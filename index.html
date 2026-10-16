@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新标日 · 语法透视读本 | 1:1视频同款认知解构</title>
+  
+  <!-- 优质衬线字体加载 (Google Fonts: Noto Serif JP & Noto Serif SC)
+       注意：必须用 media="print" + onload 异步加载。fonts.googleapis.com 在国内
+       网络环境下经常连不上，若按默认的阻塞式 stylesheet 引入，整站会白屏卡到
+       请求超时（实测 ERR_CONNECTION_TIMED_OUT），初学者会以为程序坏了。
+       异步加载失败时自动回落到系统中文/日文明朝体，排版观感基本无损。 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  </noscript>
+  
+  <link rel="stylesheet" href="css/main.css?v=20261015b">
+</head>
+<body class="theme-dark">
+
+  <!-- 顶部极简导航与功能控制栏 (Minimalist Editorial Header) -->
+  <header class="site-header">
+    <div class="brand-area" onclick="App.selectLesson(1)">
+      <span class="brand-title">新標日 · 語法透視讀本</span>
+      <span class="brand-subtitle">認知語法 · 零代詞解構</span>
+    </div>
+
+    <div class="nav-actions">
+      <!-- 极简开关控制组 (无臃肿边框) -->
+      <div class="toggle-group">
+        <button class="editorial-toggle-btn active" id="furi_toggle" title="快捷键 F：切换汉字注音">
+          <span class="state-dot"></span>
+          <span>振假名</span>
+        </button>
+        <button class="editorial-toggle-btn" id="romaji_toggle" title="快捷键 R：切换罗马音">
+          <span class="state-dot"></span>
+          <span>羅馬音</span>
+        </button>
+        <button class="editorial-toggle-btn active" id="trans_toggle" title="快捷键 T：切换中文翻译">
+          <span class="state-dot"></span>
+          <span>中文譯</span>
+        </button>
+        <button class="editorial-toggle-btn active" id="xray_toggle" title="快捷键 X：切换语法透视解构">
+          <span class="state-dot"></span>
+          <span>語法透視</span>
+        </button>
+        <button class="editorial-toggle-btn" id="theme_toggle" title="快捷键 M：切换黑板深色与纸质浅色">
+          <span class="state-dot"></span>
+          <span class="btn-label">視頻黑板</span>
+        </button>
+      </div>
+
+      <!-- 极简高保真神经语音设置 (Edge Neural Audio) -->
+      <div class="toggle-group">
+        <select class="voice-select-pill" id="voice_select" title="选择播音员发音">
+          <option value="ja-JP-NanamiNeural">🎙️ 七海 (女声)</option>
+          <option value="ja-JP-KeitaNeural">🎙️ 庆太 (男声)</option>
+        </select>
+        <select class="voice-select-pill" id="speed_select" title="发音语速">
+          <option value="0.75">0.75x 慢速跟读</option>
+          <option value="1.0" selected>1.0x 标准常速</option>
+          <option value="1.25">1.25x 快速挑战</option>
+          <option value="1.5">1.5x 高速速听</option>
+        </select>
+      </div>
+
+      <!-- 课文抽屉按钮 -->
+      <button class="lesson-selector-btn" id="open_drawer_btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <span>目錄 (48課)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 课本主体阅览卷轴 (Main Reading Container) -->
+  <main class="book-container">
+    <div id="lesson_content_root">
+      <!-- 动态课文内容将在此处渲染 -->
+      <div style="text-align:center; padding: 4rem 1rem; color: var(--text-muted);">
+        正在加载标准日本语课文与语法数据...
+      </div>
+    </div>
+  </main>
+
+  <!-- 课文全集抽屉 (All 48 Lessons Drawer) -->
+  <div class="drawer-backdrop" id="drawer_backdrop">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <span class="drawer-title">新版标准日本语 · 目录</span>
+        <button class="drawer-close-btn" id="close_drawer_btn">&times;</button>
+      </div>
+      <div class="drawer-search-box">
+        <input type="text" class="drawer-search-input" id="drawer_search_input" placeholder="搜索课文标题、人物、语法词..." />
+      </div>
+      <div class="drawer-list" id="drawer_list">
+        <!-- 课程列表动态填充 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 依赖脚本 -->
+  <script src="js/romaji.js?v=20261015b"></script>
+  <script src="js/tts.js?v=20261015b"></script>
+  <script src="js/diagram.js?v=20261015b"></script>
+  <script src="js/app.js?v=20261015b"></script>
+</body>
+</html>

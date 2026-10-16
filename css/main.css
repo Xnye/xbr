@@ -1,0 +1,1938 @@
+/* ==========================================================================
+   新标日 · 语法透视读本 (Standard Japanese Cognitive Reader)
+   - 减少AI味：纯粹书卷质感、几乎无冗余边框、呼吸感排版
+   - 全面衬线字体 (Serif / 明朝体 / 宋体)
+   - 1:1 复刻视频截图语法解构画布 (Ø が 零代词红框与弧形动态箭头、红蓝青橙助词框与下划线)
+   - 支持振假名开关、罗马音开关、中文译文开关、夜间视频同款 / 典藏米白纸质双主题
+   ========================================================================== */
+
+/* ---------- 1. 全局设计令牌 (Design Tokens) ---------- */
+:root {
+  /* 基础衬线字体栈 */
+  --font-serif-jp: "Noto Serif JP", "Yu Mincho", "游明朝", "Hiragino Mincho ProN", serif;
+  --font-serif-sc: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  --font-code: "JetBrains Mono", "SF Mono", Consolas, monospace;
+
+  /* 语法透视色卡（严格1:1对应视频截图） */
+  --color-particle-blue: #2292d8;    /* は (主题 Topic) */
+  --color-particle-cyan: #00bcd4;    /* から (原因/接续 Reason) */
+  --color-particle-orange: #f39c12;  /* を (宾格 Object) */
+  --color-particle-red: #e74c3c;     /* が / Ø 隐性主语 (Subject) */
+  --color-particle-purple: #9b59b6;  /* に (场所/时间 Location) */
+  --color-particle-yellow: #f1c40f;  /* と (伙伴/并列 Companion) */
+  --color-particle-green: #2ecc71;   /* です / 断定 Copula */
+  --color-particle-magenta: #e056fd; /* へ (移动方向 Direction) */
+
+  /* 默认主题：视频原生黑板深色 (1:1 Screenshot Dark Theme) */
+  --bg-app: #151413;
+  --bg-paper: #1c1a18;
+  --bg-canvas: #121110;
+  --bg-subtle: #23201d;
+  --text-main: #f0eee9;
+  --text-muted: #9c978f;
+  --text-faint: #635f58;
+  --border-hairline: rgba(255, 255, 255, 0.07);
+  --accent-gold: #d4af37;
+  --accent-vermilion: #e74c3c;
+  --canvas-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+}
+
+/* 浅色主题：典藏书卷纸白 (Washi Paper Light Mode) */
+body.theme-paper {
+  --bg-app: #f7f5f0;
+  --bg-paper: #fcfbf7;
+  --bg-canvas: #f2ede4;
+  --bg-subtle: #ede8dc;
+  --text-main: #232220;
+  --text-muted: #6e6a64;
+  --text-faint: #a19c94;
+  --border-hairline: rgba(0, 0, 0, 0.06);
+  --accent-gold: #9c7b16;
+  --accent-vermilion: #c0392b;
+  --canvas-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+/* ---------- 2. 基础重置与无AI味排版 (Base Editorial Layout) ---------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-serif-sc), var(--font-serif-jp), serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.85;
+  letter-spacing: 0.03em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 日语文本专用字系 */
+.jp-text, ruby, rt, .chunk-text, .basic-jp, .dlg-jp {
+  font-family: var(--font-serif-jp), serif;
+  font-feature-settings: "palt" 1;
+}
+
+/* ---------- 3. 顶部极简导航栏 (Zero Clutter Header) ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-app);
+  border-bottom: 1px solid var(--border-hairline);
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+}
+
+.brand-area {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+
+.brand-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-main);
+}
+
+.brand-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+/* 极简无框切换开关组 (Editorial Minimal Toggle Controls) */
+.toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+}
+
+.editorial-toggle-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-serif-sc), serif;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.editorial-toggle-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-subtle);
+}
+
+.editorial-toggle-btn.active {
+  color: var(--text-main);
+  border-bottom: 2px solid var(--accent-gold);
+  border-radius: 0;
+  font-weight: 600;
+}
+
+.editorial-toggle-btn .state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  transition: background 0.2s ease;
+}
+
+.editorial-toggle-btn.active .state-dot {
+  background: var(--accent-gold);
+}
+
+/* 课文选择抽屉按钮 */
+.lesson-selector-btn {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border: none;
+  font-family: var(--font-serif-sc), serif;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.2s ease;
+}
+
+.lesson-selector-btn:hover {
+  background: var(--border-hairline);
+}
+
+/* ---------- 4. 主阅读画卷 (Book Page Container) ---------- */
+.book-container {
+  max-width: 1040px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 6rem;
+  flex: 1;
+}
+
+/* 课文卷头信息 */
+.chapter-header {
+  margin-bottom: 3rem;
+  text-align: center;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.chapter-number {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.chapter-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+.chapter-romaji {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  font-style: italic;
+  font-family: var(--font-serif-sc), serif;
+}
+
+/* ---------- 5. 核心：1:1 截图视频复刻解构画布 (The 1:1 Cinematic Canvas) ---------- */
+.grammar-diagram-container {
+  margin: 2.5rem 0;
+  padding: 0;
+  background: transparent;
+}
+
+.diagram-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  padding: 0 0.2rem;
+}
+
+.meta-tag-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.meta-tag-pill {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  background: rgba(231, 76, 60, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  letter-spacing: 0.05em;
+}
+
+.meta-lesson-title {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.meta-action-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-serif-sc), serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-subtle);
+}
+
+/* 1:1 视频截图同款暗色画框 (The Canvas matching the exact Video Frame) */
+.diagram-canvas {
+  position: relative;
+  background: var(--bg-canvas);
+  border-radius: 8px;
+  padding: 2.4rem 2rem 2rem;
+  overflow: visible;
+  box-shadow: var(--canvas-shadow);
+  /* 营造如原片中暗色木质/竹林微光的通透感 */
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(34, 146, 216, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(231, 76, 60, 0.04) 0%, transparent 60%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 顶部：Ø が 隐性主语行 (The Red Zero Pronoun Header) */
+.zero-subject-layer {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
+}
+
+.zero-subject-layer.no-zero {
+  height: 12px;
+}
+
+.zero-badge-wrapper {
+  position: relative;
+  z-index: 5;
+}
+
+/* 红色框 Ø が (1:1 with Screenshot) */
+.zero-badge.red-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 2px solid var(--color-particle-red);
+  padding: 0.12rem 0.55rem;
+  border-radius: 3px;
+  color: #ff5252;
+  background: rgba(231, 76, 60, 0.1);
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.zero-badge.red-box:hover,
+.zero-badge.red-box.hover-highlight {
+  box-shadow: 0 0 14px rgba(231, 76, 60, 0.6);
+  background: rgba(231, 76, 60, 0.2);
+  transform: translateY(-1px);
+}
+
+.zero-sym {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.zero-particle {
+  font-family: var(--font-serif-jp), serif;
+  font-size: 1.15rem;
+}
+
+/* 动态 SVG 曲线箭头层 (Dynamic Curved SVG Arrows) */
+.diagram-arrows-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.arrow-curve-path {
+  stroke: var(--color-particle-red);
+  stroke-width: 1.8;
+  fill: none;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.arrow-curve-path.path-highlight {
+  stroke: #ff7675;
+  stroke-width: 2.8;
+  filter: drop-shadow(0 0 4px rgba(231, 76, 60, 0.8));
+}
+
+/* 主句块行 (The Sentence Chunks Row) */
+.sentence-chunks-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  z-index: 5;
+}
+
+/* 单个词法单元 (Syntax Chunk Unit) */
+.syntax-chunk-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.syntax-chunk-unit.hover-highlight {
+  transform: translateY(-2px);
+}
+
+/* 日语词汇与助词包裹 */
+.chunk-jp-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.35rem;
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+body.theme-paper .chunk-jp-wrapper {
+  color: #1a1a1a;
+}
+
+/* 振假名 (Ruby) 美化 */
+ruby {
+  ruby-position: over;
+  ruby-align: center;
+}
+
+rt {
+  font-size: 0.45em;
+  color: var(--text-muted);
+  font-weight: normal;
+  letter-spacing: 0;
+  transform: translateY(-0.15em);
+  transition: opacity 0.2s ease;
+}
+
+/* 核心：1:1 助词彩色外框 (Particle Colored Boxes) */
+.particle-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.1;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+/* [は] 蓝色框 (1:1 with Screenshot) */
+.blue-box {
+  border: 2px solid var(--color-particle-blue);
+  color: var(--color-particle-blue);
+  background: rgba(34, 146, 216, 0.08);
+}
+.blue-box:hover, .hover-highlight .blue-box {
+  box-shadow: 0 0 12px rgba(34, 146, 216, 0.7);
+  background: rgba(34, 146, 216, 0.22);
+}
+
+/* [から] 青色框 (1:1 with Screenshot) */
+.cyan-box {
+  border: 2px solid var(--color-particle-cyan);
+  color: var(--color-particle-cyan);
+  background: rgba(0, 188, 212, 0.08);
+}
+.cyan-box:hover, .hover-highlight .cyan-box {
+  box-shadow: 0 0 12px rgba(0, 188, 212, 0.7);
+  background: rgba(0, 188, 212, 0.22);
+}
+
+/* [を] 橙色框 (1:1 with Screenshot) */
+.orange-box {
+  border: 2px solid var(--color-particle-orange);
+  color: var(--color-particle-orange);
+  background: rgba(243, 156, 18, 0.08);
+}
+.orange-box:hover, .hover-highlight .orange-box {
+  box-shadow: 0 0 12px rgba(243, 156, 18, 0.7);
+  background: rgba(243, 156, 18, 0.22);
+}
+
+/* [が] 显性红色框 */
+.red-box {
+  border: 2px solid var(--color-particle-red);
+  color: #ff5252;
+  background: rgba(231, 76, 60, 0.08);
+}
+
+/* [に] 紫色框 */
+.purple-box {
+  border: 2px solid var(--color-particle-purple);
+  color: var(--color-particle-purple);
+  background: rgba(155, 89, 182, 0.08);
+}
+
+/* [と] 黄色框 */
+.yellow-box {
+  border: 2px solid var(--color-particle-yellow);
+  color: var(--color-particle-yellow);
+  background: rgba(241, 196, 15, 0.08);
+}
+
+/* [です] 绿色框 */
+.green-box {
+  border: 2px solid var(--color-particle-green);
+  color: var(--color-particle-green);
+  background: rgba(46, 204, 113, 0.08);
+}
+
+/* [へ] 品红框 */
+.magenta-box {
+  border: 2px solid var(--color-particle-magenta);
+  color: var(--color-particle-magenta);
+  background: rgba(224, 86, 253, 0.08);
+}
+
+/* 核心：1:1 下划线横贯 (Phrase Underline Bar) */
+.chunk-underline-bar {
+  width: 100%;
+  height: 2.5px;
+  margin-bottom: 0.45rem;
+  border-radius: 1px;
+}
+
+.blue-line { background: var(--color-particle-blue); }
+.cyan-line { background: var(--color-particle-cyan); }
+.orange-line { background: var(--color-particle-orange); }
+.red-line { background: var(--color-particle-red); }
+.purple-line { background: var(--color-particle-purple); }
+.yellow-line { background: var(--color-particle-yellow); }
+.green-line { background: var(--color-particle-green); }
+.magenta-line { background: var(--color-particle-magenta); }
+.none-line { background: transparent; }
+
+/* 核心：词下释义与词性 (Word Gloss Box) */
+.chunk-gloss-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.gloss-main {
+  color: #e0e0e0;
+  font-family: var(--font-serif-sc), serif;
+  font-weight: 500;
+}
+
+body.theme-paper .gloss-main {
+  color: #333333;
+}
+
+.gloss-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* 核心：1:1 认知语法小句拆解行 (Literal Structured Translation Row) */
+.literal-clause-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.4rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #cfd8dc;
+  letter-spacing: 0.02em;
+}
+
+body.theme-paper .literal-clause-row {
+  color: #455a64;
+}
+
+.clause-part {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+/* 带色彩的英文下划线标记 (Color Underlines on Literal Tokens) */
+.lit-token {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lit-token:hover, .lit-token.hover-highlight {
+  filter: brightness(1.3);
+  transform: translateY(-1px);
+}
+
+.blue-u {
+  color: #5dade2;
+  border-bottom: 2px solid var(--color-particle-blue);
+}
+
+.cyan-u {
+  color: #4dd0e1;
+  border-bottom: 2px solid var(--color-particle-cyan);
+}
+
+.orange-u {
+  color: #f8c471;
+  border-bottom: 2px solid var(--color-particle-orange);
+}
+
+.red-u {
+  color: #ff7675;
+  border-bottom: 2px solid var(--color-particle-red);
+}
+
+.purple-u {
+  color: #bb8fce;
+  border-bottom: 2px solid var(--color-particle-purple);
+}
+
+.yellow-u {
+  color: #f7dc6f;
+  border-bottom: 2px solid var(--color-particle-yellow);
+}
+
+.green-u {
+  color: #58d68d;
+  border-bottom: 2px solid var(--color-particle-green);
+}
+
+.magenta-u {
+  color: #e8a7fc;
+  border-bottom: 2px solid var(--color-particle-magenta);
+}
+
+/* 核心：底部自然中文翻译行 (Natural Translation Row) */
+.natural-translation-row {
+  margin-top: 0.4rem;
+  font-size: 1.15rem;
+  color: #ecf0f1;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+body.theme-paper .natural-translation-row {
+  color: #2c3e50;
+}
+
+.zh-sentence {
+  font-weight: 500;
+}
+
+/* 折叠认知语法秘籍面板 (Cognitive Note Panel) */
+.cognitive-note-panel {
+  margin-top: 1rem;
+  padding: 1.4rem 1.6rem;
+  background: var(--bg-paper);
+  border-top: 1px solid var(--border-hairline);
+  text-align: left;
+}
+
+.note-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.note-badge {
+  font-size: 0.78rem;
+  background: var(--accent-gold);
+  color: #000000;
+  padding: 0.15rem 0.6rem;
+  font-weight: 700;
+  border-radius: 2px;
+}
+
+.note-quote {
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.note-body {
+  font-size: 0.95rem;
+  color: var(--text-main);
+  line-height: 1.8;
+  margin-bottom: 1.2rem;
+}
+
+.particle-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.legend-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--bg-canvas);
+  border-left: 3px solid var(--border-hairline);
+}
+
+.blue-accent { border-left-color: var(--color-particle-blue); }
+.cyan-accent { border-left-color: var(--color-particle-cyan); }
+.orange-accent { border-left-color: var(--color-particle-orange); }
+.red-accent { border-left-color: var(--color-particle-red); }
+.purple-accent { border-left-color: var(--color-particle-purple); }
+.yellow-accent { border-left-color: var(--color-particle-yellow); }
+.green-accent { border-left-color: var(--color-particle-green); }
+
+.legend-badge {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  padding: 0.1rem 0.4rem;
+}
+
+.legend-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.84rem;
+  gap: 0.2rem;
+}
+
+.legend-text strong {
+  color: var(--text-main);
+}
+
+.legend-text span {
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* 浮动交互提示框 (Diagram Tooltip) */
+.diagram-tooltip {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  max-width: 90%;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+body.theme-paper .diagram-tooltip {
+  background: rgba(255, 255, 255, 0.98);
+  color: #1a1a1a;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* ---------- 6. 课本正文主体样式 (Textbook Editorial Reading Sections) ---------- */
+.textbook-section {
+  margin-bottom: 3.5rem;
+}
+
+.section-editorial-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  border-bottom: 1px solid var(--border-hairline);
+  padding-bottom: 0.5rem;
+}
+
+.section-editorial-title .num-kanji {
+  color: var(--accent-gold);
+  font-size: 1rem;
+}
+
+.section-editorial-title .sub-en {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+/* 基本课文列表 (Basic Sentences List) */
+.basic-sentence-item {
+  margin-bottom: 1.6rem;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.basic-main-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.basic-left {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.basic-index {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+.basic-jp {
+  font-size: 1.65rem;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.basic-romaji {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 2rem;
+}
+
+.basic-zh {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  margin-left: 2rem;
+}
+
+.sentence-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* 语法透视嵌入区域 */
+.xray-embed-slot {
+  margin-top: 0.8rem;
+}
+
+/* 对话块 (Dialogue Blocks - A/B/C/D & Applied Story) */
+.dialogue-group {
+  margin-bottom: 2rem;
+}
+
+.dialogue-group-header {
+  font-size: 1.05rem;
+  color: var(--accent-gold);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.dialogue-bubble-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+  padding: 0.3rem 0;
+}
+
+.speaker-tag {
+  font-weight: 600;
+  color: var(--text-main);
+  min-width: 4rem;
+  text-align: right;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.dlg-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dlg-jp {
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+.dlg-romaji {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.dlg-zh {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* 旁白 / 舞台说明 */
+.narration-line {
+  margin: 1.2rem 0 1.2rem 5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.6;
+  border-left: 2px solid var(--border-hairline);
+  padding-left: 0.8rem;
+}
+
+/* 语法要点边栏笔记 (Grammar Notes Grid) */
+.grammar-notes-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.grammar-note-item {
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.gn-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.gn-exp {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-main);
+  font-family: var(--font-serif-jp), serif;
+}
+
+.gn-body {
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: var(--text-main);
+}
+
+/* 词汇表 (Vocabulary Layout - No clumsy table borders) */
+.words-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem 2rem;
+}
+
+.word-card-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-hairline);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.word-card-item:hover {
+  opacity: 0.85;
+}
+
+.word-top-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.word-jp {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.word-pitch {
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold);
+  border-radius: 2px;
+  padding: 0 0.3rem;
+  font-family: var(--font-code);
+}
+
+.word-bottom-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  font-size: 0.88rem;
+}
+
+.word-pos {
+  color: var(--text-faint);
+  font-size: 0.78rem;
+}
+
+.word-zh {
+  color: var(--text-muted);
+}
+
+.word-romaji {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+/* ---------- 7. 切换控制响应 (Global Visibility Toggles) ---------- */
+body.hide-furigana rt {
+  display: none !important;
+}
+
+body.hide-romaji .romaji-text,
+body.hide-romaji .basic-romaji,
+body.hide-romaji .dlg-romaji,
+body.hide-romaji .word-romaji,
+body.hide-romaji .chapter-romaji {
+  display: none !important;
+}
+
+body.hide-translation .basic-zh,
+body.hide-translation .dlg-zh,
+body.hide-translation .word-zh,
+body.hide-translation .natural-translation-row,
+body.hide-translation .narration-line {
+  display: none !important;
+}
+
+body.hide-xray .grammar-diagram-container {
+  display: none !important;
+}
+
+/* ---------- 8. 课文选择抽屉 (Lesson Drawer) ---------- */
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.drawer-backdrop.open {
+  display: block;
+  opacity: 1;
+}
+
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  max-width: 90vw;
+  height: 100vh;
+  background: var(--bg-paper);
+  z-index: 201;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
+}
+
+.drawer-backdrop.open .drawer-panel {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  padding: 1.5rem 1.6rem 1rem;
+  border-bottom: 1px solid var(--border-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.drawer-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.drawer-search-box {
+  padding: 0.8rem 1.6rem;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.drawer-search-input {
+  width: 100%;
+  padding: 0.45rem 0.8rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-hairline);
+  border-radius: 4px;
+  color: var(--text-main);
+  font-family: var(--font-serif-sc), serif;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.drawer-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8rem 1.6rem 2rem;
+}
+
+.drawer-item {
+  padding: 0.75rem 0.6rem;
+  border-bottom: 1px solid var(--border-hairline);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.drawer-item:hover {
+  background: var(--bg-subtle);
+}
+
+.drawer-item.active {
+  border-left: 3px solid var(--accent-gold);
+  background: var(--bg-subtle);
+  padding-left: 0.8rem;
+}
+
+.drawer-item-title {
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.drawer-item-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ---------- 9. 响应式布局优化 (Responsive Adjustments) ---------- */
+@media (max-width: 768px) {
+  .site-header {
+    padding: 0.6rem 1rem;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
+  .book-container {
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  .chapter-title {
+    font-size: 1.6rem;
+  }
+
+  .chunk-jp-wrapper {
+    font-size: 1.6rem;
+  }
+
+  .literal-clause-row {
+    font-size: 1.05rem;
+  }
+
+  .zero-subject-layer {
+    height: 48px;
+  }
+
+  .zero-badge.red-box {
+    font-size: 1rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .dialogue-bubble-row {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .speaker-tag {
+    text-align: left;
+    color: var(--accent-gold);
+  }
+
+  .narration-line {
+    margin-left: 1rem;
+  }
+}
+
+/* ---------- 10. 高保真神经语音播放状态 (Audio Playing State) ---------- */
+.audio-loading {
+  opacity: 0.7;
+  cursor: wait !important;
+  animation: pulse-loading 0.8s infinite ease-in-out;
+}
+
+@keyframes pulse-loading {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+.audio-playing {
+  color: var(--accent-gold) !important;
+  animation: pulse-audio 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-audio {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.4)); }
+  50% { transform: scale(1.12); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(212, 175, 55, 0.4)); }
+}
+
+.voice-select-pill {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-muted);
+  font-family: var(--font-serif-sc), serif;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.voice-select-pill:hover {
+  color: var(--text-main);
+  border-color: var(--text-faint);
+}
+
+
+/* ==========================================================================
+   扩展助词色卡 (Extended Particle Palette)
+   第1～4课新增五个助词角色，补齐 -box / -line / -u / -accent 四种变体，
+   与既有的 blue(は) cyan(から) orange(を) red(が) purple(に)
+      yellow(と) green(です) magenta(へ) 保持同一套命名法。
+   ========================================================================== */
+:root {
+  --color-particle-teal: #16a085;    /* の 连体・所属 */
+  --color-particle-pink: #e0568a;    /* も 类同 */
+  --color-particle-indigo: #5c7cfa;  /* で 场所・手段 */
+  --color-particle-brown: #b07d47;   /* まで 终点 */
+  --color-particle-slate: #8a94a6;   /* か・ね・よ 语气 */
+}
+
+.teal-box, .pink-box, .indigo-box, .brown-box, .slate-box {
+  border-width: 2px;
+  border-style: solid;
+}
+.teal-box   { border-color: var(--color-particle-teal);   color: var(--color-particle-teal);   background: rgba(22, 160, 133, 0.08); }
+.pink-box   { border-color: var(--color-particle-pink);   color: var(--color-particle-pink);   background: rgba(224, 86, 138, 0.08); }
+.indigo-box { border-color: var(--color-particle-indigo); color: var(--color-particle-indigo); background: rgba(92, 124, 250, 0.08); }
+.brown-box  { border-color: var(--color-particle-brown);  color: var(--color-particle-brown);  background: rgba(176, 125, 71, 0.08); }
+.slate-box  { border-color: var(--color-particle-slate);  color: var(--color-particle-slate);  background: rgba(138, 148, 166, 0.08); }
+
+.teal-box:hover, .hover-highlight .teal-box,
+.pink-box:hover, .hover-highlight .pink-box,
+.indigo-box:hover, .hover-highlight .indigo-box,
+.brown-box:hover, .hover-highlight .brown-box,
+.slate-box:hover, .hover-highlight .slate-box {
+  filter: brightness(1.25);
+}
+
+.teal-line   { background: var(--color-particle-teal); }
+.pink-line   { background: var(--color-particle-pink); }
+.indigo-line { background: var(--color-particle-indigo); }
+.brown-line  { background: var(--color-particle-brown); }
+.slate-line  { background: var(--color-particle-slate); }
+
+.teal-u   { color: #4fd1b5; border-bottom: 2px solid var(--color-particle-teal); }
+.pink-u   { color: #f78fb3; border-bottom: 2px solid var(--color-particle-pink); }
+.indigo-u { color: #91a7ff; border-bottom: 2px solid var(--color-particle-indigo); }
+.brown-u  { color: #d4a373; border-bottom: 2px solid var(--color-particle-brown); }
+.slate-u  { color: #b8c0cf; border-bottom: 2px solid var(--color-particle-slate); }
+
+.teal-accent   { border-left-color: var(--color-particle-teal); }
+.pink-accent   { border-left-color: var(--color-particle-pink); }
+.indigo-accent { border-left-color: var(--color-particle-indigo); }
+.brown-accent  { border-left-color: var(--color-particle-brown); }
+.slate-accent  { border-left-color: var(--color-particle-slate); }
+.magenta-accent { border-left-color: var(--color-particle-magenta); }
+
+/* 书卷纸白主题下，直译行的浅色文字对比度不足，统一压深 */
+body.theme-paper .blue-u    { color: #1a6fa8; }
+body.theme-paper .cyan-u    { color: #00838f; }
+body.theme-paper .orange-u  { color: #b26a00; }
+body.theme-paper .red-u     { color: #c0392b; }
+body.theme-paper .purple-u  { color: #7d3c98; }
+body.theme-paper .yellow-u  { color: #9a7d0a; }
+body.theme-paper .green-u   { color: #1e8449; }
+body.theme-paper .magenta-u { color: #a2298f; }
+body.theme-paper .teal-u    { color: #0e7a63; }
+body.theme-paper .pink-u    { color: #b03a68; }
+body.theme-paper .indigo-u  { color: #3a55c9; }
+body.theme-paper .brown-u   { color: #8a5a2b; }
+body.theme-paper .slate-u   { color: #5c6675; }
+
+/* ==========================================================================
+   深度语法讲义卡片 (Deep Grammar Cards)
+   取代原先把 40 字碎片直接铺出来的 .grammar-note-item。
+   折叠态只露「分类 + 句型 + 一句话本质」，可扫读；
+   展开态给出公式、认知理据、课文原句、易错对照、辨析表、自检题。
+   ========================================================================== */
+.gdeep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.gdeep-card {
+  border-top: 1px solid var(--border-hairline);
+  padding: 1.4rem 0 1.6rem;
+}
+.gdeep-card:last-child { border-bottom: 1px solid var(--border-hairline); }
+
+.gdeep-card.flash { animation: gd-flash 1.4s ease; }
+@keyframes gd-flash {
+  0%, 40% { background: rgba(212, 175, 55, 0.13); }
+  100%    { background: transparent; }
+}
+
+.gdeep-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "pattern  chevron"
+    "essence  essence";
+  gap: 0.35rem 1rem;
+  cursor: pointer;
+  align-items: start;
+}
+
+.gdeep-pattern-row {
+  grid-area: pattern;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.gdeep-cat {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--accent-gold);
+  border: 1px solid currentColor;
+  padding: 0.05rem 0.5rem;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.gdeep-pattern {
+  font-family: var(--font-serif-jp), serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-main);
+  letter-spacing: 0.02em;
+}
+
+.gdeep-essence {
+  grid-area: essence;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+}
+
+.gdeep-chevron {
+  grid-area: chevron;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.25s ease, color 0.2s ease;
+  padding: 0.3rem 0.2rem;
+  line-height: 1;
+}
+.gdeep-card.open .gdeep-chevron { transform: rotate(180deg); color: var(--accent-gold); }
+.gdeep-head:hover .gdeep-chevron { color: var(--accent-gold); }
+
+.gdeep-body {
+  display: none;
+  margin-top: 1.6rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--border-hairline);
+}
+.gdeep-card.open .gdeep-body { display: block; }
+
+.gd-sec { margin-bottom: 1.8rem; }
+.gd-sec:last-child { margin-bottom: 0; }
+
+.gd-sec-title {
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  color: var(--accent-gold);
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.gd-sec-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-hairline);
+}
+
+.gd-prose {
+  font-size: 0.97rem;
+  line-height: 1.95;
+  color: var(--text-main);
+  margin-bottom: 0.8rem;
+}
+.gd-prose:last-child { margin-bottom: 0; }
+
+.gd-formula {
+  font-family: var(--font-serif-jp), serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  padding: 0.7rem 1rem;
+  background: var(--bg-canvas);
+  color: var(--text-main);
+  margin-bottom: 0.9rem;
+  border-left: 3px solid var(--accent-gold);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.gd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.gd-table th, .gd-table td {
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border-hairline);
+  vertical-align: top;
+  line-height: 1.7;
+}
+.gd-table th {
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}
+.gd-table td { color: var(--text-muted); }
+.gd-table tr:last-child td, .gd-table tr:last-child th { border-bottom: none; }
+.gd-table .jp-text { font-family: var(--font-serif-jp), serif; }
+
+.gd-note {
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: var(--text-faint);
+  margin-top: 0.6rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--border-hairline);
+}
+
+.gd-list { list-style: none; padding: 0; margin: 0; }
+.gd-list li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+.gd-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0.2rem;
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+.gd-list li:last-child { margin-bottom: 0; }
+
+/* --- 课文原句 --- */
+.gd-example {
+  padding: 0.85rem 0;
+  border-bottom: 1px dashed var(--border-hairline);
+}
+.gd-example:last-child { border-bottom: none; }
+
+.gd-ex-top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.gd-ex-jp {
+  font-family: var(--font-serif-jp), serif;
+  font-size: 1.28rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  cursor: pointer;
+}
+.gd-ex-jp:hover { color: var(--accent-gold); }
+.gd-ex-rm {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 0.15rem;
+}
+.gd-ex-lit {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  letter-spacing: 0.02em;
+}
+.gd-ex-lit .lit-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+  margin-right: 0.5rem;
+}
+.gd-ex-zh {
+  font-size: 0.95rem;
+  color: var(--text-main);
+  margin-top: 0.3rem;
+}
+.gd-ex-note {
+  font-size: 0.87rem;
+  line-height: 1.75;
+  color: var(--text-faint);
+  margin-top: 0.4rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--border-hairline);
+}
+.gd-ex-src {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* --- 易错对照 --- */
+.gd-pitfall {
+  padding: 0.8rem 0;
+  border-bottom: 1px dashed var(--border-hairline);
+}
+.gd-pitfall:last-child { border-bottom: none; }
+.gd-wrong, .gd-right {
+  display: block;
+  font-family: var(--font-serif-jp), serif;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  padding-left: 1.5rem;
+  position: relative;
+}
+.gd-wrong {
+  color: var(--text-faint);
+  text-decoration: line-through;
+  text-decoration-color: var(--accent-vermilion);
+}
+.gd-wrong::before {
+  content: '×';
+  position: absolute;
+  left: 0;
+  color: var(--accent-vermilion);
+  font-weight: 700;
+}
+.gd-right { color: var(--text-main); }
+.gd-right::before {
+  content: '○';
+  position: absolute;
+  left: 0;
+  color: #2ecc71;
+  font-weight: 700;
+}
+.gd-pit-why {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-top: 0.45rem;
+  padding-left: 1.5rem;
+}
+
+/* --- 自检题 --- */
+.gd-quiz { margin-bottom: 0.7rem; }
+.gd-quiz:last-child { margin-bottom: 0; }
+.gd-q {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-main);
+  cursor: pointer;
+}
+.gd-q-num {
+  color: var(--accent-gold);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.gd-q:hover { color: var(--accent-gold); }
+.gd-a {
+  display: none;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin: 0.35rem 0 0 1.5rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--accent-gold);
+}
+.gd-quiz.open .gd-a { display: block; }
+
+/* --- 关联条目 --- */
+.gd-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-hairline);
+}
+.gd-related-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+}
+.gd-rel-chip {
+  font-size: 0.85rem;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--border-hairline);
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  font-family: var(--font-serif-jp), serif;
+  transition: all 0.2s ease;
+}
+.gd-rel-chip:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+.gd-rel-chip.pending { opacity: 0.45; cursor: default; }
+.gd-rel-chip.pending:hover { border-color: var(--border-hairline); color: var(--text-muted); }
+
+/* --- 原教材笔记（保留原始抓取文本，可追溯） --- */
+.gd-legacy { margin-top: 1rem; font-size: 0.85rem; }
+.gd-legacy summary {
+  cursor: pointer;
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  list-style: none;
+}
+.gd-legacy summary::-webkit-details-marker { display: none; }
+.gd-legacy summary::before { content: '\25B8\00a0'; }
+.gd-legacy[open] summary::before { content: '\25BE\00a0'; }
+.gd-legacy-body {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-canvas);
+  color: var(--text-faint);
+  line-height: 1.75;
+  font-size: 0.85rem;
+}
+.gd-legacy-empty { color: var(--accent-vermilion); font-style: italic; }
+
+/* --- 讲义顶部的覆盖率提示 --- */
+.gdeep-coverage {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.4rem;
+  line-height: 1.75;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-canvas);
+  border-left: 2px solid var(--accent-gold);
+}
+
+/* 例句内嵌的透视图槽位 */
+.gd-xray-slot { display: none; margin-top: 0.9rem; }
+.gd-xray-slot.open { display: block; }
+
+@media (max-width: 720px) {
+  .gdeep-pattern { font-size: 1.3rem; }
+  .gdeep-body { padding-left: 0.6rem; }
+  .gd-formula { font-size: 1.05rem; }
+  .gd-table { font-size: 0.85rem; }
+  .gd-table th, .gd-table td { padding: 0.45rem 0.5rem; }
+  .gd-ex-src { margin-left: 0; width: 100%; }
+}
+
+.gd-prose strong, .gd-essence strong { color: var(--accent-gold); font-weight: 600; }
+
+/* 表头不折行：「成分」这类两字表头折成竖排很难看 */
+.gd-table th { white-space: nowrap; }
+@media (max-width: 720px) { .gd-table th { white-space: normal; } }
+
+/* ==========================================================================
+   零主语 Ø が 的"默认收起"形态
+   红框不再常驻：收起时缩成一枚浅色小角标、箭头隐藏，句子回归干净；
+   悬停预览、点击固定，才还原成完整红框＋弧形箭头。
+   行高恒定 52px，展开收起只改透明度与缩放，不引起版面跳动。
+   ========================================================================== */
+.grammar-diagram-container .zero-badge.red-box {
+  cursor: pointer;
+  font: inherit;
+  transition: transform 0.22s ease, opacity 0.22s ease,
+              border-color 0.22s ease, color 0.22s ease, background 0.22s ease;
+}
+
+.grammar-diagram-container .diagram-arrows-svg {
+  transition: opacity 0.25s ease;
+}
+
+.grammar-diagram-container.zero-collapsed .zero-badge.red-box {
+  border-color: var(--border-hairline);
+  color: var(--text-faint);
+  background: transparent;
+  transform: scale(0.7);
+  opacity: 0.75;
+  box-shadow: none;
+}
+.grammar-diagram-container.zero-collapsed .zero-badge.red-box:hover {
+  opacity: 1;
+  color: var(--text-muted);
+  border-color: var(--text-faint);
+  box-shadow: none;
+}
+
+.grammar-diagram-container.zero-collapsed .diagram-arrows-svg {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 固定展开时给角标一点"已钉住"的提示 */
+.grammar-diagram-container.zero-pinned .zero-badge.red-box {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.18);
+}
+
+/* 收起态的说明文字；展开后让位给红框本身 */
+.zero-hint {
+  position: absolute;
+  left: calc(100% + 0.6rem);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.grammar-diagram-container.zero-collapsed .zero-hint { opacity: 1; }
+
+/* ==========================================================================
+   逐词直译行默认折叠
+   初学者先看中文自然译文；想观察日语语序时点开"看日语语序"。
+   ========================================================================== */
+.literal-toggle-row {
+  display: flex;
+  justify-content: center;
+  margin: -0.4rem 0 0.5rem;
+}
+
+.literal-toggle-btn {
+  background: none;
+  border: none;
+  border-bottom: 1px dashed var(--border-hairline);
+  color: var(--text-faint);
+  font-family: var(--font-serif-sc), serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  padding: 0.1rem 0.4rem 0.2rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.literal-toggle-btn:hover {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+.literal-toggle-btn .lit-toggle-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 0.7rem;
+}
+.literal-toggle-btn.open { color: var(--text-muted); }
+.literal-toggle-btn.open .lit-toggle-arrow { transform: rotate(90deg); }
+
+@media (max-width: 720px) {
+  .zero-hint { display: none; }
+}
+
+/* 名词短语内部的 の 连接框：比词尾助词框略小、贴得更紧，
+   视觉上传达"它把前后两个名词焊在一起"，而不是"它是前一个词的尾巴" */
+.particle-box.inner-connector {
+  margin: 0 0.12rem;
+  padding: 0.02rem 0.28rem;
+  font-size: 0.82em;
+  transform: translateY(-0.05em);
+}
+
+/* ============ 初学者图例：怎么读透视图 ============
+   零起点用户看透视图等于看天书，这张卡把每个视觉符号翻译成一句人话。
+   全站只在每课顶部出现一次，看过即自动折叠（localStorage）。 */
+.diagram-legend {
+  margin: 0 0 1.6rem;
+  border: 1px solid var(--border-hairline);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.04);
+}
+.legend-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.7rem 0.95rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-main);
+  font-family: inherit;
+}
+.legend-head:hover { background: rgba(212, 175, 55, 0.07); }
+.legend-arrow {
+  color: var(--accent-gold);
+  font-size: 0.85rem;
+  width: 0.8rem;
+  flex: none;
+}
+.legend-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.legend-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-left: auto;
+  flex: none;
+}
+.legend-body {
+  padding: 0.2rem 0.95rem 0.95rem;
+  border-top: 1px solid var(--border-hairline);
+}
+.legend-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) 1fr;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--border-hairline);
+}
+.legend-sample {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+.legend-row-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.22rem;
+}
+.legend-row-body {
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+}
+.legend-row-body em {
+  font-style: normal;
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+/* 图例里的迷你词块：沿用真实透视图的类名，所见即所得 */
+.legend-demo-chunk {
+  min-width: 120px;
+  text-align: center;
+}
+.legend-demo-zero {
+  cursor: default;
+  transform: none !important;
+  opacity: 1 !important;
+  border-width: 2px !important;
+}
+.legend-demo-btn {
+  cursor: default;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.legend-steps {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-hairline);
+}
+.legend-steps ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+}
+.legend-steps ol li { margin-bottom: 0.2rem; }
+.legend-steps ol strong { color: var(--text-main); }
+@media (max-width: 720px) {
+  .legend-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  .legend-sample { justify-content: flex-start; }
+  .legend-sub { display: none; }
+}

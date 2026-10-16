@@ -1,0 +1,61 @@
+# ============================================================
+# xbrlearn — 忽略规则
+# 原则：只忽略「可重新生成 / 机器本地 / 非项目资产」的东西，
+#       源数据（data/*.json）与前端资源一律纳入版本管理。
+# ============================================================
+
+# ---------- Python 字节码与缓存 ----------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ---------- Python 虚拟环境 ----------
+.venv/
+venv/
+env/
+ENV/
+
+# ---------- 工具缓存 ----------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# ---------- 运行时日志与临时输出 ----------
+# server.py 启动时由 shell 重定向产生
+_server.log
+_server.err
+*.log
+*.err
+*.tmp
+*.bak
+
+# ---------- TTS 音频缓存 ----------
+# assets/audio/*.mp3 由 server.py / preheat_audio.py 用 md5(voice+text) 命名生成，
+# 可重新生成，不入库；目录本身由脚本自动创建，无需 .gitkeep。
+assets/audio/*.mp3
+
+# ---------- 外部构建输入 ----------
+# build_app_data.py 读取的上游抓取源码（不属于本项目资产）
+temp_learnjapan/
+
+# ---------- 历史快照备份 ----------
+# 一次性回滚快照，数据已由 data/ 与 git 历史覆盖
+_backup/
+
+# ---------- 编辑器 / 操作系统 ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ---------- 凭据（若日后引入）----------
+.env
+.env.*
+*.pem
+*.key
