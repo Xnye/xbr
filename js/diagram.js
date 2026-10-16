@@ -16,10 +16,14 @@ const GrammarDiagram = (function () {
   /**
    * Generates the HTML for a syntax breakdown component
    * @param {Object} data Exemplar data structure
-   * @param {Object} options display options { id, isExpanded, showAudio }
+   * @param {Object} options display options { id, simple } —— simple: 课文对白的「词块透视」精简模式
    */
   function render(data, options = {}) {
     const containerId = options.id || `diagram_${data.id}`;
+    // 简单模式（课文对白的「词块透视」）：只画 词块 ＋ 助词框（含 jp_units 块内连接框）＋ 振假名。
+    // 不画词下词义小字、不画「▸逐词直译」按钮与直译行、不画认知心法卡、不画 Ø が 红框。
+    // 由 opts.simple 或条目自带的 ex.simple 触发；完整模式一行不动。
+    if (options.simple || data.simple) return renderSimple(data, containerId);
     const hasZeroSubject = !!data.zero_subject;
 
     let html = `
@@ -147,9 +151,29 @@ const GrammarDiagram = (function () {
   }
 
   /**
-   * Render single word chunk with ruby, particle box, underline, and gloss
+   * 简单模式：课文对白的「词块透视」。
+   * 只输出 词块 ＋ 助词框 ＋ 振假名 三层里必要的那一层（.sentence-chunks-row），
+   * 外层仍套用完整透视图的容器类名（.grammar-diagram-container / .diagram-canvas），
+   * 于是主题、字号、助词配色、悬停联动全部沿用同一套 CSS。
+   * 没有 zero_subject，因此不画 Ø が 红框、不生成 SVG 箭头层。
    */
-  function renderChunk(chunk, containerId) {
+  function renderSimple(data, containerId) {
+    return `
+      <div class="grammar-diagram-container simple-mode" id="${containerId}" data-diagram-id="${data.id}">
+        <div class="diagram-canvas simple-canvas">
+          <div class="sentence-chunks-row" id="${containerId}_chunks_row">
+            ${data.chunks.map(chunk => renderChunk(chunk, containerId, true)).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render single word chunk with ruby, particle box, underline, and gloss
+   * @param {boolean} simple 简单模式：省略词下词义小字（词块、助词框、振假名照旧）
+   */
+  function renderChunk(chunk, containerId, simple) {
     const chunkId = `${containerId}_chunk_${chunk.id}`;
     const pColor = chunk.particle_color || 'none';
     const uColor = chunk.underline_color || 'none';
@@ -200,13 +224,13 @@ const GrammarDiagram = (function () {
         </div>
 
         <!-- Underline spanning the phrase -->
-        <div class="chunk-underline-bar ${uColor}-line"></div>
+        <div class="chunk-underline-bar ${uColor}-line"></div>${simple ? '' : `
 
         <!-- Word Gloss beneath -->
         <div class="chunk-gloss-box">
           <span class="gloss-main">${chunk.gloss_main}</span>
           ${chunk.gloss_sub ? `<span class="gloss-sub">${chunk.gloss_sub}</span>` : ''}
-        </div>
+        </div>`}
       </div>
     `;
   }

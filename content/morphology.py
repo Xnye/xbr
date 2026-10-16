@@ -157,8 +157,63 @@ PARTICLES = {
         'gloss': '和…等',
         'desc': '【や】把几个名词并列起来，但暗示「还有别的没说出来」：机やいす（桌子、椅子等等）。と 是完整列举「只有这些」，や 是举例「有这些，也有别的」。',
     },
+    # ---- 第25–48课新增的副助词・接续助词（只在「段内兜底再切」的支路上剥，见 _DEEP_PARTICLES）----
+    'だけ': {
+        'color': 'cyan', 'name': '副助词（限定）',
+        'gloss': '只／仅',
+        'desc': '【だけ】划出范围的上限：３日だけ＝只三天。它只限定数量与范围，不暗示「不够」。'
+                '与 しか 的分工：だけ 是「就这么些」（中性），しか＋否定 才是「只有这些，没有别的」。',
+    },
+    'しか': {
+        'color': 'cyan', 'name': '副助词（限定＋否定）',
+        'gloss': '只（接否定）',
+        'desc': '【しか】必须与否定呼应：李さんしか いません＝只有小李（别人都不在）。'
+                '它把「有」的其他可能性全部划掉，所以句子末尾一定是否定。',
+    },
+    'ばかり': {
+        'color': 'cyan', 'name': '副助词（反复／限定）',
+        'gloss': '光是／净是',
+        'desc': '【ばかり】表示同一件事反复出现，或全部都是同一样东西：'
+                '飲んでばかりいます＝光在喝；開通したばかりです＝刚刚开通（～たばかり）。'
+                '它带一点「太多了／太频了」的语感。',
+    },
+    'とか': {
+        'color': 'yellow', 'name': '并列助词（举例・口语）',
+        'gloss': '…啦…啦',
+        'desc': '【とか】是口语的举例并列，比 や 更随意，可以重复使用（Aとか Bとか）。'
+                '它还常接在「提议」句里：映画でも→映画とか 見ませんか（看点电影什么的？）。',
+    },
+    'でも': {
+        'color': 'pink', 'name': '提示助词（举例・提议）',
+        'gloss': '…什么的',
+        'desc': '【でも】举一个不特定的例子，暗示「别的也行」：映画でも 見ませんか＝看点电影什么的吧。'
+                '它与接续词 でも（可是）同形，但那一个在句首、后面接整句。',
+    },
+    'までに': {
+        'color': 'brown', 'name': '格助词（期限）',
+        'gloss': '在…之前（期限）',
+        'desc': '【までに】标出「期限」：明日の９時までに 出してください＝请在明天九点前提交。'
+                'まで 说的是「一直持续到那个点」，までに 说的是「在那个点之前做完」。',
+    },
+    'ながら': {
+        'color': 'cyan', 'name': '接续助词（同时进行）',
+        'gloss': '一边…一边…',
+        'desc': '【ながら】把两个动作叠在同一段时间上：テレビを見ながら 食事をします＝一边看电视一边吃饭。'
+                '它接在动词的ます形语干后面（見＋ながら），后面的动作才是句子的重点。',
+    },
+    'ので': {
+        'color': 'cyan', 'name': '接续助词（客观原因）',
+        'gloss': '因为（客观）',
+        'desc': '【ので】在从句末尾给出原因，语气比 から 客观、柔和（から 更像主观主张）：'
+                '寒いので 窓を閉めます。它接简体形后面。',
+    },
+    'のに': {
+        'color': 'cyan', 'name': '接续助词（逆接・意外）',
+        'gloss': '却／明明…',
+        'desc': '【のに】把「本以为…」与「实际情况」顶在一起，带不满或意外的语感：'
+                '目覚ましを かけておいたのに 遅刻しました＝明明定了闹钟却迟到了。',
+    },
 }
-
 # 同一个 か，位置不同、职责不同：
 #   句尾的 か 是疑问终助词（走 final，见 PARTICLES['か']）
 #   名词后面的 か 是并列／不定助词（パンか お粥、だれか います）
@@ -240,6 +295,9 @@ SUPPLEMENT = {
     'わたし': ('わたし', '代', '我', 'I'),
     '私': ('わたし', '代', '我', 'I'),
     # ---- 第5课起：教材词表没收录的词（数字＋时/量词这类组合）----
+    '一時': ('いちじ', '名', '1点', "one o'clock"),
+    '二時': ('にじ', '名', '2点', "two o'clock"),
+    '三時': ('さんじ', '名', '3点', "three o'clock"),
     '四時': ('よじ', '名', '4点', 'four o\'clock'),
     '七時': ('しちじ', '名', '7点', 'seven o\'clock'),
     '六時': ('ろくじ', '名', '6点', 'six o\'clock'),
@@ -256,6 +314,124 @@ SUPPLEMENT = {
     # ほう（方）是第12课比较句的核心名词：「Aのほうが」＝A这一边。
     '熱い': ('あつい', '形1', '（物体）热，烫', 'hot'),
     'ほう': ('ほう', '名', '（比较的）一方', 'side (in a comparison)'),
+    # ---- 第19课起：人名＋职称、形式名词、假名词面 ----
+    # 吉田課長 是第19课的人名＋职称：词表只收 課長，整块查不到就会退回残配（吉田＋課長）。
+    # 後（あと）与 こと 是第20／21课的形式名词：它们不承担实义，只把前面的词组收成一个整体，
+    # 词义给「这个形式本身」，具体含义（哪一件事／哪一边）由前接的谓语决定。
+    # にほんじん 是假名词面（词表按汉字 日本人 收录），要单独收一条才能查到。
+    '吉田課長': ('よしだかちょう', '（人名＋职称）', '吉田科长', 'Section chief Yoshida'),
+    '後': ('あと', '（形式名词：～た後で）', '之后', 'after'),
+    'こと': ('こと', '把前面的词组整体名词化', '（形式名词）', 'nominalizer'),
+    'にほんじん': ('にほんじん', '名', '日本人', 'Japanese person'),
+    # ---- 第22课起：口语词与「する型名词」的词表缺口 ----
+    # いや：否定对方的应答（词表只收了 いいえ）。
+    # お願い／お願いします：第17课的 お願いしましたか。词表只收了固定搭配
+    # お願いします（熟语），剥掉 しました／します 之后剩下的名词查不到词，
+    # 「剥完还是个词」这条守卫就会拒绝切分，整段退化成一块。
+    # 把 お願いします 标成 动3（与 勉強します 同型）——suru_verb_base 只认 动3，
+    # 这样 お願い＋しました／します／して 才走得通（失礼します 同理）。
+    'いや': ('いや', '叹', '不／不是（否定对方）', 'no / nah'),
+    'お願い': ('おねがい', '名', '拜托／请求', 'request (a favor)'),
+    'お願いします': ('おねがいします', '动3', '拜托了', 'please'),
+    '失礼します': ('しつれいします', '动3', '告辞了，我走了', 'excuse me / goodbye'),
+    # ---- 第25–48课：词表缺失的普通单词（不是语法点，属数据缺口）----
+    # 逐个查证过教材词表：这些词在 lessons.json 的全 48 课词表里都查不到，
+    # 于是「面白いです」「子供の時」这类段的词义只能回落到词面。
+    '面白い': ('おもしろい', '形1', '有趣，有意思', 'interesting'),
+    '時': ('とき', '名', '时候', 'time (when)'),
+    'とき': ('とき', '名', '时候', 'time (when)'),
+    '航空': ('こうくう', '名', '航空', 'aviation'),
+    '英字': ('えいじ', '名', '英文（字母）', 'English letter'),
+    '冷凍': ('れいとう', '名', '冷冻', 'frozen'),
+    '宅配': ('たくはい', '名', '送货上门（宅配）', 'home delivery'),
+    'マラソン': ('マラソン', '名', '马拉松', 'marathon'),
+    '込む': ('こむ', '动1', '拥挤（込む）', 'to be crowded'),
+    '周': ('しゅう', '专', '周（姓氏）', 'Zhou (surname)'),
+    '高齢化': ('こうれいか', '名', '高龄化', 'aging (of society)'),
+}
+
+# ---- 第25–48课：词表缺口与「形式名词短语」的词义补表 ----
+# 与 SUPPLEMENT 的区别（这一点很重要，别把这里的词挪进 SUPPLEMENT）：
+#   SUPPLEMENT 进 LEXICON，而 LEXICON 的假名读法会进 KANA_READINGS／断词器单位表，
+#   那会改上册已上线的分词边界与罗马音。这张表只在「所有其他查词路径都失败」时兜底，
+#   所以只有现在词义回落到词面的那些段会受影响，一个已上线的词义都不会被改。
+# 值：(读音, 词性标签, 中文词义)；词性标签直接用 POS_LABEL 的键，查不到就连原样输出。
+_EXTRA_WORDS = {
+    # 动词的 ておく 形（第42课 目覚ましをかけておいた）：事先做好的说法，
+    # 引擎的补助动词链还没把它整体收进来，这里按词条补（不影响分词边界）。
+    'かけておいた': ('かけておいた', '动', '挂上了（事先做好）'),
+    # 形式名词（第32／36／38／40／42／44／45课）：不承担实义，只把前接谓语收成一个整体。
+    # 词义给「这个形式本身」，具体含义由前接谓语决定（与 こと／ほう 的既有写法一致）。
+    'はず': ('はず', '名', '应该（はず：按道理）'),
+    'つもり': ('つもり', '名', '打算'),
+    'ばかり': ('ばかり', '副助词', '净是…／老是…'),
+    'ところ': ('ところ', '名', '地方／（正当）…的时候'),
+    'よう': ('よう', '名', '样子／像…那样'),
+    'ほど': ('ほど', '副助词', '到…的程度'),
+    'の': ('の', '把前面的词组整体名词化', '（名词化）'),
+    'まま': ('まま', '名', '原样（まま：保持原状）'),
+    'わけ': ('わけ', '名', '道理／理应'),
+    # 复合形容词尾（第43课）：書き＋やすい／読み＋にくい。
+    'やすい': ('やすい', '形1', '（やすい：容易…）'),
+    'にくい': ('にくい', '形1', '（にくい：难以…）'),
+    'やすかった': ('やすかった', '形1', '（やすかった：容易…・过去）'),
+    'やすくない': ('やすくない', '形1', '（やすくない：不容易…）'),
+    'にくかった': ('にくかった', '形1', '（にくかった：难以…・过去）'),
+    'にくくない': ('にくくない', '形1', '（にくくない：不难以…）'),
+    # 敬语（第47／48课）：お＋ます形语干／お＋名词 的语干。
+    '持ち': ('もち', '动1', '拿／持有'),
+    'お持ち': ('おもち', '动1', '（敬语）拿着／带着'),
+    # 被教材注解拆成两块的复合词残片 + 词表缺口（第28／32／41／44／45课）：
+    # 这些段是数据层把一个词拆成两块注音造成的（遊園｜地、昼ご｜飯、２０１０｜年），
+    '２０１０': ('にせんじゅうねん', '数量词', '2010（年）'),
+    # 词表里查不到的表面形（复合动词的辞书形／らしい 的接续）：这一类不进 SUPPLEMENT，
+    # 因为 LEXICON 的读法会进断词器单位表，会改上册已上线的罗马音（l20_x1_9 帰国する 踩过）。
+    '入学する': ('にゅうがくする', '动3', '入学'),
+    '行くらしい': ('いくらしい', '（らしい：好像…）', '好像要去'),
+    '遅くなって': ('おそくなって', '动1', '（遅くなる：变晚／迟到 的て形）'),
+    '女の人': ('おんなのひと', '名', '女人／妇女'),
+    'お荷物': ('おにもつ', '名', '（敬语）行李'),
+    '酒': ('さけ', '名', '酒'),
+    '遊園': ('ゆうえん', '名', '游园（遊園地＝游乐园）'),
+    '地': ('ち', '名', '（遊園地／土地 的 地）'),
+    '昼ご': ('ひるご', '名', '（昼ご飯＝午饭 的前半）'),
+    '飯': ('めし', '名', '饭'),
+    '年': ('ねん', '名', '年'),
+    '食品': ('しょくひん', '名', '食品'),
+    '込んで': ('こんで', '动1', '拥挤（込む 的て形）'),
+    '過ぎ': ('すぎ', '动2', '（すぎる：过于…）'),
+    '張さん': ('ちょうさん', '专', '小张'),
+    '戴さん': ('たいさん', '专', '戴先生'),
+    # ---- 下册的固定表达／连语（审计 C2 的「固定搭配」口径：拆开教反而错）----
+    # 这几条都是第26／29／32／36／48课的段：词表里查不到，又不该按活用拆。
+    #   という       —— と＋言う 的连语（引用）：「『タバコを吸うな』という意味」
+    #   お持ちします —— お＋ます形语干＋します 的自谦语（第48课）
+    #   しれません   —— 〜かもしれません（也许）的定型尾巴
+    #   ほんと       —— 本当 的口语形（第36课「あら，ほんと。」）
+    #   よると       —— 〜によると（根据…说）的定型尾巴
+    # 词性标签里带「固定搭配」四个字是**故意的**：审计 C2 见到它就不再要求切谓语。
+    'という': ('という', '固定搭配（と＋言う：引用）', '叫做…的／所谓'),
+    'お持ちします': ('おもちします', '固定搭配（お＋持ちします：自谦）', '（自谦）拿／带'),
+    'しれません': ('しれません', '固定搭配（〜かもしれません：也许）', '也许／说不定'),
+    '張さん': ('ちょうさん', '专', '小张'),
+    # 词表缺口挡住了「助詞＋述語」硬切（l27_x0_3 体操を｜していました）：
+    # 判据里要求「助詞左边是一个能查到词义的实词」，体操 缺词表就切不动。
+    '体操': ('たいそう', '名', '体操'),
+    'よると': ('よると', '固定搭配（〜によると：根据…）', '根据…说'),
+    # 敬语前缀 お／ご 单独成段时（第36课 毎日お｜酒を、第47课 もうお｜帰りに／どうぞお｜座りください）：
+    # 教材的 ! 把 お酒／お帰り 切成了两段，前半段尾巴上只剩一个 お，整段因此只能前缀残配。
+    # 剥出来单独成段后，那张「お」盒子的词义要点明它是敬语前缀，不能让它空着。
+    'お': ('お', '接头', '（敬语前缀）'),
+    'ご': ('ご', '接头', '（敬语前缀）'),
+    # 段尾孤立的数字（第30课 もう１１｜時だから、第42课 会議は５｜時、第46课 明日の９｜時）：
+    # 通用数字词义刻意不给（上册 l22_c8 的 ３４９３ 靠「查不到词义」才折成形式名词短语），
+    # 这里只补这几条教材正文里真实出现的短数字。
+    '５': ('ご', '数量词', '5'),
+    '９': ('きゅう', '数量词', '9'),
+    '１１': ('じゅういち', '数量词', '11'),
+    # 词表缺口（第39课 道路工事のために）：工事 不在全 48 课词表里，短语成分因此
+    # 拿不到完整词义（审计 C3 的「短语成分」那一栏）。
+    '工事': ('こうじ', '名', '施工／工程'),
 }
 
 
@@ -408,7 +584,18 @@ def tokenize_raw(raw):
 PEELABLE = ['では', 'じゃ', 'から', 'まで', 'より', 'ほど',
             'は', 'が', 'を', 'に', 'で', 'へ', 'と', 'の', 'も',
             'か', 'や']
+
 _PEEL_ORDER = sorted(PEELABLE, key=len, reverse=True)
+
+# ---- 第25–48课的副助词・接续助词：只在「段内兜底再切」的支路上剥（deep=True）----
+# 为什么不直接加进 PEELABLE：上册已有 しか（10 句）／だけ（2 句）／でも（13 句）／ので（3 句）
+# 在用，直接放宽会改变第 1–24 课已上线的分词边界与罗马音。
+# 这一层只在 _inner_resplit 判定「整段查不到词义 + 段内残留核心格助词」时才打开，
+# 上册基本课文 96/96 有全角空格，走不到这里。
+_DEEP_PARTICLES = ('までに', 'ばかり', 'ながら', 'とか', 'だけ', 'しか', 'でも')
+_DEEP_CONJ_TAILS = ('ので', 'のに')
+_DEEP_PEEL_ORDER = tuple(sorted(set(_PEEL_ORDER) | set(_DEEP_PARTICLES),
+                                key=len, reverse=True))
 
 # 「ない」前面可以收在这些助词上（ことが ない／では ない／に ない），这时候
 # ない 是独立的否定谓词。か／や 不算依据——它们是五段动词ない形的一部分
@@ -440,29 +627,67 @@ for _surf, _v in LEXICON.items():
         VERB_KANA.setdefault(_v['kana'], _surf)
 
 
+
+# 闭引号／闭括号夹在词体与助词之间（「八達嶺」は／「油条」は／「スワンクワイ」は）：
+# 教材把引用符写在助词内侧，剥助词时它跟着留在词体里（视觉上仍是 八達嶺」は），
+_OPEN_QUOTES = ('「', '『')
+# 判定「剥完还剩不剩一个词」时要把这个符号当透明字符——否则 は 剥不出来，
+# 整块被当成词体，罗马音就成 hattatsurei」ha（は 读成 ha，审计 C5）。
+_CLOSE_QUOTES = ('」', '』', '）', '】', '］')
+
+
 def _body_is_word(body_surf, body_read, particle=''):
     """
     段尾助词的剥离判定：剥完只剩残干（とて／きっ／ちょっ）就说明那不是助词。
-      ① 词体以汉字／片假名收尾 → 助词必然贴在词外：李さんは／猫が／スミスさんの
-      ② 词体本身在词表（或人名表）里：これは／だれの／おとといは
-      ③ 词体读法是词表里的词（含汉字词的读法），或以某个词收尾：りさん → さん
-      ④ 词体＋助词整体是词表里的纯假名词，且助词是 は／へ／を
+      ① 词体本身在词表（或人名表）里：これは／だれの／おとといは
+      ② 词体本身以助词收尾（部屋には／李さんからは）：后面这个助词一定在词外
+      ③ 词体＋助词整体是词表里的纯假名词，且助词是 は／へ／を
          （词尾 は 读 wa 本身就是「这里是助词」的证据）：こんにちは → konnichiwa
-      ⑤ 词体本身以助词收尾（部屋には／李さんからは）：后面这个助词一定在词外
+      ④ 单字词体按下面的细分判定（静か／特に／いや／でも 挡在这里，時／誰／先 照旧放行）
+      ⑤ 词体以汉字／片假名收尾 → 助词必然贴在词外：李さんは／猫が／スミスさんの
+      ⑥ 词体读法是词表里的词（含汉字词的读法／动词ます形语干），或以某个词收尾：
+         りさん → さん、出し|に 行きます
     """
     if not body_surf:
         return False
-    if _has_kanji(body_surf[-1]) or _is_kata(body_surf[-1]):
+    if body_surf.endswith(_CLOSE_QUOTES):
+        # 引用符透明：先摘掉它再判（读法里对应的那一个字符也摘掉）
+        t = body_surf[-1]
+        return _body_is_word(body_surf[:-1], _strip_tail(body_read, t), particle)
+    if body_surf.startswith(_OPEN_QUOTES):
+        # 开引号同理透明（第29课「タバコを｜吸うな」：词体是「タバコ，
+        # 不把开引号当透明字符的话 を 永远剥不出来，整块只能用前缀残配）。
+        return _body_is_word(body_surf[1:], _strip_tail(body_read, body_surf[0]), particle)
+    if body_surf in LEXICON or body_surf in NAME_ZH or body_surf in _EXTRA_WORDS:
         return True
-    if body_surf in LEXICON or body_surf in NAME_ZH:
         return True
     if particle and body_surf.endswith(tuple(_PEEL_ORDER)):
         # 词体本身以助词收尾（部屋に＋は／李さんから＋は）：后面这个助词一定在词外
         return True
     if particle in ('は', 'へ', 'を') and (body_surf + particle) in KANA_WORDS:
         return True
-    if len(body_surf) == 1 and len(particle) > 1:
-        # では → で ＋ は：单字残干在多字助词面前是正常词体
+    if len(body_surf) == 1:
+        if len(particle) > 1:
+            return True          # では → で ＋ は：单字残干在多字助词面前是正常词体
+        if not _has_kanji(body_surf):
+            # 单字假名词体拿不出任何身份：い／で 只是 います／出ます 的语干「读音」，
+            # 它们不是词。いや → い＋や、でも → で＋も 都挡在这里。
+            return False
+        if _verb_face(body_surf + particle):
+            # 词体＋助词 是动词的ない形语干（行か／書か → 行きます／書きます）：那是
+            # 行か＋ない 的语干，不是「名词＋か」（行かない 由 _peel_inner 切成 行か＋ない）
+            return False
+        if particle == 'は':
+            # は 必须剥出来才读 wa（実は → jitsu wa）；尾字 は 的实词几乎不存在
+            return True
+        # 单字汉字词体：整体是词表里的い／な形容词时，尾字假名属于词干本身 → 不许剥
+        #   静かですね → 静＋か   （静か 是词表里的 形2，静 不是词）
+        # 其余照旧放行——時＋に／誰＋も／地＋へ／先＋に／特＋に 都是名词（代词）＋真助词
+        # 或缺词表的单字实词。特に（→ tokuni）刻意不动：audit_exemplars.C14 把
+        # toku ni 写成固定用例，改它会直接把审计打破。
+        info = LEXICON.get(body_surf + particle)
+        return not (info and (info.get('pos') or '').startswith('形'))
+    if _has_kanji(body_surf[-1]) or _is_kata(body_surf[-1]):
         return True
     if not body_read:
         return False
@@ -504,8 +729,20 @@ _FINAL = ['か', 'ね', 'よ']
 
 # 不可剥离词：整体成词，尾部假名与助词同形但绝非助词
 NO_PEEL = {'この', 'その', 'あの', 'どの', 'これ', 'それ', 'あれ', 'どれ',
-           'ここ', 'そこ', 'あそこ', 'どこ', 'こちら', 'そちら', 'あちら', 'どちら',
-           'だれ', '何', 'どなた', 'いくら', 'みんな', 'ほか'}
+           # 整体成词的口语／固定表达：尾字与助词同形，剥掉就成了残干
+           #   いや（否定对方）→ い＋や、ええと（思考中）→ ええ＋と、
+           #   ところで（转换话题）→ ところ＋で、でも（可是）→ で＋も
+           # でも 的 で 本身就是一个助词（_PEEL_ORDER 里就有 で），单字词体那条守卫
+           # 只能按「整体是不是形容词」判，拦不住副词，所以这类一律列进来。
+           # 特に 刻意不列：剥成 特＋に 虽然词体残了，但罗马音 toku ni 是
+           # audit_exemplars.C14 的固定用例（期望 toku ni），改成 tokuni 会把审计打破。
+           'いや', 'ええと', 'ところで', 'でも',
+           'いかにも',
+           # 下册两处「尾字与助词同形，但整块才是词」的段：
+           #   ほんと（第36课 あら，ほんと。）→ ほん｜と 会被当成并列，
+           #   よると（第32／44课 〜によると）→ よる｜と 同上。
+           'ほんと', 'よると'}
+
 
 # 谓语尾：从长到短匹配。值为 (中文词义, 形态说明, 下划线颜色, 直译行短词义)
 # 第四个元素专供逐词直译行使用——那一行寸土寸金，必须短。
@@ -523,7 +760,41 @@ PREDICATES = {
     'いません': ('没有・不在（人）', '存在・有意志・否定', 'green', '不在'),
     'います': ('有・在（人/动物）', '存在动词・有意志', 'green', '有'),
     'ちがいます': ('不是・不对', '动词・否定性应答', 'green', '不对'),
-    'そうです': ('是这样', '应答・确认', 'green', '是这样'),
+    # そうです 在句尾被剥出来时，前面一定接着一个小句（简体形／ます形语干），
+    # 第25–48课的推量・比况（词表里都不作为单词收录，只能作为谓语尾／形态尾处理）：
+    #   でしょう／でしょうか  L26 推量、L27 确认、L31 疑问推量
+    #   かもしれません        L26 或许
+    #   ようです／みたいです／らしいです  L44／L46 判断・传闻（样态・传闻）
+    # 它们按后缀匹配剥出（词体必须非空），所以单说的「そうですか」这类不受影响。
+    'かもしれません': ('也许…／说不定', '推量：或许', 'green', '也许'),
+    'でしょうか': ('（推量疑问）…吗', '推量＋疑问（でしょうか）', 'green', '（大概吗）'),
+    'でしょう': ('（推量）…吧', '推量（でしょう）', 'green', '（吧）'),
+    'みたいです': ('好像…（判断）', '推量・比况（みたいだ）', 'green', '好像'),
+    'らしいです': ('好像…（传闻／典型）', '推量（らしい）', 'green', '好像'),
+    'ようです': ('好像…（判断）', '推量（ようだ）', 'green', '好像'),
+    # 也就是 L32 的传闻 〜そうです（入学するそうです）或 L33 的样态 〜そうです
+    # （おいしそうです）。样态那一路在 analyze_segment 3b 就被拦下了（见那一段注释），
+    # 所以走到这里的是传闻。单说的「はい、そうです」不经过本表（词体没有前接成分），
+    # 仍由词面承担词义——上册 19 处 そうです 全是这一种，改这里不会动上册。
+    'そうです': ('听说…（传闻）', '传闻：接简体形', 'green', '听说'),
+    # 第22课的简体断定 だ：曇りだ → 曇り＋だ。它与 です 是同一个断定助动词的简体形，
+    # 只能接在名词／な形容词后面，所以剥离时另外加守卫（见 analyze_segment 3b）。
+    'だ': ('是（简体断定）', '（だ：简体断定）', 'green', '是'),
+}
+
+# 上表这几条（推量・传闻型）是「后缀匹配」剥出来的，所以要一句「前接形态」的守卫——
+# 否则 すばらしいです 会被当成 すば＋らしいです、休みたいですね 会被当成 休＋みたいです。
+# 判据：らしいです／みたいです 前接名词性成分（日本｜らしいです、好き｜みたいです）；
+#       ようです／そうです（传闻）／でしょう系 前接收在谓语形上（降る｜そうです）或名词。
+# 样态 そう（おいし｜そうです）在 analyze_segment 3b 就被拦下，不走这条守卫。
+_PRED_HEAD_GUARD = {
+    'らしいです': 'noun',
+    'みたいです': 'noun',
+    'ようです': 'pred',
+    'そうです': 'pred',
+    'でしょう': 'pred',
+    'でしょうか': 'pred',
+    'かもしれません': 'pred',
 }
 _PRED_ORDER = sorted(PREDICATES.keys(), key=len, reverse=True)
 
@@ -601,12 +872,65 @@ ADJ_I_TAILS = {
 }
 _ADJ_TAIL_ORDER = sorted(ADJ_I_TAILS.keys(), key=len, reverse=True)
 
+# 不规则い形容词：いい（よい）的活用形不按"词干＋い"那套走——
+#   よかった／よくなかった／よければ → 词表里收的是 いい。
+# 只认这些不会与副词 よく 撞车的形态（よく 单独出现时仍按副词处理）。
+# 注意 よ 的两种词干长度：剥 た 是 よかっ（よかっ＋た），
+# 剥 かった（ADJ_I_TAILS）之后只剩 よ —— 词干判据与词义还原都必须认得它，
+# 否则 よかった 会整块留在词体里（第22课 l8_x1_4 的缺陷就是这条）。
+_ADJ_IRREGULAR = {
+    'よかっ': ('いい', '（过去形词干）'),
+    'よ': ('いい', '（过去形词干）'),
+    'よけれ': ('いい', '（假定形）'),
+    'よかろ': ('いい', '（未然形）'),
+}
+
+# 词表把词性标错的 な形容词（第37课 いろいろな人）：教材词表里 いろいろ 是副词条目，
+# 但基本课文用的是它的连体形 いろいろな。_adj_pos 只认「形2」，这里给一条显式白名单，
+# 让 adj_form 也能还原它——补上之后 いろいろな 才会与后面的名词折成短语。
+_NA_ADJ_EXTRA = {'いろいろ': ('いろいろ', '（连体形）')}
+
 
 def _adj_pos(surface, kind):
     """词表里是不是某类形容词（形1＝い形容词、形2＝な形容词）。"""
     info = LEXICON.get((surface or '').strip())
     return bool(info) and (info.get('pos') or '').startswith(kind)
 
+# 词表里只收了汉字条目的假名词体（第22课 いっしょだよ＝一緒だよ）。
+# 只能写死：词表里的 いっしょに 是副词条目，拿它当名词源会把
+# 第17课基本课文「いっしょにお茶を…」切成 いっしょ＋に。
+_KANA_PRED_NOUNS = {'いっしょ'}
+
+
+def _pred_noun_ok(head):
+    """断定助动词 だ 前面的词体是不是名词性成分（曇り／学生／医者／日本人）。
+
+    简体断定 だ 只接在名词（与な形容词）后面，所以「剥完剩下的真的是名词」这一条
+    既能把 曇りだ 切成 曇り＋だ，也能挡住 まだ／そうだ 这类词尾同形的副词。
+    三类证据缺一不可地放宽过三次：
+      ① 词表里的名词性条目（含假名词面回查：にほんじん → 日本人）
+      ② 人名表
+      ③ 数字词体（第22课 ３９４５だよ／400円だ）——数字不在词表里，
+         但断定助动词接数字是常态，不能因为没有词条就整块留下。
+      ④ 词表里只有汉字条目的假名词体（第22课 いっしょだよ＝一緒だよ）：
+         写死了 いっしょ 一条。词表里 いっしょに 是副词条目，不能把它当名词源，
+         否则 いっしょに 会被切成 いっしょ＋に（第17课基本课文 いっしょにお茶を…）。
+    """
+    head = (head or '').strip()
+    if not head:
+        return False
+    if head in NAME_ZH:
+        return True
+    info = LEXICON.get(head)
+    if info:
+        if (info.get('pos') or '').startswith(('名', '专', '代', '疑')):
+            return True
+    elif _noun_face(head):
+        # 假名词面回查（にほんじん → 日本人）：词表按汉字收录，假名写法查不到整条
+        return True
+    if head in _KANA_PRED_NOUNS:
+        return True
+    return bool(re.fullmatch(r'[0-9０-９]+', head)) or bool(counter_gloss(head))
 
 def adj_i_ku_ok(head):
     """词干是不是 い形容词的连用形（熱く／高く／安く）：熱→熱い 在词表里。"""
@@ -632,15 +956,21 @@ def adj_form(surface):
     s = (surface or '').strip()
     if not s:
         return '', ''
-    # な形容词：静かな（连体形）→ 静か
+    # な形容词连体形：静かな → 静か、簡単な → 簡単
     if s.endswith('な') and len(s) > 1 and _adj_pos(s[:-1], '形2'):
         return s[:-1], '（连体形）'
+    # 注：词表把 いろいろ 收成副词（第37课 いろいろな人）。曾试过在这里补一条白名单把
+    # 它当 な形容词的连体形，但 いろいろな 在上册第 5／16 课也出现过——补上之后那两条
+    # 已上线条目的成分写法会变（上册必须逐字节相同），所以放弃，第37课那一条留在报告里。
     # い形容词连用形／过去形词干：熱く → 熱い、楽し → 楽しい
     # い形容词：连用形（熱く → 熱い）与过去形词干（楽し → 楽しい）
     if s.endswith('く') and len(s) > 1 and _adj_pos(s[:-1] + 'い', '形1'):
         return s[:-1] + 'い', '（连用形）'
     if _adj_pos(s + 'い', '形1'):
         return s + 'い', '（过去形词干）'
+    irr = _ADJ_IRREGULAR.get(s)
+    if irr:
+        return irr
     return '', ''
 
 def predicate_info(p):
@@ -653,6 +983,21 @@ def predicate_info(p):
     if p in TE_TAILS:
         t = TE_TAILS[p]
         return (t['zh'], t['note'], t['color'], t['lit'])
+    if p in NA_ADJ_TAILS:
+        t = NA_ADJ_TAILS[p]
+        return (t['zh'], t['note'], t['color'], t['lit'])
+    if p in VERB_TAILS:
+        t = VERB_TAILS[p]
+        return (t['zh'], t['note'], t['color'], t['lit'])
+    # い形容词／な形容词的辞书形本身就能充当谓语（第26课 自転車に２人で乗るのは危ないです）：
+    # 「〜ない」收尾的形容词如果整块留在词体里，读起来像「不…」的否定形（审计 C2 报的正是
+    # 「以谓语尾结尾却没切出谓语」），所以句尾位置的形容词辞书形走谓语槽。词义照词表给。
+    _ainfo = LEXICON.get(p) or {}
+    if (_ainfo.get('pos') or '').startswith(('形1', '形2')):
+        _azh = clean_gloss(_ainfo.get('zh', ''))
+        if _azh:
+            return (_azh, '形容词・谓语（' + POS_LABEL.get(_ainfo.get('pos'), '') + '）',
+                    'green', _azh)
     return INFLECTIONS.get(p)
 
 
@@ -663,9 +1008,39 @@ TE_TAILS = {
            'lit': '（て）'},
 }
 
+# な形容词的活用尾（第16／18课）：簡単＋で／きれい＋に。它们与格助词 で／に 同形，
+# 靠词体是不是词表里的 形2 区分（见 analyze_segment 3c）。'で' 与动词て形同形，
+# 所以这张表在 predicate_info 里排在 TE_TAILS 之后——动词的 で 仍归 TE_TAILS。
+NA_ADJ_TAILS = {
+    'で': {'zh': '（并列）', 'note': '（な形容词て形：并列中顿）', 'color': 'indigo',
+           'lit': '（并列）'},
+    'に': {'zh': '（变成）', 'note': '（な形容词＋に：使…变成什么样）', 'color': 'indigo',
+           'lit': '（变成）'},
+}
+
+# 动词的活用尾（第17课起）：たい 按 い形容词活用，贴在ます形语干后面（見＋たい）。
+# 它必须与语干连写（mitai），所以 analyze_segment 4c 给 inner_inflection=True。
+VERB_TAILS = {
+    'たい': {'zh': '（たい）', 'note': '（たい：想）', 'color': 'green', 'lit': '（たい）'},
+    # 第43课的复合形容词尾 〜やすい／〜にくい（書き＋やすい）：与语干连写（kakiyasui），
+    # 第 4 步 4d 给 inner_inflection=True。中文里必须与前接语干连读。
+    'やすい': {'zh': '（容易…）', 'note': '（やすい：容易…）', 'color': 'green', 'lit': '（容易）'},
+    'にくい': {'zh': '（难以…）', 'note': '（にくい：难以…）', 'color': 'green', 'lit': '（难以）'},
+    'やすかった': {'zh': '（容易…・过去）', 'note': '（やすかった：容易…・过去）',
+                   'color': 'green', 'lit': '（容易）'},
+    'やすくない': {'zh': '（不容易…）', 'note': '（やすくない：不容易…）',
+                   'color': 'green', 'lit': '（不容易）'},
+    'にくかった': {'zh': '（难以…・过去）', 'note': '（にくかった：难以…・过去）',
+                   'color': 'green', 'lit': '（难以）'},
+    'にくくない': {'zh': '（不难以…）', 'note': '（にくくない：不难以…）',
+                   'color': 'green', 'lit': '（不难以）'},
+}
+
 # か／ね／よ 的前面若是动词活用形（休みました＋か / 飲みません＋か / 行きます＋か），
 # 也允许把终助词切出来。否则「休みましたか」会被当成一个词，罗马音变成 yasumimashitaka。
-_FINAL_AFTER = tuple(_PRED_ORDER) + (
+# （「だ」刻意不进这张表：なんだか 这类词会因此被剥成 なんだ＋か；
+#   而 だ 自己走「词体是名词性词条」的那条路，见 analyze_segment 3。）
+_FINAL_AFTER = tuple(p for p in _PRED_ORDER if p != 'だ') + (
     'ませんでした', 'ましょう', 'ません', 'ました', 'ます',
     'ください', 'でしょう', 'たい', 'ない')
 
@@ -690,7 +1065,10 @@ _KATA_PARTICLE = {'ヘ': 'へ', 'ヲ': 'を', 'ハ': 'は'}
 _SPLIT_PARTICLES = tuple(p for p in _PEEL_ORDER if p not in ('か', 'や'))
 # 补助用言：時半です＋から → jihan desu kara、来てください → kite kudasai
 _AUX_TAILS = ('です', 'でした', 'でしょう', 'ください')
-_PARTICLE_ROMAJI = {'は': 'wa', 'へ': 'e', 'を': 'o', 'では': 'de wa', 'じゃ': 'ja'}
+_PARTICLE_ROMAJI = {'は': 'wa', 'へ': 'e', 'を': 'o', 'では': 'de wa', 'じゃ': 'ja',
+                    # 多字助词的读法（第25–48课深切才剥得出来的那些）：
+                    # でも＝de mo（与 で＋も 同形，`demo` 会被读成一个词）、までに＝made ni。
+                    'でも': 'de mo', 'までに': 'made ni'}
 
 # 接续助词：挂在谓语之后，把前后两个小句连起来（好きです＋から／有料です＋が）。
 # 它们只在「前面收在一个谓语上」时才被认出来，所以 これから／だから 这类词不会被切坏。
@@ -714,6 +1092,9 @@ NAME_ZH = {
     '佐藤さん': '佐藤先生', '鈴木さん': '铃木先生', '高橋さん': '高桥先生',
     '小野さん': '小野女士', 'スミスさん': '史密斯先生', '金さん': '金先生',
     '李秀麗さん': '李秀丽女士', '小野緑さん': '小野绿女士',
+    # 第24课的 陳さん：词表的 陳 只有单字，这里按现有格式补整条
+    # （与 スミスさん→史密斯先生 同形：姓氏＋先生）。
+    '陳さん': '陈先生',
 }
 
 # 教材词性代码 → 可读标签。原代码（名/专/动1）对学习者是天书。
@@ -752,6 +1133,7 @@ def counter_gloss(surface):
     if counter not in COUNTERS:
         return None
     return ''.join(_NUM_ZH.get(ch, ch) for ch in num) + COUNTERS[counter]
+
 
 
 # 教材的 ! 标记是「注音汉字起点」，不是词边界：かばん!売(う)り!場(ば) 会被切成
@@ -797,9 +1179,10 @@ def group_tokens(tokens):
     新标日在同一语块内可能用 ! 切出多个词（かばん!売(う)り!場(ば)は），
     必须合并成一个分析单位，否则会误判助词位置。
 
-    每个语块段带两套粒度，各有用途：
+    每个语块段带三套粒度，各有用途：
       parts — 注音级细粒度，供前端拼 <ruby> 振假名
       words — ! 词级粒度，供罗马音断空格（注音级会把「かばん売り場」碎成 kaban u ri ba）
+      word_surfs — 与 words 一一对应的词面，供 _split_segment_by_words 按词界切段
     """
     # 语块边界：基本课文用全角空格「　」分块；会话／应用课文的排版没有空格，
     # 这时退化为用 ! 注音词首当边界（! 只保证是「注音词首」，所以还要用
@@ -834,7 +1217,7 @@ def group_tokens(tokens):
             cur = None
         if cur is None:
             cur = {'surf': t['surf'], 'read': read, 'kind': 'chunk',
-                   'parts': [part], 'words': [read]}
+                   'parts': [part], 'words': [read], 'word_surfs': [t['surf']]}
             cur_word_surf = t['surf']
         else:
             cur['surf'] += t['surf']
@@ -843,13 +1226,499 @@ def group_tokens(tokens):
             if t.get('wb') and not _joins_compound(cur_word_surf, t['surf']) \
                     and not cur['words'][-1].endswith('っ'):
                 cur['words'].append(read)
+                cur['word_surfs'].append(t['surf'])
                 cur_word_surf = t['surf']
             else:
                 cur['words'][-1] += read
+                cur['word_surfs'][-1] += t['surf']
                 cur_word_surf += t['surf']
     if cur:
         segments.append(cur)
     return segments
+
+def _split_segment_by_words(seg):
+    """
+    按 ! 给出的词界把一个段切成多个段（供「整段没有剥出任何成分」时逐词重析）。
+
+    课文排版（会话／应用课文没有全角空格）会把一整句动作连成一个段：
+        !帰(かえ)ってから!書(か)きました → 段='帰ってから書きました'
+    段里的 words 已经带着词界（['かえってから', 'かきました']），
+    只要按它切开再逐段做活用切分，就能切出 帰っ＋て＋から／書き＋ました。
+    切不动（词界与注音 token 对不齐）时返回 None，调用方保持原段。
+    """
+    words = seg.get('words') or []
+    surfs = seg.get('word_surfs') or []
+    parts = seg.get('parts') or []
+    if len(words) < 2 or len(surfs) != len(words):
+        return None
+    subs = []
+    pi = 0
+    for wsurf, wread in zip(surfs, words):
+        sub_parts = []
+        got = 0
+        while pi < len(parts) and got < len(wread):
+            p = parts[pi]
+            sub_parts.append(p)
+            got += len(p.get('read') or '')
+            pi += 1
+        if got != len(wread) or ''.join(p['surf'] for p in sub_parts) != wsurf:
+            return None
+        subs.append({'surf': wsurf, 'read': wread, 'kind': 'chunk',
+                     'parts': sub_parts, 'words': [wread], 'word_surfs': [wsurf]})
+    if pi != len(parts) or ''.join(s['surf'] for s in subs) != seg.get('surf'):
+        return None
+    return subs
+
+
+def _inner_resplit_subs(seg, analyzed, sentence_final=False, form_noun_follows=False):
+    """段内兜底再切：满足三重收紧时返回**原始子段**（调用方还要继续再切），否则 None。
+
+    与 _inner_resplit 的判据完全相同，区别只在返回值：这里把子段还给调用方，
+    好让它继续走同一套判据（第31课 レポートを｜まとめました 就是子段没再切出来的病）。
+    """
+    if seg.get('kind') == 'punct':
+        return None
+    body = analyzed.get('body') or ''
+    if len(body) < 4:
+        return None
+    info = lookup(body)
+    if info is not None and not info.get('partial'):
+        return None                          # 整段就是词表里的一个词（前缀命中不算）
+    if not any(m in body for m in _INNER_CASE_MARKS):
+        return None
+    sliced = _piece_cuts(seg)
+    if not sliced:
+        return None
+    chars, cuts = sliced
+    subs = _slice_segment(seg, chars, cuts)
+    if not subs or len(subs) < 2:
+        return None
+    got = 0
+    for k, x in enumerate(subs):
+        y = analyze_segment(x, sentence_final=(sentence_final and k == len(subs) - 1),
+                            form_noun_follows=(form_noun_follows and k == len(subs) - 1),
+                            deep=True)
+        if y.get('particle') or y.get('predicate') or y.get('predicate_inner') \
+                or y.get('conj') or y.get('final'):
+            got += 1
+    if got < 1:
+        return None
+    return subs
+
+
+def _inner_resplit(analyzed, seg, sentence_final=False, form_noun_follows=False):
+    """段内兜底再切：满足三重收紧时返回逐片重析后的段列表，否则返回 None。"""
+    subs = _inner_resplit_subs(seg, analyzed, sentence_final, form_noun_follows)
+    if not subs:
+        return None
+    return [analyze_segment(x, sentence_final=(sentence_final and k == len(subs) - 1),
+                            form_noun_follows=(form_noun_follows and k == len(subs) - 1),
+                            deep=True)
+            for k, x in enumerate(subs)]
+
+
+def _slice_segment(seg, chars, cuts):
+    """按切片列表把段切成子段（保留原 token 边界与 ! 词界），供逐片重析。"""
+    surf = seg.get('surf') or ''
+    read = seg.get('read') or ''
+    words = seg.get('words') or []
+    word_surfs = seg.get('word_surfs') or []
+    woffs = []
+    acc = 0
+    for w in words:
+        woffs.append(acc)
+        acc += len(w)
+    words_ok = bool(words) and acc == len(read)
+    owner = []
+    for ti, p in enumerate(seg.get('parts') or []):
+        owner.extend([ti] * len(p.get('surf') or ''))
+    # chars 的每一项可能盖住多个字面字符（'日本人(にっぽんじん)' 是一整项），
+    # 所以查「原 token 序号」必须用**字面偏移**，不能用 chars 的下标：
+    # 用下标会把后一项并进前一项（友達|に → 一整项「友達に」带着注记），
+    # 注记于是漂到不含汉字的片上，词体的振假名就丢了（审计 C4）。
+    char_so = []
+    _so = 0
+    for _s, _r, _a in chars:
+        char_so.append(_so)
+        _so += len(_s)
+    subs = []
+    for a, b, ra, rb in cuts:
+        sub_chars = []
+        pos = 0
+        for idx, (s, r, ann) in enumerate(chars):
+            nxt = pos + len(s)
+            if nxt <= a:
+                pos = nxt
+                continue
+            if pos >= b:
+                break
+            if pos < a or nxt > b:
+                return None
+            sub_chars.append((idx, s, r, ann))
+            pos = nxt
+        if not sub_chars:
+            return None
+        parts = []
+        for idx, s, r, ann in sub_chars:
+            so_off = char_so[idx] if idx < len(char_so) else -1
+            ti = owner[so_off] if 0 <= so_off < len(owner) else -1
+            if parts and parts[-1]['_ti'] == ti:
+                parts[-1]['surf'] += s
+                parts[-1]['read'] += r
+            else:
+                parts.append({'surf': s, 'read': r, 'ann': ann, '_ti': ti})
+        for p in parts:
+            p.pop('_ti', None)
+        sub_words, sub_surfs = [], []
+        if words_ok:
+            for wi, w in enumerate(words):
+                wa, wb = woffs[wi], woffs[wi] + len(w)
+                if wa >= ra and wb <= rb:
+                    sub_words.append(w)
+                    sub_surfs.append(word_surfs[wi])
+                elif wa < rb and wb > ra:
+                    ca, cb = max(wa, ra), min(wb, rb)
+                    sub_words.append(read[ca:cb])
+                    sub_surfs.append(surf[a + (ca - ra):a + (cb - ra)])
+        if not sub_words:
+            sub_words, sub_surfs = [read[ra:rb]], [surf[a:b]]
+        subs.append({'surf': surf[a:b], 'read': read[ra:rb], 'kind': 'chunk',
+                     'parts': parts, 'words': sub_words, 'word_surfs': sub_surfs})
+    if ''.join(s['surf'] for s in subs) != surf:
+        return None
+    return subs
+
+
+# 段内再切用的「已知单位」表：读法／动词ます形／补助动词／形式名词／助词／敬称／副助词。
+# 只用来找切点（切点两侧都必须是已知单位），不动 _split_body_read——罗马音的断词规则不变。
+_RENTAI_PARTS = ('この', 'その', 'あの', 'どの', 'こんな', 'そんな', 'あんな', 'どんな')
+_UNIT_CACHE = None
+
+
+def _unit_tails():
+    """已知单位表（长的优先），首次调用时构建。"""
+    global _UNIT_CACHE
+    if _UNIT_CACHE is None:
+        units = set(KANA_READINGS) | set(VERB_KANA)
+        units |= set(_AUX_VERBS) | set(_FORM_NOUNS) | set(_HONORIFIC) | set(_TAIL_WORDS)
+        units |= set(_PEEL_ORDER) | set(_DEEP_PARTICLES) | set(_DEEP_CONJ_TAILS)
+        units |= {base for base, _label in _AUX_CHAIN_BASES}
+        units |= {w for w in KANA_WORDS}
+        units |= {t[0] for t in _FORM_TAILS}       # 形态尾也整体吃（かもしれません／らしいです…）
+        _UNIT_CACHE = tuple(sorted((u for u in units if u), key=len, reverse=True))
+    return _UNIT_CACHE
+
+
+def _starts_rentai(piece):
+    return any(piece.startswith(t) for t in _RENTAI_PARTS)
+
+
+def _cut_before_rentai(piece):
+    """连体词一律另起一片：にこの → に | この（这样 _fold_rentai 才能把 この＋名词 折成一个成分）。"""
+    if not piece:
+        return []
+    for i in range(1, len(piece)):
+        if _starts_rentai(piece[i:]):
+            return [piece[:i]] + _cut_before_rentai(piece[i:])
+    return [piece]
+
+
+def _leading_particle(piece):
+    """这一片开头的助词（长的优先），供「黏回左边」用。"""
+    for p in _DEEP_PEEL_ORDER:
+        if piece.startswith(p):
+            return p
+    return ''
+
+
+def _cut_offsets(read, spans):
+    """找切点：两侧都必须落在「已知单位」的边界上，且不许切进已知单位／注音词内部。
+
+    ① 先做一次贪心最长匹配，得到「已知单位」的覆盖区间（きょうと 会整体吃成 京都，
+       所以不会被 きょう＋と 切开）；
+    ② 切点必须同时满足「左边以已知单位收尾」与「右边有已知单位起头」——
+       这是文节边界的判据，也是 おいし｜そうです 不被切开的保证
+       （おいし 不是词、右侧 そう 才是词，所以那里不成界）。
+    """
+    if len(read) < 3:
+        return []
+    units = _unit_tails()
+
+    def in_ann(i):
+        return any(a < i < b for a, b in spans)
+
+    prot = []
+    p = 0
+    while p < len(read):
+        hit = ''
+        for cand in units:
+            if read.startswith(cand, p):
+                hit = cand
+                break
+        if hit and not any(a < p < b for a, b in prot):
+            prot.append((p, p + len(hit)))
+            p += len(hit)
+        else:
+            p += 1
+
+    end_ok, start_ok = set(), set()
+    for i in range(len(read)):
+        for cand in units:
+            if read.startswith(cand, i):
+                start_ok.add(i)
+                end_ok.add(i + len(cand))
+                break
+    return [i for i in range(1, len(read))
+            if i in end_ok and i in start_ok
+            and not any(a < i < b for a, b in prot) and not in_ann(i)]
+
+
+_WORD_UNIT_CACHE = None
+
+def _word_units():
+    """「词」一级的单位（词表读法／假名词／动词ます形），长的优先；首次调用时构建。"""
+    global _WORD_UNIT_CACHE
+    if _WORD_UNIT_CACHE is None:
+        _WORD_UNIT_CACHE = tuple(sorted(set(KANA_READINGS) | set(KANA_WORDS) | set(VERB_KANA),
+                                       key=len, reverse=True))
+    return _WORD_UNIT_CACHE
+
+
+
+def _longer_unit_at(piece, lead):
+    """这个位置起头的是不是「以 lead 开头、但更长的**词**」（でんわ 的 で 不是助词）。
+
+    只查词一级单位：ておきます 这类补助动词链不算——て 必须黏回左边。
+    """
+    for u in _word_units():
+        if len(u) > len(lead) and piece.startswith(u):
+            return True
+    return False
+
+
+def _merge_pieces(offsets, read):
+    """切点 → 文节级的片：助词／接尾／补助动词黏左，连体词另起一片。"""
+    bounds = [0] + sorted(offsets) + [len(read)]
+    out = []
+    for i in range(len(bounds) - 1):
+        pc = read[bounds[i]:bounds[i + 1]]
+        if not pc:
+            continue
+        lead = _leading_particle(pc)
+        rest = pc[len(lead):] if lead else ''
+        # 以助词开头的一片：那颗助词属于**左边**的文节（テレビを｜見ます、習慣が｜ない），
+        # 余下的部分自成一片（不再判「黏左」——否则 絵を｜かくのが 会被黏成 絵をか｜くのが）。
+        # 但若这个位置起头的是更长的**词**，就别动：でんわ 的 で 不是助词。
+        if lead and rest and out and not _longer_unit_at(pc, lead):
+            out[-1] += lead
+            for sub in _cut_before_rentai(rest):
+                if sub:
+                    out.append(sub)
+            continue
+        for sub in _cut_before_rentai(pc):
+            if not sub:
+                continue
+            if out and _piece_glues_left(sub, out[-1]):
+                out[-1] += sub
+            else:
+                out.append(sub)
+    return out
+
+
+def _ref_pieces(read, spans):
+    """在罗马音断词器给出的片（_split_body_read）上做文节级合并。
+
+    与 _merge_pieces 的区别：这里不在断词器的片内部另开新片，
+    所以「段内再切」产出的子段永远是断词器片的串联——整句罗马音与改动前一模一样。
+      それ｜は｜いいですね → それは｜いいですね（は 黏左）
+      テレビ｜を｜見ます   → テレビを｜見ます
+    """
+    ref = _split_body_read(read, spans)
+    if len(ref) < 2:
+        return None
+    auto = set(_cut_offsets(read, spans))
+    groups = []
+    acc = 0
+    for pc in ref:
+        start = acc
+        acc += len(pc)
+        lead = _leading_particle(pc)
+        rest = pc[len(lead):] if lead else ''
+        # 只有「切点搜索确认了助词后面是单位边界」时才把助词黏左：
+        # とても／ところ／はず 里的 と／は 是词内假名，不是助词。
+        if groups and lead and rest and (start + len(lead)) in auto:
+            groups[-1] += lead
+        # 孤立助词／接尾／补助动词一律黏左（文节规则），不受切点搜索的否决影响；
+        # 其余情况才看「切点搜索有没有在片首给出切点」。
+        if groups and _piece_glues_left(pc, groups[-1]):
+            groups[-1] += pc
+        elif groups and start not in auto:
+            groups[-1] += pc
+        else:
+            groups.append(pc)
+    return groups
+
+
+
+
+def _piece_cuts(seg):
+    """把段体按词表／读音表最长匹配切成若干片 → (逐字对齐表, 切片列表)；切不动返回 None。
+
+    切片是 (surf_a, surf_b, read_a, read_b) 四元组（真机＝字面／读音两个坐标）。
+    切点用 _cut_offsets 找：从左边贪心吃掉「已知单位」（词表读法／动词ます形／
+    补助动词／形式名词／助词／敬称），已知单位内部不许切——这样
+    きょうと 会整体吃成 京都，不会被 きょう＋と 切开。
+    切不动（对不齐、切点落在注音词里、只切出一片）返回 None，调用方保持原段。
+    """
+    chars = _read_align(seg.get('parts'))
+    if not chars:
+        return None
+    surf = seg.get('surf') or ''
+    read = seg.get('read') or ''
+    if ''.join(c[0] for c in chars) != surf or ''.join(c[1] for c in chars) != read:
+        return None
+    spans = []
+    starts = []
+    ro = so = 0
+    for idx, (s, r, ann) in enumerate(chars):
+        if ann:
+            spans.append((ro, ro + len(r)))
+        starts.append((ro, so, idx))
+        ro += len(r)
+        so += len(s)
+
+    def surf_off(cut):
+        if cut <= 0:
+            return 0
+        if cut >= ro:
+            return so
+        for ro0, so0, idx in starts:
+            if ro0 == cut:
+                return so0
+            if ro0 < cut < ro0 + len(chars[idx][1]):
+                return None              # 切点落在字的中途（注音词内部）：不许动
+        return None
+
+    # 切点默认必须落在罗马音断词器（_split_body_read）已经给出的边界上：
+    # 这样「段内再切」只改变块级结构、整句罗马音一字不变。
+    # _INNER_ALLOW_EXTRA_CUTS=True 时额外允许词表给出的切点（断词器给不出的那些，
+    # 例如 時までにこの 这种被 ! 切碎的名词），代价是那些句子的罗马音会多出空格。
+    if _INNER_ALLOW_EXTRA_CUTS:
+        pieces = _merge_pieces(_cut_offsets(read, spans), read)
+    else:
+        pieces = _ref_pieces(read, spans)
+    if not pieces or len(pieces) < 2:
+        return None
+    if not pieces or len(pieces) < 2:
+        return None
+    cuts = []
+    ro2 = 0
+    for pc in pieces:
+        a = surf_off(ro2)
+        b = surf_off(ro2 + len(pc))
+        if a is None or b is None or a >= b:
+            return None
+        cuts.append((a, b, ro2, ro2 + len(pc)))
+        ro2 += len(pc)
+    if ro2 != ro:
+        return None
+    return chars, cuts
+
+
+# 段内再切是否允许「断词器给不出的词表切点」：
+#   False → 只切在断词器已有的边界上，整句罗马音零变化（最保守）；
+#   True  → 也按词表切（如 時までにこの → 時までに｜この），那些句子的罗马音会多出空格。
+_INNER_ALLOW_EXTRA_CUTS = False
+
+
+def _read_align(parts):
+    """段体的注音 token → 逐字对齐表 [(字面片段, 读音片段, 是否有注音)]；对不齐返回 None。
+
+    规则与 expand_placeholder_readings 同源：字面里的假名读自己，
+    汉字串吃掉「前后假名之间的那段读音」。
+    """
+    chars = []
+    for p in parts or []:
+        s = p.get('surf') or ''
+        r = p.get('read') or ''
+        ann = bool(p.get('ann'))
+        if not s:
+            continue
+        if s == r:
+            chars.extend((c, c, ann) for c in s)
+            continue
+        i = j = 0
+        while i < len(s):
+            c = s[i]
+            if _is_hira(c) or _is_kata(c):
+                if j < len(r) and r[j] == c:
+                    chars.append((c, c, ann))
+                    i += 1
+                    j += 1
+                    continue
+                if len(s) == len(r):
+                    chars.append((c, r[j], ann))
+                    i += 1
+                    j += 1
+                    continue
+                return None
+            k = i
+            while k < len(s) and not (_is_hira(s[k]) or _is_kata(s[k])):
+                k += 1
+            if k < len(s):
+                jj = r.find(s[k], j)
+                if jj < 0:
+                    return None
+            else:
+                jj = len(r)
+            if jj < j:
+                return None
+            chars.append((s[i:k], r[j:jj], ann))
+            i, j = k, jj
+        if j != len(r):
+            return None
+    return chars or None
+
+
+
+
+def _piece_glues_left(piece, prev=''):
+    """这一片要不要黏回左边一片。补助动词清单用 _AUX_CHAIN_BASES（调用时才取）。"""
+    if not piece:
+        return False
+    if prev and (piece in _HONORIFIC or piece in ('たち', 'など', 'なんか')):
+        return True                          # 接尾（さん／くん／ちゃん／さま）黏左：李＋さん
+    if piece in _PEEL_ORDER or piece in _DEEP_PARTICLES:
+        return True
+    if piece in _PIECE_GLUE_EXTRA:
+        return True
+    if not prev or not prev.endswith(('て', 'で')):
+        return False
+    if piece in ('て', 'で'):
+        return True
+    return any(piece.startswith(base) for base, _label in _AUX_CHAIN_BASES)
+
+
+# ============================================================ 4b. 段内兜底再切（第25–48课）
+# 下册数据（第25–48课）几乎没有全角空格：96 句基本课文里只有 2 句有，
+# 课文 530 句里只有 23 句有。group_tokens 于是退化成「按 ! 注音词首分块」，
+# 一个段里塞进 2–4 个词（例：部長にほめられました／李さんはテレビを），
+# 段内助词根本没有机会被剥出来——下册基本课文 73/96 句、课文 311/530 句因此有硬伤。
+#
+# 这里补一道「段内兜底」：把整段字面按 _split_body_read 的判据（词表／读音表最长匹配，
+# 复用 _trusted_left／_pred_like_left／_aux_left_ok）重切，再逐片走 analyze_segment。
+# 三重收紧，保证只碰已经错的段：
+#   ① 本句本来就没有全角空格（break_on_wb）——上册基本课文 96/96 有空格，被这条排除；
+#   ② 整段剥完之后查不到任何词义（gloss_of(body) is None）；
+#   ③ 段体内部还残留核心格助词（は/が/を/に/で/へ/と/も/から/まで/より/ほど）。
+# 另加一条采纳条件：切开后必须真的剥出了成分，否则 かばん売り場 这种复合词会被拆成两块。
+_INNER_CASE_MARKS = ('は', 'が', 'を', 'に', 'で', 'へ', 'と', 'も',
+                     'から', 'まで', 'より', 'ほど')
+
+# 段内再切时，孤立的助词一律黏回左边一片（「部長に」「テレビを」而不是「部長」「に」），
+# 补助动词则只黏在「て形／で形」后面（掃除して＋おきます／読んで＋います）——
+# 地図をくれました 里的 くれました 是主谓语，必须独立成段。
+_PIECE_GLUE_EXTRA = ('ばかり', 'ながら', 'ほど', 'くらい', 'まで', 'だけ', 'しか')
 
 
 def _strip_tail(read, tail):
@@ -862,17 +1731,194 @@ def _strip_tail(read, tail):
     return read[:idx] if idx > 0 else read
 
 
-def analyze_segment(seg):
+
+# ---- 形式名词・复合尾的「段体内部再切」（第25–48课的深层支路）----
+# 上册的分词把这些尾巴留在词体里（乗るの｜は、終わるはず｜です、読むほど）。
+# 下册体例（! 只标注音词首、没有全角空格）下断词器给不出这些边界，
+# 所以在这里按「尾巴表＋前接形态」补一刀，让形式名词单独成段，
+# 再由 build 侧的「谓语＋形式名词」折块把它与前接谓语收成一个成分。
+# 只在 inner_split（本句没有全角空格）时生效，且 の 只认「前接收在谓语形上」——
+# 上册已上线的 おもしろいの（l10_x2_5）因此一个字节都不动。
+_SPLIT_FORM_NOUNS = ('つもり', 'ところ', 'ばかり', 'はず', 'ほど', 'よう', 'まま',
+                     'わけ', 'こと', 'の')
+# 形式名词后面还允许出现的成分（助词／固定尾巴）；不在表里就说明这个位置不是形式名词。
+_FN_TAIL_AFTER = ('にしています', 'にしている', 'にして', 'になりました', 'になります',
+                  'がありません', 'があります', 'ばかりいます', 'ばかりいました',
+                  'ばかりです', 'ばかりだ', 'には', 'までに',
+                  'に', 'が', 'は', 'を', 'も', 'で', 'です', 'でした', 'だ', 'な')
+# 形式名词前允许的「收在谓语形上」之外，还要挡掉「〜て形＋ばかり」：
+# 折块只保留词体与读法，て形的 て 会被丢掉（飲ん＋ばかり），所以那里不切。
+def _fn_head_ok(head):
+    if not head or head.endswith(('て', 'で')):
+        return False
+    if not _pred_like_left(head):
+        return False
+    return bool(gloss_of(head, prefer_verb=True) or lookup(head))
+
+
+def _surface_split(seg, pts):
+    """按**字面偏移**列表 pts 把段切成若干片；读音偏移由注音对齐表推出（对不齐返回 None）。
+
+    注记标记只留给「带汉字的片段」：教材的注音 token 常把后面的假名一起圈进来
+    （!仕事(しごと)を → 一个 token 覆盖 しごとを），照抄这层标记会让
+    _ann_spans 把「仕事を」整块当成一个注音词，罗马音就再也断不出 shigoto o suru。
+    所以这里归一成「汉字片段带标记、假名片段不带」，与手写切分的口径一致。
+    """
+    chars = [(s, r, bool(ann) and _has_kanji(s))
+             for s, r, ann in (_read_align(seg.get('parts')) or [])]
+    if not chars:
+        return None
+    surf = seg.get('surf') or ''
+    read = seg.get('read') or ''
+    surf = seg.get('surf') or ''
+    read = seg.get('read') or ''
+    if ''.join(c[0] for c in chars) != surf or ''.join(c[1] for c in chars) != read:
+        return None
+    map_so = {}
+    so = ro = 0
+    for s, r, _ann in chars:
+        map_so[so] = ro
+        so += len(s)
+        ro += len(r)
+    map_so[so] = ro
+    cuts = []
+    bounds = [0] + list(pts) + [len(surf)]
+    for a, b in zip(bounds, bounds[1:]):
+        if a not in map_so or b not in map_so or a >= b:
+            return None
+        cuts.append((a, b, map_so[a], map_so[b]))
+    subs = _slice_segment(seg, chars, cuts)
+    if not subs or len(subs) != len(cuts):
+        return None
+    return subs
+
+
+def _fn_tail_subs(seg, sentence_final=False):
+    """段体里压着的形式名词（はず／つもり／こと／の／ほど…）单独成段 → 子段列表，切不动返回 None。
+
+    三个条件缺一不可：
+      ① 形式名词前面**收在谓语形上**（形式名词只接谓语：終わる｜はず、乗る｜の；
+         名词要加 の 才能接，所以 学校｜の 这类不会走到这里）；
+      ② 形式名词后面是允许表里的成分（空／助词／にして／ばかりいます…）；
+      ③ 切点两侧都能从注音对齐表算出来（切点不许落在注音词内部）。
+    句尾的 の 例外：那里是终助词（どうしたの？／行くの？），由 analyze_segment 的
+    终助词那一步处理，这里不碰——上册 l22_x0_3 因此一个字节都不动。
+    形式名词后面还挂着助词时切成三片（行く｜ことに｜しました），
+    这样 こと 自己成段、后面的谓语也能照常剥（中间那片会剥出助词 に）。
+    """
+    surf = seg.get('surf') or ''
+    if len(surf) < 3 or seg.get('kind') == 'punct':
+        return None
+    for fn in _SPLIT_FORM_NOUNS:                     # 长的优先
+        if fn == 'の' and sentence_final:
+            continue
+        k = surf.rfind(fn)
+        if k <= 0:
+            continue
+        rest = surf[k + len(fn):]
+        if rest and not any(rest.startswith(t) for t in _FN_TAIL_AFTER):
+            continue
+        if not _fn_head_ok(surf[:k]):
+            continue
+        pts = [k]
+        for p in ('までに', 'には', 'に', 'が', 'は', 'を', 'も'):
+            if rest.startswith(p) and len(rest) > len(p) and k + len(fn) + len(p) < len(surf):
+                pts.append(k + len(fn) + len(p))
+                break
+        subs = _surface_split(seg, pts)
+        if subs:
+            return subs
+    return None
+
+def _appearance_stem_ok(head):
+    """样态 そう 前面的语干：い形容词词干（おいし→おいしい）／动词ます形语干（降り→降ります）。
+
+    样态 そう 只接在「语干」后面，传闻 そう 接的是简体形，两者就是靠这条分的：
+        おいし＋そうです ✓（样态）   おいしい＋そうです ✗（传闻，形容词直接接）
+        降り＋そうです   ✓（样态）   降る＋そうです    ✗（传闻）
+    写死了两个不规则语干：いい→よさ（よさそうです）、ない→なさ（なさそうです）。
+    """
+    head = (head or '').strip()
+    if not head:
+        return False
+
+    if head in ('よさ', 'なさ', 'さ'):
+        return True
+    return bool(adj_i_stem_ok(head) or _verb_face(head) or adj_i_ku_ok(head))
+
+
+# 段体里「助詞＋述語」黏在一起时的切片（第25–48课的深层支路）：
+#   道が込んでいます → 道が｜込んでいます      食事をしています → 食事を｜しています
+#   私がいたします   → 私が｜いたします        時までにこの      → 時までに｜この
+# 条件是「助詞左边是一个实词、右边也是一个能查到词义的词」，两边都成立才切；
+# 段体长度下限 5 字、左边不许是副词／连体词——否则 もしもし 会被切成 もし｜もし
+# （上册 l15_x0_1 踩过：もし 是副词「如果」，し 能查到词义，两边都"成立"）。
+# 只在 inner_split 支路里调用，上册基本课文（96/96 有全角空格）走不到这里。
+def _particle_cut_subs(seg):
+    surf = seg.get('surf') or ''
+    if len(surf) < 5 or seg.get('kind') == 'punct':
+        return None
+    for k in range(1, len(surf) - 1):
+        for p in _DEEP_PEEL_ORDER:
+            # で 与 でした／です 同形：休みませんでした 会被切成 休みません｜でした
+            # （上册 l5_c6 踩过），所以这里不认 で。
+            if p == 'で':
+                continue
+            if not surf.startswith(p, k) or len(surf) <= k + len(p):
+                continue
+            endp = k + len(p)
+            # 后面紧跟别的助词时一并黏左（天安門からは｜いろんな）：只切到 から 会把
+            # は 丢到右片开头，那里它读不出助词音（kara haironna ← 错）。
+            while True:
+                nxt = ''
+                for q in _DEEP_PEEL_ORDER:
+                    if surf.startswith(q, endp) and endp + len(q) < len(surf):
+                        nxt = q
+                        break
+                if not nxt:
+                    break
+                endp += len(nxt)
+            # 左边用**去掉助词的语干**做判据（道｜が…）：道が 整体查不到词义，
+            # 拿它当判据会把 道が｜込んでいます 这种该切的挡掉。
+            stem, right = surf[:k], surf[endp:]
+            if len(right) < 2 and not _has_kanji(right):
+                continue
+            lg = gloss_of(stem, prefer_verb=True)
+            if not lg or not lg.get('zh'):
+                continue
+            if (lg.get('pos') or '').startswith(('副词', '接续', '连体', '感叹', '助')):
+                continue
+            if not gloss_of(right, prefer_verb=True):
+                continue
+            subs = _surface_split(seg, [endp])        # 助词黏左：道が｜込んでいます
+            if subs:
+                return subs
+    return None
+
+
+def analyze_segment(seg, sentence_final=False, form_noun_follows=False, deep=False):
     """
     把语块段拆成四层：词体 body / 格助词 particle / 谓语 predicate / 终助词 final。
     剥离顺序至关重要：终助词在谓语之后 → 先剥终助词，再剥谓语，最后剥格助词。
       一階ですか   →  final=か, predicate=です,   body=一階
       学生では     →  particle=では,              body=学生
       犬がいますね →  final=ね, predicate=います, body=犬, particle=が
+      どうしたの？ →  final=の,                    body=どうした（句尾的 の 是终助词）
+
+    info = lookup(surf)
+    if info is not None and not info.get('partial'):
+        return None                      # 整段就是一个词：不许切
+
+    form_noun_follows：下一段是不是形式名词（こと／ほう／後…）。形式名词会把前一段
+    收进同一个成分块，块内只能呈现词体＋形式名词，所以块内的 た／だ 不切出来
+    （食べ｜た＋こと → 折块时活用尾会丢，见 _peel_inner 的 4b）。
+
+    deep：只在「段内兜底再切」（_inner_resplit）里打开，允许剥下册才出现的副助词
+    （だけ／しか／ばかり／とか／までに／でも／ながら）与接续助词 ので／のに。
+    默认关闭，所以第 1–24 课已经上线的边界一个字节都不动。
     """
     if seg['kind'] == 'punct':
         return seg
-
     # 教材排版偶尔把助词写成片假名（公園ヘ行きました／第27・30・36课共 3 处），
     # 只在段尾出现时归一成平假名，免得 ヘリコプター 这类词被误伤。
     surf = seg['surf']
@@ -891,10 +1937,22 @@ def analyze_segment(seg):
     out['inner_inflection'] = False
     out['conj'] = None
     out['final'] = None
+    # 谓语的连写标记（简体断定 だ 用：曇り＋だ → kumorida）。
+    # 与 inflection 分开：inflection 表示「这是动词活用尾巴」，调用方会据此按动词解释词体。
+    out['predicate_glued'] = False
     # --- 1) 终助词 ---
     # か 只在「剥掉后剩下一个像样的谓语」时才认定（一階ですか → か + です；
     # 休みましたか → か + ました），否则会把「会社か」这类词尾误当疑问助词。
     # ね／よ 无此风险，直接剥。
+    # 句尾的 の（第22课）：どうしたの？／行くの？ 里的 の 是终助词（疑问・说明语气），
+    # 不是连体助词。判据有两条，缺一不可：
+    #   ① 它在句／行尾（后面没有别的段了）——句中的 駅の外 一个像素都不动；
+    #   ② 它前面收在一个谓语形上（どうした／行く）。少了这条，句尾的 もの 会被切成 も＋の。
+    if sentence_final and len(surf) > 1 and surf not in NO_PEEL and surf.endswith('の'):
+        head = surf[:-1]
+        if _pred_like_left(head):
+            out['final'] = 'の'
+            surf = head
     if surf not in NO_PEEL:
         for f in _FINAL:
             if not (surf.endswith(f) and len(surf) > len(f)):
@@ -910,13 +1968,28 @@ def analyze_segment(seg):
     # --- 2) 接续助词：谓语之后的 から／が（森さんは お酒が 好きですから。／有料ですが）---
     # 只有当「剥掉它之后剩下的是一个谓语」时才认，所以 だから／これから 不会被切坏。
     if surf not in NO_PEEL:
-        for c in _CONJ_TAILS:
+        for c in (_CONJ_TAILS + _DEEP_CONJ_TAILS if deep else _CONJ_TAILS):
             if surf.endswith(c) and len(surf) > len(c):
                 head = surf[:-len(c)]
-                if head.endswith(_AUX_PRED_END):
+                # ので／のに 的左边常是形容词或动词的辞书形（寒いので／降るのに），
+                # 不在 _AUX_PRED_END 里，所以深切多认一条「收在谓语形上」。
+                if head.endswith(_AUX_PRED_END) or (deep and _pred_like_left(head)):
                     out['conj'] = c
                     surf = head
                     break
+
+    # --- 3b) 样态 そう（第33课）：动词ます形语干／い形容词语干 ＋ そう です ---
+    # 样态（おいしそうです＝看起来好吃）与传闻（入学するそうです＝听说要入学）句面同形，
+    # 但前接形态不同：样态接**语干**（おいし／降り），传闻接**简体形**（する／降る）。
+    # 这里先把样态拦下：そう 进内层活用槽（与语干连写，oishisou），です 走正常谓语剥法；
+    # 剩下的传闻交给 PREDICATES['そうです']。上册没有样态句（0 句），不影响已上线内容。
+    if not out['final'] and not out['conj'] and len(surf) > 3 and surf.endswith('そうです'):
+        head = surf[:-len('そうです')]
+        if _appearance_stem_ok(head):
+            out['predicate_inner'] = 'そう'
+            out['inner_inflection'] = True
+            out['predicate'] = 'です'
+            surf = head
 
     # --- 3) 谓语／活用形 ---
     # 一次扫描、长的优先：ませんでした 必须先于 でした 命中，
@@ -927,6 +2000,18 @@ def analyze_segment(seg):
         if not surf.endswith(p):
             continue
         head = surf[:-len(p)]
+        # 断定助动词 だ（第22课）：只接在名词性词体后面（曇りだ），且与词干连写
+        # （kumorida）——本项目的罗马音数据层就是这么写的。
+        # 少了这条守卫，まだ／そうだ 这类词尾同形的副词会被切成 ま＋だ／そう＋だ。
+        # 连写用 predicate_glued 而不是 inflection：inflection 会让调用方按动词解释词体
+        # （曇り 是名词「阴天」，不是 曇ります 的语干）。
+        if p == 'だ':
+            if _pred_noun_ok(head):
+                out['predicate'] = p
+                out['predicate_glued'] = True
+                surf = head
+                break
+            continue
         if p in INFLECTIONS:
             if not head:
                 # 「ください」可以单独成段：コーラと ケーキを ください。
@@ -938,61 +2023,150 @@ def analyze_segment(seg):
                 continue
             if p in _SURU_INFLECTIONS:
                 ok = bool(suru_verb_base(head))       # 勉強します → 勉強＋します
+                if not ok and deep:
+                    # 第48课的敬语 お＋ます形语干＋します（お持ちします）：
+                    # 语干是一个普通动词的ます形语干，不是 する型名词，所以走这一条。
+                    ok = bool(verb_masu_form(head))   # 持ち → 持ちます
             else:
                 ok = bool(verb_masu_form(head))       # 起きます → 起き＋ます
+                if not ok and deep:
+                    # 第25–48课：语干收在受身／使役／可能／て形的活用形上时也认
+                    # （ほめられ＋ました／留学させ＋ます／話せ＋ます／続けて＋ください）。
+                    # 判据是「这个语干自己读出的是**形态标签**」——标签以「（」开头才是
+                    # 活用形；否则 どうし＋ました（どうしました＝固定说法）会被切开。
+                    g = gloss_of(head)
+                    ok = bool(g) and (g.get('pos') or '').startswith('（')
+                    ok = bool(g) and (g.get('pos') or '').startswith('（')
             if ok:
                 out['predicate'] = p
-                out['inflection'] = True
+                # ください 与词体分写（書いて ください → kaite kudasai）：它的 て形／
+                # ないで 前接由 body 承担，连写会把两个词黏成一个（tomattekudasai）。
+                out['inflection'] = p not in ('ください',)
                 surf = head
                 break
             continue
+        if p in _PRED_HEAD_GUARD:
+            # 推量・传闻型（らしいです／みたいです／ようです／そうです／でしょう…）：
+            # 前接形态不对就不剥——否则 すばらしいです／休みたいですね 会被劈成两块。
+            guard = _PRED_HEAD_GUARD[p]
+            # らしいです／みたいです 的前接也可以是「收在谓语形上且能查到词义」的辞书形
+            # （第44课 行く｜らしいです）——判据里那条「能查到词义」是挡 すばらしいです
+            # 被劈成 すば｜らしいです 的：すば 查不到词，所以守卫照旧拦住。
+            if guard == 'noun' and not (
+                    _pred_noun_ok(head) or _adj_pos(head, '形2')
+                    or (_pred_like_left(head)
+                        and bool(gloss_of(head, prefer_verb=True) or lookup(head)))):
+                continue
+            if guard == 'pred' and not (_pred_like_left(head) or _pred_noun_ok(head)
+                                        or _adj_pos(head, '形2')
+                                        or head.endswith(('の', 'な', 'だ', 'です'))):
+                continue
         if (head or p in ('あります', 'います', 'ありません', 'いません', 'です')) \
                 and (p not in _EXISTENCE_PREDS or _existence_ok(surf, p)):
             out['predicate'] = p
             surf = head
             break
 
-    # --- 4) 内层谓语尾：い形容词活用（楽しかった → 楽し＋かった／熱くない → 熱く＋ない）---
-    # 外层（です／ではありません）剥完之后，剩下的词体可能还带着形容词的活用尾巴。
-    # 尾巴一律要求「剥完剩下的词干确实是词表里的形容词」（熱く→熱い／楽し→楽しい），
-    # 否则 ビル／なる／あなた 这类词尾偶合的假名会被切坏。
-    # 「ない」只有两种情况允许剥：前面是 い形容词连用形（熱く），
-    # 或者前面收在助词上（ことが ない／しか ない）；单独成段时它本来就是否定谓词。
-    if surf and surf not in NO_PEEL:
+    # --- 3c) な形容词的中顿 で／连用形 に（第16／18课）：簡単＋で／きれい＋に ---
+    # 这两个 で／に 是な形容词的活用尾（簡単で 便利です／きれいに します），不是格助词。
+    # 判据只有「词体是词表里的 形2」这一条——公園で／医者に 这类真格助词因此原样保留。
+    # inner_inflection=False：罗马音里 で／に 与词干分写（kantan de／kirei ni），
+    # 这是既有数据层的写法。
+    na_adj_tail = False
+    if surf and surf not in NO_PEEL and not out['predicate_inner'] \
+            and len(surf) > 1 and surf[-1] in ('で', 'に'):
+        head = surf[:-1]
+        if _adj_pos(head, '形2'):
+            out['predicate_inner'] = surf[-1]
+            out['inner_inflection'] = False
+            surf = head
+            # 剩下的词体本身就是一个完整的 形2 词条，不能再当格助词的宿主：
+            # 否则 静かに 会接着被剥成 静＋か（か 与 に 同为单字助词）。
+            na_adj_tail = True
+
+    # --- 4) 内层活用尾：剥掉贴在词体上的形态尾巴 ---
+    # 外层（です／ではありません）剥完之后，剩下的词体可能还带着活用尾巴。
+    # 尾巴一律要求「剥完剩下的词干确实是词表里的形容词／动词」，
+    # 否则 ビル／なる／あなた／あとで 这类词尾偶合的假名会被切坏。
+    # 抽成函数是因为格助词剥完之后还要再补一刀（行き＋たい＋と，第24课）：
+    # 活用尾在词体内部、格助词在词体外面，顺序上必须先剥助词才能看见 たい。
+    def _peel_inner(s):
+        if not s or s in NO_PEEL:
+            return s
+        # 4a) 形容词的活用尾与动词的ない形
+        #     「ない」允许剥的三种情况：① い形容词连用形（熱くない）
+        #     ② 前面收在助词上（ことが ない／しか ない）③ 动词的ない形（行か＋ない，第22课）；
+        #     单独成段时它本来就是否定谓词。か／や 不算依据——它们是五段动词ない形的一部分，
+        #     拿它们当证据会把 行かない 切成 行＋か＋ない。
+        #     「なかった」只认 ①②：范围限定在「动词＋ない」这一种。
         for p in _ADJ_TAIL_ORDER:
-            if not surf.endswith(p) or len(surf) < len(p):
+            if not s.endswith(p) or len(s) < len(p):
                 continue
-            head = surf[:-len(p)]
+            head = s[:-len(p)]
+            verb_nai = False
             if not head:
                 ok = p in ('ない', 'なかった')
             elif p == 'かった':
-                ok = adj_i_stem_ok(head)
+                # い形容词过去形（楽し＋かった）＋不规则 いい → よかっ＋かった（第22课）
+                ok = adj_i_stem_ok(head) or head in _ADJ_IRREGULAR
             else:
-                # ない／なかった：前面要么是 い形容词连用形（熱くない），
-                # 要么收在助词上（ことがない／しか ない）。か／や 不算依据——
-                # 它们是五段动词ない形的一部分（行かない／書かない），
-                # 拿它们当证据会把 行かない 切成 行＋か＋ない。
-                ok = adj_i_ku_ok(head) or head.endswith(_NEG_LEFT_PARTICLES)
+                adj_ok = adj_i_ku_ok(head)
+                tail_ok = head.endswith(_NEG_LEFT_PARTICLES)
+                verb_nai = (p == 'ない' and not adj_ok and not tail_ok
+                            and bool(_verb_face(head)))
+                ok = adj_ok or tail_ok or verb_nai
             if not ok:
                 continue
             out['predicate_inner'] = p
-            out['inner_inflection'] = bool(ADJ_I_TAILS[p]['glue'])
-            surf = head
+            # 动词ない形与语干连写（行か＋ない＝ikanai）；形容词的 ない 分写（atsuku nai）
+            out['inner_inflection'] = bool(ADJ_I_TAILS[p]['glue']) or verb_nai
+            s = head
             break
-
-    # --- 4b) 动词て形（第14课）：聞いて＋から → 聞い＋て＋から ---
-    # 与形容词同理，切成「词干＋て」让学习者看见音便（書い／読ん／まわっ／いっ）。
-    # 只有「剥完的词干确实是词表里的动词」才允许剥，否则 あとで／それで 会被切坏。
-    if surf and surf not in NO_PEEL:
-        for p in ('て', 'で'):
-            if not surf.endswith(p) or len(surf) <= len(p):
+        # 4b) 动词て形／た形（第14／22课）：聞いて＋から → 聞い＋て＋から、分かっ＋た・読ん＋だ
+        #     切成「词干＋て／た」让学习者看见音便（書い／読ん／まわっ／いっ）。
+        #     五段动词的语干是音便语干（書い／読ん／買っ），一段・サ変的た形语干与ます形语干
+        #     同形（食べ|た／見|た／予約し|た），所以 た／だ 还要多认一条「语干＋ます 在词表里」。
+        #     例外：形式名词跟在后面时不切（form_noun_follows）——折块那一步只保留词体与读法，
+        #     切出来的活用尾会丢（食べ｜た＋こと 折成「食べこと／tabekoto」），
+        #     所以 食べたこと／終わった後で／食べたほう 这类保持整块，与折块机制一致。
+        for p in ('て', 'で', 'た', 'だ'):
+            if not s.endswith(p) or len(s) <= len(p):
                 continue
-            head = surf[:-len(p)]
-            if _te_stem_masu(head):
+            if form_noun_follows and p in ('た', 'だ'):
+                continue
+            head = s[:-len(p)]
+            if _te_stem_masu(head) or (p in ('た', 'だ') and verb_masu_form(head)):
                 out['predicate_inner'] = p
-                out['inner_inflection'] = True     # て形与词干连写：聞いて → kiite
-                surf = head
+                out['inner_inflection'] = True   # て形／た形与词干连写：kiite／wakatta
+                s = head
                 break
+        # 4c) 愿望助动词 たい（第17／20课）：見＋たい／行き＋たい。
+        #     たい 按 い形容词活用，贴在动词的ます形语干后面；与语干连写（mitai），
+        #     所以 inner_inflection=True。判据用词表：语干＋ます 必须是词表里的动词；
+        #     单字假名语干（いたい 的 い 之类）不收，避免把 kana 写的形容词切坏。
+        if not out['predicate_inner'] and len(s) > 2 and s.endswith('たい'):
+            head = s[:-2]
+            if (len(head) >= 2 or _has_kanji(head)) \
+                    and (verb_masu_form(head) or VERB_KANA.get(head + 'ます')):
+                out['predicate_inner'] = 'たい'
+                out['inner_inflection'] = True
+                s = head
+        # 4d) 复合形容词尾 〜やすい／〜にくい（第43课）：書き＋やすい／読み＋にくい。
+        #     它们与 たい 同型：贴在动词的ます形语干后面、与该语干连写（kakiyasui）。
+        #     只在深层支路里剥（上册没有这个语法点，deep=False 时一个字节都不动）。
+        if deep and not out['predicate_inner']:
+            for p in ('やすかった', 'やすくない', 'にくかった', 'にくくない', 'やすい', 'にくい'):
+                if not s.endswith(p) or len(s) <= len(p):
+                    continue
+                head = s[:-len(p)]
+                if verb_masu_form(head) or _te_stem_masu(head) or _verb_face(head):
+                    out['predicate_inner'] = p
+                    out['inner_inflection'] = True
+                    s = head
+                    break
+        return s
+
+    surf = _peel_inner(surf)
 
     # 谓词与终助词剥掉之后，供助词判定用的读法
     mid_read = base_read
@@ -1003,8 +2177,13 @@ def analyze_segment(seg):
     # --- 5) 格助词（仅段尾，且剥完后仍是合法词体） ---
     # 「剥完还是完整词」这一条不能省：とても／きっと／ちょっと 这类
     # 纯假名词的尾字与助词同形，剥了就会剩残干（とて / きっ）。
-    if surf and surf not in NO_PEEL:
-        for p in _PEEL_ORDER:
+    # 孤独的形式名词（ものね／ことだ）整块就是一个词，不再从它身上剥助词：
+    #   ものね → も＋の＋ね，审计 C1 报「の 后面跟着非谓语块」。
+    # 只在 surf 恰好等于形式名词时生效——它身上本来也只有一个 1 字助词可剥。
+    if surf and surf not in NO_PEEL and not na_adj_tail and surf not in _FORM_NOUNS:
+        # 深切（deep）才把 だけ／しか／ばかり／とか／までに／でも／ながら 也算作可剥成分：
+        # 它们在上册已经出现过（だけ2／しか10／でも13 句），全局放宽会改上册边界。
+        for p in (_DEEP_PEEL_ORDER if deep else _PEEL_ORDER):
             if surf.endswith(p) and len(surf) > len(p):
                 cand = surf[:-len(p)]
                 if not _body_is_word(cand, _strip_tail(mid_read, p), p):
@@ -1012,7 +2191,28 @@ def analyze_segment(seg):
                 out['particle'] = p
                 surf = cand
                 break
+    # --- 5c) 句尾的「〜ない」型形容词辞书形（第26课 危ないです）---
+    # 「〜ない」收尾的い形容词（危ない／少ない）整块留在词体里时会被读成「不…」。
+    # 试过把它挪进谓语槽：块本身没振假名（build_chunks 的谓语块不带 ruby），
+    # 汉字立刻变成裸汉字（审计 C4）。所以这里**不动结构**——l26_b1 的这一条
+    # 留在报告里，逐条说明原因。
+    #
+    # --- 5b) 格助词剥完之后，词体里可能还留着活用尾（第24课 行き｜たい｜と 思います）---
+    # 活用尾属于词体内部、格助词在词体外面，所以这一刀只能在第 5 步之后补；
+    # 外层槽位（谓语／终助词／接续助词／内层活用尾）已经填了就不再补，
+    # 免得把 食べ＋て＋から 之类已经切好的段再动一遍。
+    if out['particle'] and not (out['predicate'] or out['predicate_inner']
+                               or out['conj'] or out['final']):
+        surf = _peel_inner(surf)
 
+
+    # --- 5b) 格助词剥完之后，词体里可能还留着活用尾（第24课 行き｜たい｜と 思います）---
+    # 活用尾属于词体内部、格助词在词体外面，所以这一刀只能在第 5 步之后补；
+    # 外层槽位（谓语／终助词／接续助词／内层活用尾）已经填了就不再补，
+    # 免得把 食べ＋て＋から 之类已经切好的段再动一遍。
+    if out['particle'] and not (out['predicate'] or out['predicate_inner']
+                               or out['conj'] or out['final']):
+        surf = _peel_inner(surf)
     out['body'] = surf
     read = base_read
     for tail in (out['final'], out['conj'], out['predicate'],
@@ -1034,6 +2234,15 @@ def gloss_of(surface, prefer_verb=False):
     surface = (surface or '').strip()
     if not surface:
         return None
+    # 引用符透明（第29课「タバコを吸うな」）：引号夹着的片段自己不是词，摘掉引号就查得到
+    # （「タバコ → タバコ、吸うな」→ 吸うな）。只摘引号，不动括号——括号在教材里另有体例。
+    # 只接受**完整词义**：摘掉引号后仍只是前缀残配时照旧往下走（那种情况要靠段内再切解决）。
+    if surface[0] in _OPEN_QUOTES or surface[-1] in _CLOSE_QUOTES:
+        _core = surface.lstrip('「『').rstrip('」』')
+        if _core and _core != surface:
+            _g = gloss_of(_core, prefer_verb)
+            if _g and not _g.get('partial'):
+                return _g
     # 形容词活用形先还原成辞书形再查（熱く → 熱い、楽し → 楽しい、静かな → 静か）。
     # 这一步是「剥完的残干也得是个词」的另一面：词干必须真的指向词表里的形容词。
     dic, form_label = adj_form(surface)
@@ -1054,6 +2263,13 @@ def gloss_of(surface, prefer_verb=False):
                 return {'zh': clean_gloss(vinfo.get('zh', '')), 'en': vinfo.get('en', ''),
                         'pos': POS_LABEL.get(vinfo.get('pos', ''), vinfo.get('pos', '')) + '（ます形）',
                         'honorific': ''}
+    # 活用形的表面形还原（第15课起）：見たい／食べた／帰らなければ／行ったり／来ると…
+    # 放在词表整词命中之前，但先放过词表里已有的整词——熟语（いけません／すみません）与
+    # 形式名词（こと／ほう／後）的词义在词表里给得更准，不能被活用规则抢走。
+    if surface not in LEXICON:
+        form = form_gloss(surface)
+        if form:
+            return form
     for h in _HONORIFIC:
         if surface.endswith(h) and len(surface) > len(h):
             if surface in NAME_ZH:
@@ -1100,12 +2316,31 @@ def gloss_of(surface, prefer_verb=False):
                 return {'zh': clean_gloss(tinfo.get('zh', '')), 'en': tinfo.get('en', ''),
                         'pos': POS_LABEL.get(tinfo.get('pos', ''), tinfo.get('pos', '')) + label,
                         'honorific': ''}
+        # ④ 第25–48课的补表（形式名词／复合形容词尾／被注解拆碎的复合词残片）：
+        #    只在前三条与 ①②③ 全都没命中时才用，所以已上线的词义一个都不改。
+        if surface in _EXTRA_WORDS:
+            kana, pos, zh = _EXTRA_WORDS[surface]
+            return {'zh': zh, 'en': '', 'pos': POS_LABEL.get(pos, pos), 'honorific': ''}
+        # 注：这里刻意**不**给「纯数字」通用词义。上册 l22_c8 的 ３４９３－(の) 是
+        # 靠「词义查不到 → 那一段不算谓语性」才折成形式名词短语的；
+        # 一旦给 ３４９３ 补上词性（数量词），折块就不再成立，上册已上线的块会变。
+        # 下册真正需要的那几个数字（２０１０ 年）走上面的 _EXTRA_WORDS 表。
         return None
+    # 七時間 会前缀命中 七時（7点）→ partial；数量词优先，别让「7点」顶掉「七个小时」
     # 七時間 会前缀命中 七時（7点）→ partial；数量词优先，别让「7点」顶掉「七个小时」
     if info.get('partial'):
         cnt = counter_gloss(surface)
         if cnt:
             return {'zh': cnt, 'en': '', 'pos': '数量词', 'honorific': ''}
+        # 「词＋助词」是引擎的既有写法（部屋には → 词体 部屋に ＋ 助词 は，见 _body_is_word ②）：
+        # 前缀命中之后剩下的那一截如果**正好就是一颗助词**（会議室に／部屋に），
+        # 那词体本身就是一个完整的词，只是尾巴上挂着助词，不该再报「前缀残配」。
+        # 剩下的那一截只要还夹着别的成分（会議は５ 的 は５、毎日お 的 お、見ること 的 ること）
+        # 就照旧带 partial——那些是段没切干净，得靠段内再切解决。
+        if info.get('partial') == _leading_particle(info.get('partial') or ''):
+            return {'zh': clean_gloss(info.get('zh', '')), 'en': info.get('en', ''),
+                    'pos': POS_LABEL.get(info.get('pos', ''), info.get('pos', '')),
+                    'honorific': ''}
     return {'zh': clean_gloss(info.get('zh', '')), 'en': info.get('en', ''),
             'pos': POS_LABEL.get(info.get('pos', ''), info.get('pos', '')),
             'honorific': '', 'partial': info.get('partial', '')}
@@ -1128,13 +2363,22 @@ def clean_gloss(zh):
     return s or zh
 
 
-def _spaced_reading(read):
+def _spaced_reading_raw(read):
     """
     假名读法 → 罗马音，并在「尾部成分」前断开：
     敬称（りさん → ri san）与副助词（さんほど → san hodo）都要独立成词，
     否则罗马音会出现 nagashimasanhodo 这种连写。
+
+    では（で＋は）：这颗 は 是助词，读 wa（ではありません → de wa arimasen）。
+    上册的 では 都落在段尾，由 _PARTICLE_ROMAJI 处理，走不到这里；
+    到这里的只有下册的段中 では（中国では「…）与整块谓语 ではありません。
     """
     from annot import kana_to_romaji
+    if read.count('では') == 1 and len(read) > 2:
+        head, _, tail = read.partition('では')
+        return ' '.join(x for x in (_spaced_reading(head) if head else '',
+                                    'de wa',
+                                    _spaced_reading(tail) if tail else '') if x)
     for h in _HONORIFIC:
         # 敬称：只要前面还有字就断开（りさん → ri san）
         if read.endswith(h) and len(read) > len(h):
@@ -1160,6 +2404,32 @@ def _spaced_reading(read):
                 and read[:-len(h)].endswith(_AUX_PRED_END):
             return (_spaced_reading(read[:-len(h)]) + ' ' + kana_to_romaji(h)).strip()
     return kana_to_romaji(read)
+
+
+# 罗马音里只允许拉丁字母／数字（审计 C5）。不是读音的字符一律换成空格：
+# 教材夹注里的汉字（たちいりきんし（立入禁止））、汉语／日文引号（「」“”）、
+# 全角方括号（［］）都没有读音。句子罗马音另有 build_romaji.clean_romaji 兜底，
+# 而**块的 romaji**走的就是这条链，不在这里清就会把汉字与引号原样带进罗马音。
+# 全角句点 ．／连字符 － 由 annot._FW_ASCII 映射成 . ／-，那是合法停顿，不受影响。
+_ROM_NOT_READ = re.compile(r"[^A-Za-z0-9~' .,!?\-]")
+# 汉字（含扩展 A 与兼容区）：句子罗马音的对应兜底在 build_romaji.clean_romaji。
+_CJK_IDEO = re.compile(r'[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]')
+
+
+def _spaced_reading(read):
+    """_spaced_reading_raw 的输出再过一道「非读音字符」清洗（见 _ROM_NOT_READ）。
+
+    整片都不是读音时（「／」／“再见”这类纯标点片）只把**汉字**原样留下：
+    汉字是汉语原文或教材夹注，句子层面还有 build_romaji.clean_romaji 兜底；
+    在这里连汉字一起清掉，会把这一片从罗马音里整个抹掉、连带吃掉一个词界
+    （上册 l24「再见！」会从 "tsukete. !" 变成 "tsukete.!"，上册就不再逐字节相同）。
+    引号／括号本身没有读音也没有信息量，直接清成空串。
+    """
+    raw = _spaced_reading_raw(read) or ''
+    s = re.sub(r'\s+', ' ', _ROM_NOT_READ.sub(' ', raw)).strip()
+    if s:
+        return s
+    return ''.join(c for c in raw if _CJK_IDEO.match(c))
 
 
 def _ann_spans(seg, body):
@@ -1240,16 +2510,63 @@ _COMPOUND_ADJ_TAILS = ('にくい', 'にくく', 'にくかっ', 'やすい', '�
                        'すぎる', 'すぎた', 'すぎて')
 
 
+_DIC_TO_I = {'う': 'い', 'く': 'き', 'ぐ': 'ぎ', 'す': 'し', 'つ': 'ち', 'ぬ': 'に',
+             'ぶ': 'び', 'む': 'み', 'る': 'り'}
+# 不规则动词的辞书形 → ます形（五段规则套不上）
+_DIC_IRREGULAR = {'来る': '来ます', 'くる': '来ます', 'する': 'します'}
+
+
 def _masu_from_dic(piece):
-    """动词辞书形 → 词表里的词面（いく→行きます、よむ→読みます、あがる→上がります）。"""
+    """动词辞书形 → 词表里的词面（いく→行きます、弾く→弾きます、見る→見ます、来る→来ます）。
+
+    词表按**ます形**收录动词（行きます／弾きます），所以还原方向是「辞书形 → ます形」。
+    三步：① 按词面拼（教材按汉字收录：弾く→弾きます、行く→行きます）；
+         ② 按读法拼（假名辞书形：いく→いきます，靠 VERB_KANA 反查）；
+         ③ 不规则表（来る→来ます、する→します）。
+         ③ 不规则表（来る→来ます、する→します）。
+    一段动词（見る／食べる）的辞书形是「语干＋る」、ます形是「语干＋ます」，它套不上
+    上面的五段规则，所以不在这里猜——反向活用层用自己的 _dic_face 补这一段，
+    免得 _verb_form_ok（分词管线用）把 できる 也算成辞书形而动了罗马音断词。
+    """
+    piece = (piece or '').strip()
     if len(piece) < 2:
         return ''
-    table = {'う': 'い', 'く': 'き', 'ぐ': 'ぎ', 'す': 'し', 'つ': 'ち', 'ぬ': 'に',
-             'ぶ': 'び', 'む': 'み', 'る': 'り'}
-    i_kana = table.get(piece[-1])
+    face = _DIC_IRREGULAR.get(piece)
+    if face:
+        info = LEXICON.get(face)
+        if info and '动' in (info.get('pos') or ''):
+            return face
+        return ''
+    i_kana = _DIC_TO_I.get(piece[-1])
     if not i_kana:
         return ''
-    return VERB_KANA.get(piece[:-1] + i_kana + 'ます', '')
+    cand = piece[:-1] + i_kana + 'ます'               # 五段：行く→行きます／帰る→帰ります
+    info = LEXICON.get(cand)
+    if info and '动' in (info.get('pos') or ''):
+        return cand
+    hit = VERB_KANA.get(cand)                          # 假名词面走读法反查：いく→いきます
+    if hit:
+        info = LEXICON.get(hit)
+        if info and '动' in (info.get('pos') or ''):
+            return hit
+    return ''
+
+
+def _dic_face(piece):
+    """辞书形 → 词表词面，在一段动词上补一把「语干＋ます」（見る→見ます／集める→集めます）。
+
+    只给反向活用层用：_masu_from_dic 还要服务分词管线（_verb_form_ok），
+    在那里放宽会把 できる／みる 这类也算成辞书形，罗马音的断词跟着变。
+    """
+    face = _masu_from_dic(piece)
+    if face:
+        return face
+    if piece.endswith('る') and len(piece) >= 2:
+        cand = piece[:-1] + 'ます'
+        info = LEXICON.get(cand)
+        if info and '动' in (info.get('pos') or ''):
+            return cand
+    return ''
 
 
 # 「行く」的て形是例外（いって，不是 いいて），靠这一条补上。
@@ -1293,18 +2610,716 @@ def _verb_form_ok(piece):
     return ''
 
 
+# ============================================================ 反向活用识别（第15课起）
+# 词表按「ます形」收录动词（見ます／食べます／帰ります），课文里出现的却是活用形
+# （見たい／食べた／帰らなければ／来ると）。这一层做「还原再匹配」：剥掉下表里的活用尾，
+# 看剩下的语干是否确实指向词表里的动词／形容词，命中就给出「词义 ＋ 形态标签」。
+# 标签一物三用：
+#   * 前端词块下面那行小字（build_exemplars_auto 里 chunk 的 gloss_sub）
+#   * 直译行的形态标注（build_exemplars_auto.FORM_LIT_TOKENS 按标签里的关键字匹配）
+#   * 形式名词 こと／ほう 的合并判据（_is_predicate_like 看标签是不是动词／形容词）
+# 三条自我约束：
+#   ① 只认下表列出的尾巴（长尾优先），别的形态一律不猜；
+#   ② 语干必须能在词表里找到，否则 とても／ちょっと／あなた 这类词尾同形的词会被切坏；
+#   ③ 这一层只补词义，不改变分词边界与罗马音——段的结构仍由 analyze_segment 决定。
+
+# 活用尾 → (形态标签, 语干判据)。判据：te＝て形语干、nai＝ない形语干、
+# tai＝たい前接的语干、dic＝辞书形、i_adj＝い形容词语干、noun＝名词、pred＝谓语形（ん 的接续），
+# 以及第25–48课新增的一批：pass＝受身语干、cause＝使役语干、pot＝可能语干、
+# aux＝て形＋补助动词的语干、nasai＝なさい前接的语干、vol/vol_o＝意志形语干、
+# cond/cond_tara/cond_nara＝条件形的语干、appearance＝样态 そう 的语干、
+# hearsay＝传闻 そう／よう／みたい／らしい 的语干。
+#
+# ---------------------------------------------------------------- 补助动词链（第28–48课）
+# て形＋补助动词（てあげる／てくれる／てもらう／ていただく／てある／ておく／
+# てみる／てしまう／ていく／てくる）在教材数据里整块黏在一起，而且活用形很多
+# （てあげます／てあげました／てあげて…），所以按「て／で ＋ 补助动词活用」程序化生成。
+# 两个前缀都要生成：て 与 で 只取决于前面动词的音便（読んで／書いて），
+# 语干判据自己会把不合格的那一半挡掉，所以不会误伤。
+_AUX_CHAIN_BASES = (
+    ('います', '（て いる：正在…／结果状态）'),
+    ('いました', '（て いる：正在…／结果状态・过去）'),
+    # 简体形的「て いる・过去」（第45课 読んでいた / 立っていた）：
+    # 补助动词表里原来只有 いました，简体 いた 缺失，所以 読んでいた 拿不到词义。
+    ('いた', '（て いる：正在…／结果状态・过去）'),
+    ('いません', '（て いる：否定）'),
+    ('いませんでした', '（て いる：过去否定）'),
+    ('いない', '（て いる：否定）'),
+    ('いて', '（て いる：て形）'),
+    ('いる', '（て いる：正在…／结果状态）'),
+    ('おきます', '（ておく：事先做好）'),
+    ('おきました', '（ておく：事先做好・过去）'),
+    ('おきません', '（ておく：否定）'),
+    ('おいて', '（ておく：て形）'),
+    ('おこう', '（ておく：意志形）'),
+    ('おく', '（ておく：事先做好）'),
+    ('あります', '（てある：已经…着（状态））'),
+    ('ありました', '（てある・过去）'),
+    ('あって', '（てある・て形）'),
+    ('ある', '（てある：已经…着（状态））'),
+    ('みます', '（てみる：试试看）'),
+    ('みました', '（てみる：试试看・过去）'),
+    ('みません', '（てみる：否定）'),
+    ('みて', '（てみる：て形）'),
+    ('みよう', '（てみる：意志形）'),
+    ('みる', '（てみる：试试看）'),
+    ('しまいます', '（てしまう：做完／不小心…了）'),
+    ('しまいました', '（てしまう：做完／不小心…了・过去）'),
+    ('しまいません', '（てしまう：否定）'),
+    ('しまって', '（てしまう：て形）'),
+    ('しまおう', '（てしまう：意志形）'),
+    ('しまった', '（てしまう：做完／不小心…了・过去）'),
+    ('しまう', '（てしまう：做完／不小心…了）'),
+    ('いきます', '（ていく：…下去）'),
+    ('いきました', '（ていく：…下去・过去）'),
+    ('いって', '（ていく：て形）'),
+    ('いく', '（ていく：…下去）'),
+    ('きます', '（てくる：…过来／…起来）'),
+    ('きました', '（てくる：…过来／…起来・过去）'),
+    ('きて', '（てくる：て形）'),
+    ('くる', '（てくる：…过来／…起来）'),
+    ('あげます', '（てあげる：为别人做）'),
+    ('あげました', '（てあげる：为别人做・过去）'),
+    ('あげません', '（てあげる：否定）'),
+    ('あげて', '（てあげる：て形）'),
+    ('あげる', '（てあげる：为别人做）'),
+    ('くれます', '（てくれる：别人为我做）'),
+    ('くれました', '（てくれる：别人为我做・过去）'),
+    ('くれません', '（てくれる：否定）'),
+    ('くれて', '（てくれる：て形）'),
+    ('くれる', '（てくれる：别人为我做）'),
+    ('もらいます', '（てもらう：请别人做）'),
+    ('もらいました', '（てもらう：请别人做・过去）'),
+    ('もらって', '（てもらう：て形）'),
+    ('もらう', '（てもらう：请别人做）'),
+    ('いただきます', '（ていただく：请…（自谦））'),
+    ('いただきました', '（ていただく：请…（自谦）・过去）'),
+    ('いただいて', '（ていただく：て形）'),
+    ('いただく', '（ていただく：请…（自谦））'),
+    ('ください', '（て形＋ください：请…）'),
+    ('ばかりいます', '（てばかりいる：老是在…）'),
+    ('ばかりいました', '（てばかりいる・过去）'),
+    ('ばかりいて', '（てばかりいる・て形）'),
+    ('ばかりいる', '（てばかりいる：老是在…）'),
+    ('ばかりだ', '（てばかりだ：老是…）'),
+    ('ばかりです', '（てばかりです：老是…）'),
+)
+_AUX_CHAIN_TAILS = tuple(
+    (pre + base, label, 'aux')
+    for base, label in _AUX_CHAIN_BASES
+    for pre in ('て', 'で'))
+
+_FORM_TAILS = _AUX_CHAIN_TAILS + (
+    # ---- 复合形容词 〜すぎる（第44课）：食べすぎました／大きすぎます ----
+    ('すぎませんでした', '（すぎる：过于…・过去否定）', 'i_adj_stem'),
+    ('すぎません', '（すぎる：过于…・否定）', 'i_adj_stem'),
+    ('すぎました', '（すぎる：过于…・过去）', 'i_adj_stem'),
+    ('すぎます', '（すぎる：过于…）', 'i_adj_stem'),
+    ('すぎた', '（すぎる：过于…・过去）', 'i_adj_stem'),
+    ('すぎて', '（すぎる：过于…・て形）', 'i_adj_stem'),
+    ('すぎる', '（すぎる：过于…）', 'i_adj_stem'),
+    # ---- 条件（第31／35／37／45课）----
+    ('なければ', '（ない形＋ば：必须…的前提）', 'nai'),
+    ('なくても', '（ない形＋ても：不…也可以）', 'nai'),
+    ('ば', '（仮定形＋ば：如果…）', 'cond'),
+    # 「〜なければなりません」（义务）整条是谓语的一部分，剥完后语干还要过 _layered_face
+    ('なければなりませんでした', '（ない形＋ば：必须…・过去）', 'nai'),
+    ('なければなりません', '（ない形＋ば＋なりません：必须…）', 'nai'),
+    ('なければならない', '（ない形＋ば＋ならない：必须…）', 'nai'),
+    ('なければいけません', '（ない形＋ば＋いけません：必须…）', 'nai'),
+    ('なければいけない', '（ない形＋ば：必须…）', 'nai'),
+    ('なくてはいけません', '（なくては＋いけません：必须…）', 'nai'),
+    ('なくてはいけない', '（なくては＋いけない：必须…）', 'nai'),
+    ('ないで', '（ない形＋で：请不要…）', 'nai'),
+    ('ったら', '（たら：如果…／…的时候）', 'cond_tara'),
+    ('だったら', '（名词＋だったら：如果是…）', 'cond_nara'),
+    ('れば', '（假定形＋ば：如果…）', 'cond'),
+    ('たら', '（たら：如果…／…的时候）', 'cond_tara'),
+    ('なら', '（なら：如果是…的话）', 'cond_nara'),
+    # ---- 受身（第41／42／47课）：一段・する・来る 走 られ，五段走 れ ----
+    ('られませんでした', '（受身・过去否定）', 'pass'),
+    ('られました', '（受身・过去）', 'pass'),
+    ('られません', '（受身・否定）', 'pass'),
+    ('られます', '（受身・礼貌体）', 'pass'),
+    ('られて', '（受身・て形）', 'pass'),
+    ('られた', '（受身・过去）', 'pass'),
+    ('られれば', '（受身・假定）', 'pass'),
+    ('られる', '（受身／可能）', 'pass'),
+    ('れませんでした', '（受身・过去否定）', 'pass'),
+    ('れました', '（受身・过去）', 'pass'),
+    ('れません', '（受身・否定）', 'pass'),
+    ('れます', '（受身・礼貌体）', 'pass'),
+    ('れて', '（受身・て形）', 'pass'),
+    ('れた', '（受身・过去）', 'pass'),
+    ('れる', '（受身／可能）', 'pass'),
+    # ---- 使役（第43／46课）----
+    ('させませんでした', '（使役・过去否定）', 'cause'),
+    ('させました', '（使役・过去）', 'cause'),
+    ('させません', '（使役・否定）', 'cause'),
+    ('させます', '（使役・礼貌体）', 'cause'),
+    ('させて', '（使役・て形）', 'cause'),
+    ('させた', '（使役・过去）', 'cause'),
+    ('させる', '（使役）', 'cause'),
+    # ---- 可能（第38／42课）：五段＝え段＋ます（話せます），一段＝られます（食べられます 见上）----
+    # 判据用 pot_v：只认「语干＋え段」这条还原路线（話→話し→話します），
+    # 不走「语干本身就是一个动词」那条，否则 見せて 会被当成 見す 的可能形（见 setて）、
+    # つけて 会被当成 つく 的可能形。语干还要求带汉字或两字以上（挡 つ＋けて）。
+    ('えませんでした', '（可能・过去否定）', 'pot_v'),
+    ('えました', '（可能・过去）', 'pot_v'),
+    ('えません', '（可能・否定）', 'pot_v'),
+    ('えます', '（可能・礼貌体）', 'pot_v'),
+    ('えて', '（可能・て形）', 'pot_v'),
+    ('えた', '（可能・过去）', 'pot_v'),
+    ('える', '（可能）', 'pot_v'),
+    ('けませんでした', '（可能・过去否定）', 'pot_v'),
+    ('けました', '（可能・过去）', 'pot_v'),
+    ('けません', '（可能・否定）', 'pot_v'),
+    ('けます', '（可能・礼貌体）', 'pot_v'),
+    ('けて', '（可能・て形）', 'pot_v'),
+    ('けた', '（可能・过去）', 'pot_v'),
+    ('ける', '（可能）', 'pot_v'),
+    # 语干形：受身／使役的「语干」在被深切切开后要独立成段（ほめられ＋ました、
+    # 留学させ＋ます），所以它自己也得查得到词义（形态标签以「（」开头，见
+    # analyze_segment 第 3 步的深切判据）。长尾优先，所以只在这些尾不出现时才命中。
+    # 五段的那两条（壊さ｜れました／書か｜せました／開か｜れます）与 られ／させ 同类：
+    # 少了它们，谓语尾就剥不出来（壊されました 整块留在词体里，审计 C2/C3 都报）。
+    ('られ', '（受身・语干）', 'pass'),
+    ('させ', '（使役・语干）', 'cause'),
+    ('れ', '（受身・语干）', 'pass'),
+    ('せ', '（可能・语干）', 'pot_v'),
+    ('せませんでした', '（可能・过去否定）', 'pot_v'),
+    ('せました', '（可能・过去）', 'pot_v'),
+    ('せません', '（可能・否定）', 'pot_v'),
+    ('せます', '（可能・礼貌体）', 'pot_v'),
+    ('せて', '（可能・て形）', 'pot_v'),
+    ('せた', '（可能・过去）', 'pot_v'),
+    ('せる', '（可能）', 'pot_v'),
+    ('なさい', '（なさい：请…／命令）', 'nasai'),
+    ('ろ', '（命令形）', 'imperative'),
+    # ---- 意志（第30课）----
+    ('よう', '（意志形：…吧）', 'vol'),
+    ('う', '（意志形：…吧）', 'vol_o'),
+    # ---- 样态・传闻・比况（第32／33／44／46课）----
+    ('そうです', '（传闻：听说…）', 'hearsay'),
+    ('そうだ', '（传闻：听说…）', 'hearsay'),
+    ('そうな', '（样态＋な：看起来…的）', 'appearance'),
+    ('そうに', '（样态＋に）', 'appearance'),
+    ('そう', '（样态：看起来…）', 'appearance'),
+    ('ようです', '（ようです：好像…）', 'hearsay'),
+    ('ようだ', '（ようだ：好像…）', 'hearsay'),
+    ('みたいです', '（みたいです：好像…）', 'hearsay'),
+    ('みたいだ', '（みたいだ：好像…）', 'hearsay'),
+    ('みたい', '（みたい：像…一样）', 'noun'),
+    ('らしいです', '（らしい：好像…／典型的…）', 'hearsay'),
+    ('らしく', '（らしい・连用形）', 'noun'),
+    ('らしい', '（らしい：像…那样／典型的）', 'noun'),
+    ('のような', '（ような：像…这样的）', 'noun'),
+    ('のように', '（ように：像…那样／为了…）', 'pred'),
+    ('ような', '（ような：像…这样的）', 'pred'),
+    ('ように', '（ように：像…那样／为了…）', 'pred'),
+    ('のよう', '（のよう：像…一样）', 'noun'),
+    # ---- ん（です／だ）（第24／33／41课）----
+    ('だったり', '（名词＋だったり：列举）', 'noun'),
+    # ---- する 型复合动词的辞书形（第25课起的「〜する」小句：入学するそうです）----
+    ('する', '（する：辞书形）', 'suru'),
+    # ---- ん（です／だ）（第24／33／41课）----
+    ('たいん', '（たい＋ん：说明语气）', 'tai'),
+    ('んです', '（んです：说明语气）', 'pred'),
+    ('んだ', '（んだ：说明语气）', 'pred'),
+    ('ん', '（＋ん：说明语气）', 'pred'),
+    # ---- 原有的（第15–24课）----
+    ('くて', '（い形容词て形：并列中顿）', 'i_adj'),
+    ('ても', '（て形＋も：许可句的条件）', 'te'),
+    ('ては', '（て形＋は：禁止句的条件）', 'te'),
+    ('たり', '（たり：列举）', 'te'),
+    ('だり', '（たり：列举）', 'te'),
+    ('たい', '（たい：想）', 'tai'),
+    ('た', '（た形）', 'te'),
+    ('て', '（て形）', 'te'),
+    ('か', '（基本形＋か：不确定小句）', 'dic'),
+    ('と', '（基本形＋と：引用）', 'dic'),
+    # 注：这里刻意**不**收 ('の', 'pred')。の 名词化确实会留成词体（乗るの｜は），
+    # 但给它一条活用尾会把上册已上线的 おもしろいの／見たの 等词义说明改掉
+    # （l10_x2_5 的 gloss_sub 从「い形容词」变成「（の：名词化）」），违反「上册一字不变」。
+    ('な', '（な：禁止）', 'prohibit'),
+)
+_FORM_TAIL_ORDER = sorted(_FORM_TAILS, key=lambda t: len(t[0]), reverse=True)
+
+# 「〜なければなりません」这一族义务句型（第46课）：整条尾巴单独成块时，形态说明
+# 按「固定搭配」标（见 form_gloss）——上册 L19 用的是分写的 〜なければ　なりません，
+# 走不到这张表，所以上册那三条已上线条目的形态说明一个字节都不动。
+_NAI_UNIT_TAILS = ('なければなりませんでした', 'なければなりません', 'なければならない',
+                   'なければいけません', 'なければいけない',
+                   'なくてはいけません', 'なくてはいけない')
+
+# 表面形专属的短词义／标签：教材词表的词义偏长（拍照／广阔／忘记／回来），
+# 这几处在活用形块上用更短的直译词；して／あるか 的标签要点明是哪个形态
+# （同样是「基本形＋か」，あるか 是疑问小句，行くか 是不确定小句）。
+_FORM_ZH = {
+    '撮っても': '拍', '吸っては': '吸', '広くて': '宽',
+    '忘れないで': '忘', '帰らなければ': '回', 'あるか': '在', 'して': '做',
+}
+_FORM_LABEL = {
+    'して': '（して：する 的て形）',
+    'あるか': '（基本形＋か：疑问小句）',
+}
+# 假名词面 → 词表词面（にほんじん → 日本人）：词表按汉字收录，假名词面只能靠读法反查。
+_KANA_SURF = {}
+for _ks, _kv in LEXICON.items():
+    if _kv.get('kana') and _kv['kana'] != _ks:
+        _KANA_SURF.setdefault(_kv['kana'], _ks)
+
+# 词表里查不到整条、但引擎必须给得出词义的词（第16／20课）：
+#   まだ  —— 第16课基本课文经 SOURCE_PATCHES 修订后（まで→まだ）出现的副词；
+#   どこか —— どこ＋か 的不定用法（どこかへ 行きたいです）。
+# 它们刻意不进 LEXICON：LEXICON 的假名读法会进 KANA_READINGS，
+# 而 KANA_READINGS 参与罗马音断词（まだ 会把 まだできません 切成 mada de kimasen）。
+_FORM_WORDS = {
+    'まだ': ('还，仍然', '副词'),
+    'どこか': ('哪里（不确定）', '疑问词＋か（不定）'),
+    'どこか': ('哪里（不确定）', '疑问词＋か（不定）'),
+    # 第26课的「〜かもしれません」：教材数据把 かも 与 しれません 分成了两段，
+    # 后一段单独成段时词表与活用表都只给得出错的「（受身・否定）」，
+    # 所以在这里按固定搭配给整条词义（审计 C2 的「固定搭配」口径：拆开教反而错）。
+    'しれません': ('也许／说不定', '固定搭配（〜かもしれません）'),
+}
+
+# ない形的语干是あ段（帰ら／走ら／買わ）：换回い段才能接 ます
+_NAI_TO_I = {'わ': 'い', 'か': 'き', 'が': 'ぎ', 'さ': 'し', 'た': 'ち',
+             'な': 'に', 'ば': 'び', 'ま': 'み', 'ら': 'り'}
+# て形／た形语干的音便例外：行く 的 いって・行った 都不走通用规则（_TE_WHITELIST 同理）。
+_TE_STEM_EXTRA = {'行っ': 'いきます', 'いっ': 'いきます'}
+# 单字语干只有 する 的「し」是真实存在的（して／しなくて）
+_STEM_1CHAR = {'し': 'します'}
+
+
+def _verb_face(stem):
+    """活用形语干 → 词表里的动词词面（撮っ→撮ります、かけ→かけます、帰ら→帰ります、
+    残業し→残業します、し→します）。查不到返回空串。
+
+    与 _te_stem_masu 的分工：那个函数服务既有分词管线（改它会动分词边界与罗马音），
+    这里为反向识别补一段「一段／サ変／ない形语干／假名词面」的兜底，两者互不影响。
+    """
+    stem = (stem or '').strip()
+    if stem in _STEM_1CHAR:
+        return _STEM_1CHAR[stem]
+    if not stem:
+        return ''
+    # 二字以上的语干才走音便（っ／い／ん…）与ない形（あ段→い段）这两条推断；
+    # 单字语干（見／着／寝）只认「语干＋ます」这一条硬证据，免得 さ→します、
+    # こ→きます 这类巧合把 さん／こと 这类词尾同形的词切坏。
+    if len(stem) >= 2:
+        face = _TE_STEM_EXTRA.get(stem)
+        if face and VERB_KANA.get(face):
+            return VERB_KANA[face]
+        face = _te_stem_masu(stem)                   # 音便语干：書い／読ん／買っ／話し／来
+        if face:
+            return face
+    # 一段・サ変・カ変：语干与ます形语干同形（かけ→かけます、見→見ます、たべ→食べます）
+    info = LEXICON.get(stem + 'ます')
+    if info and '动' in (info.get('pos') or ''):
+        return stem + 'ます'
+    hit = VERB_KANA.get(stem + 'ます')               # 假名词面：かえり→帰ります
+    if hit:
+        return hit
+    # ない形语干：あ段 → い段 再查（帰ら→帰ります、買わ→買います）
+    if len(stem) >= 2 and stem[-1] in _NAI_TO_I:
+        alt = stem[:-1] + _NAI_TO_I[stem[-1]]
+        info = LEXICON.get(alt + 'ます')
+        if info and '动' in (info.get('pos') or ''):
+            return alt + 'ます'
+        hit = VERB_KANA.get(alt + 'ます')
+        if hit:
+            return hit
+    return ''
+
+
+def _noun_face(stem):
+    """名词语干 → 词表词面（にほんじん 这类假名词面要靠读法反查：→ 日本人）。"""
+    stem = (stem or '').strip()
+    if not stem:
+        return ''
+    for face in (stem, _KANA_SURF.get(stem, '')):
+        if not face:
+            continue
+        info = LEXICON.get(face)
+        if info and (info.get('pos') or '').startswith(('名', '专', '代', '疑')):
+            return face
+    return ''
+
+# ---------------------------------------------------------------- 第25–48课：新形态的语干还原
+# ない形语干之外的三种段位转换：え段（可能／假定）、お段（意志）、单字假名语干。
+#   話せ→話します（可能）  書け→書きます（可能／仮定）  休も→休みます（意志）
+_E_TO_I = {'え': 'い', 'け': 'き', 'せ': 'し', 'て': 'ち', 'ね': 'に', 'へ': 'ひ',
+           'め': 'み', 'れ': 'り', 'げ': 'ぎ', 'ぜ': 'じ', 'で': 'じ', 'べ': 'び',
+           'ぺ': 'ぴ'}
+_O_TO_I = {'お': 'い', 'こ': 'き', 'そ': 'し', 'と': 'ち', 'の': 'に', 'ほ': 'ひ',
+           'も': 'み', 'ろ': 'り', 'ご': 'ぎ', 'ぞ': 'じ', 'ど': 'じ', 'ぼ': 'び',
+           'ぽ': 'ぴ', 'よ': 'い'}
+
+
+def _form_verb_face(stem):
+    """活用形语干 → 词表词面；比 _verb_face 多认两个单字假名语干（み→見ます、き→来ます）。
+
+    这一条只服务「反向活用识别」这一层（gloss_of 的形态还原），
+    不动分词管线用的 _verb_face，所以罗马音断词不受影响。
+    """
+    stem = (stem or '').strip()
+    face = _verb_face(stem)
+    if face:
+        return face
+    if len(stem) == 1:
+        return VERB_KANA.get(stem + 'ます', '')
+    return ''
+
+
+def _kana_step_face(stem, table):
+    """え段／お段语干 → い段语干，再查词表（話せ→話し→話します／休も→休み→休みます）。"""
+    stem = (stem or '').strip()
+    if not stem or stem[-1] not in table:
+        return ''
+    alt = stem[:-1] + table[stem[-1]]
+    info = LEXICON.get(alt + 'ます')
+    if info and '动' in (info.get('pos') or ''):
+        return alt + 'ます'
+    return VERB_KANA.get(alt + 'ます', '')
+
+def _pot_face(stem, tail=''):
+    """可能形语干（第38课）：話せ→話します、書け→書きます、見られ→見ます。
+
+    五段可能形被切成「語干＋え段＋ます」（話｜せます）时，语干只剩「話」——
+    这时用尾字把え段补回去（話＋し＝話します）。一段・する 走 られ，语干本身已经完整。
+    """
+    face = _form_verb_face(stem) or _kana_step_face(stem, _E_TO_I)
+    if face:
+        return face
+    if tail and tail[0] in _E_TO_I:
+        alt = stem + _E_TO_I[tail[0]]
+        info = LEXICON.get(alt + 'ます')
+        if info and '动' in (info.get('pos') or ''):
+            return alt + 'ます'
+        return VERB_KANA.get(alt + 'ます', '')
+    return ''
+
+
+
+def _pred_face(stem):
+    """谓语形语干 → 词表词面（ん／ように 这类接谓语形的尾巴用）。
+
+    会依次试：语干本身 → 剥掉 た／だ／て／で → 再剥掉 れ／られ（受身语干），
+    这样 開けた＋ん／しかられた＋ん／読んでいます 这些都能还原到ます形。
+    """
+    stem = (stem or '').strip()
+    if not stem:
+        return ''
+    cands = [stem]
+    for t in ('た', 'だ', 'て', 'で'):
+        if stem.endswith(t) and len(stem) > len(t):
+            cands.append(stem[:-len(t)])
+    for base in list(cands):
+        if base.endswith('られ') and len(base) > 2:
+            cands.append(base[:-2])
+        if base.endswith('れ') and len(base) > 1:
+            cands.append(base[:-1])
+    for base in cands:
+        face = _form_verb_face(base) or _dic_face(base)
+        if face:
+            return face
+    if _adj_pos(stem, '形1') or _adj_pos(stem, '形2'):
+        return stem
+    if stem.endswith('ない') and len(stem) > 2:
+        base = stem[:-2]
+        face = _form_verb_face(base) or _dic_face(base) or _noun_face(base)
+    for base in list(cands):
+        if base.endswith('られ') and len(base) > 2:
+            cands.append(base[:-2])
+        if base.endswith('れ') and len(base) > 1:
+            cands.append(base[:-1])
+        # 五段可能形的辞书形（行ける→行き／読める→読み）：え段→い段
+        if base.endswith('る') and len(base) > 2 and base[-2] in _E_TO_I:
+            cands.append(base[:-2] + _E_TO_I[base[-2]])
+
+def _appearance_face(stem):
+    """样态 そう 的语干（第33课）：おいし→おいしい、降り→降ります、よさ→いい。"""
+    stem = (stem or '').strip()
+    if not stem:
+        return ''
+    if stem == 'よさ':
+        return 'いい'
+    if adj_i_stem_ok(stem):
+        return stem + 'い'
+    return _form_verb_face(stem)
+
+
+def _form_stem_info(stem, kind, tail=''):
+    """按判据验证语干，返回 (词表词面, 词义)；判据不成立返回 ('', '')。
+
+    判据一律是「剥完的语干必须真的指向词表里的一个词」——这条守卫是第 1–24 课
+    调好的做法（かった／て／た／ない 都靠它挡住 とても／ビル 这类词尾偶合的词），
+    第 25–48 课新增的形态全部沿用同一套守卫，所以不会把普通词切坏。
+    tail 只在可能形需要时用到：話せ｜ます 的语干只剩「話」，
+    要拿尾字把え段补回去（話＋し＝話します）。
+    """
+    stem = (stem or '').strip()
+    if kind in ('te', 'tai', 'nai', 'aux', 'nasai'):
+        # て形／ない形语干、て＋补助动词的语干、なさい 的前接语干
+        # （内层可能还压着一层使役／受身：休ま｜せて｜ください、完成｜させ｜なければ）
+        face = _layered_face(stem)
+    elif kind in ('pass', 'cause', 'vol', 'imperative'):
+        # 受身・使役・意志（一段・する・来る）・命令（ろ）
+        face = _form_verb_face(stem)
+        if not face and kind in ('pass', 'cause'):
+            face = _suru_face(stem)          # 留学｜させます → 留学します
+    elif kind == 'pot':
+        face = _pot_face(stem, tail)
+    elif kind == 'vol_o':
+        # 五段意志形（休もう／行こう）：お段→い段，且语干至少两字（挡 よう→います）
+        face = _kana_step_face(stem, _O_TO_I) if len(stem) >= 2 else ''
+    elif kind == 'prohibit':
+        # 禁止的 な 只接在动词**辞书形**后面（吸うな／止めるな）
+        face = _dic_face(stem)
+    elif kind == 'cond':
+        face = _ba_face(stem)
+    elif kind == 'cond_tara':
+        face = _form_verb_face(stem) or _dic_face(stem)
+    elif kind == 'cond_nara':
+        face = _dic_face(stem) or _noun_face(stem)
+    elif kind == 'i_adj_stem':
+        # 〜すぎる 的前接：い形容词词干（大き→大きい）或动词ます形语干（食べ→食べます）
+        face = stem + 'い' if adj_i_stem_ok(stem) else _form_verb_face(stem)
+    elif kind == 'pot':
+        face = _pot_face(stem, tail)
+    elif kind == 'pot_v':
+        face = _pot_v_face(stem, tail)
+    elif kind == 'appearance':
+        face = _appearance_face(stem)
+    elif kind == 'hearsay':
+        face = _pred_face(stem) or _noun_face(stem)
+    elif kind == 'pot':
+        face = _pot_face(stem, tail)
+    elif kind == 'pot_v':
+        # 五段可能形（話｜せます）。注：上一轮这里还压着一行
+        # `face = suru_verb_base(stem) + 'します' …`，它无条件覆盖了 _pot_v_face 的结果，
+        # 等于把整条可能形还原路线掐死（書かせました／話せます 都拿不到词义），已删。
+        face = _pot_v_face(stem, tail)
+    elif kind == 'i_adj':
+        face = stem + 'い' if _adj_pos(stem + 'い', '形1') else ''
+    elif kind == 'dic':
+        face = _dic_face(stem)
+    elif kind == 'suru':
+        # する 型复合动词的辞书形（第31／34／37课 フリーズ｜する／留学｜する／出場｜する）：
+        # 语干是那个名词，回查「〜します」在词表里的条目（suru_verb_base 给的是语干本身，
+        # 按词表的收录方式要补回 します）。这条是通用的，以后新出现的 〜する 不必再补表。
+        _base = suru_verb_base(stem)
+        face = _base + 'します' if _base else ''
+    elif kind == 'noun':
+        face = _noun_face(stem)
+    elif kind == 'pred':
+        # ん／の／ように 只接在谓语形后面：痛い＋ん／行ける＋ように／食べた＋の
+        face = _pred_face(stem)
+    else:
+        face = ''
+    if not face:
+        return '', ''
+    zh = clean_gloss((LEXICON.get(face) or {}).get('zh', ''))
+    return (face, zh) if zh else ('', '')
+
+
+def _pot_v_face(stem, tail=''):
+    """五段可能形的「语干＋え段」还原（第38课）：話｜せます → 話します。
+
+    只走这条路线：不走「语干本身是动词」那条，否则 見せて（見せる 的て形）
+    会被读成 見す 的可能形、つけて 会被读成 つく 的可能形。
+    语干要求带汉字或两字以上，挡掉 つ｜けて 这种纯假名单字语干。
+    """
+    face = _kana_step_face(stem, _E_TO_I)
+    if face:
+        return face
+    if tail and tail[0] in _E_TO_I and (_has_kanji(stem) or len(stem) >= 2):
+        alt = stem + _E_TO_I[tail[0]]
+        info = LEXICON.get(alt + 'ます')
+        if info and (info.get('pos') or '').strip() == '动1':
+            return alt + 'ます'
+        hit = VERB_KANA.get(alt + 'ます')
+        if hit and (LEXICON.get(hit, {}).get('pos') or '').strip() == '动1':
+            return hit
+    return ''
+
+
+def form_gloss(surface):
+    """活用形的表面形 → {'zh','en','pos','honorific'}；认不出返回 None。
+
+    gloss_of 的第一层调用它：词表里没有的活用形（見たい／食べた／帰らなければ／来ると／
+    行ったり／にほんじんだったり）在这里还原成「词条词义 ＋ 形态标签」。
+    词表里已有的整词不抢（调用方先判 LEXICON 里有没有），所以 いけません／すみません
+    这类熟语，以及 こと／ほう／後 这类由词表给词义的形式名词都不受影响。
+    """
+    s = (surface or '').strip()
+    s = (surface or '').strip()
+    if len(s) < 2:
+        return None
+    word = _FORM_WORDS.get(s)
+    if word:
+        return {'zh': word[0], 'en': '', 'pos': word[1], 'honorific': ''}
+    for tail, label, kind in _FORM_TAIL_ORDER:
+        if len(s) <= len(tail) or not s.endswith(tail):
+            continue
+        face, zh = _form_stem_info(s[:-len(tail)], kind, tail)
+        if not face and kind == 'pot_v':
+            # 五段使役（第43课）：書か｜せました —— 语干收在あ段，与可能形的え段语干同尾，
+            # 所以先按可能形试、不成立再按使役试（第43课的 書かせました 走这条）。
+            face, zh = _cause_v_face(s[:-len(tail)])
+            if face:
+                label = label.replace('可能', '使役')
+        if not face:
+            continue
+        if kind == 'aux' or tail in _NAI_UNIT_TAILS:
+            # 补助动词链与「〜なければなりません」这一条义务句型：
+            #   〜ています／〜てしまいました／〜ておきます／〜てあります…
+            #   〜なければなりません（第46课 完成させなければなりません）
+            # 句面上是「活用形＋补助动词」，合起来才表达一个语法意义，教材也当句型整体教，
+            # 块级结构因此保持整块（与 知っています 这类既有写法一致）。
+            # 词性标签点明它是固定句型——审计 C2 的口径正是「固定搭配不再要求切谓语」
+            # （与 _EXTRA_WORDS 里 しれません／という／お持ちします 用的是同一个口径）。
+            # 注意：只认这一条句型，不认整族 ない 形——上册 L19 的 〜なければ／〜ないで
+            # 已上线，改它们的形态说明会破坏「上册逐字节相同」。
+            # 只剥一层最外层括号：strip('（）') 会把「（てある：已经…着（状态））」的
+            # 内层右括号也一起吃掉，导致标签括号不闭合。
+            _lab = label.strip()
+            if _lab.startswith('（') and _lab.endswith('）'):
+                _lab = _lab[1:-1]
+            label = '固定搭配（%s）' % _lab
+        return {'zh': _FORM_ZH.get(s) or zh,
+                'en': (LEXICON.get(face) or {}).get('en', ''),
+                'pos': _FORM_LABEL.get(s) or label,
+                'honorific': ''}
+    # 辞书形本身就是「词表里没有的表面形」：弾く／集める／来る／見る（第20／22课的基本形）
+    face = _dic_face(s)
+    if face:
+        zh = clean_gloss((LEXICON.get(face) or {}).get('zh', ''))
+        if zh:
+            return {'zh': _FORM_ZH.get(s) or zh,
+                    'en': (LEXICON.get(face) or {}).get('en', ''),
+                    'pos': _FORM_LABEL.get(s) or '（基本形）',
+                    'honorific': ''}
+    # 命令形与五段可能形的「裸语干」（消せ／止めろ）：教材里它们独立成段。
+    # 只认带汉字的语干（纯假名的裸语干 すべて／ため／いかにも 与这类形态同形，会误伤），
+    # 而且只走「语干＋え段」这条还原路线（_kana_step_face）——
+    # 否则 食べ（食べたい 的语干）会被当成五段可能形。
+    if _has_kanji(s):
+        bare = ''
+        if s.endswith('ろ') and len(s) > 1:
+            bare = _form_verb_face(s[:-1])
+            label = '（命令形）'
+        elif s[-1] in _E_TO_I:
+            bare = _kana_step_face(s, _E_TO_I)
+            label = '（え段形：命令／可能）'
+        if bare:
+            zh = clean_gloss((LEXICON.get(bare) or {}).get('zh', ''))
+            if zh:
+                return {'zh': zh, 'en': (LEXICON.get(bare) or {}).get('en', ''),
+                        'pos': label, 'honorific': ''}
+    return None
+
+def _cause_v_face(stem):
+    """五段使役的语干还原（書か｜せました → 書きます）；认不出返回 ('', '')。
+
+    与可能形的区别只在语干的尾字：可能收え段（話｜せます），使役收あ段（書か｜せました）。
+    词表按ます形收录，所以还原方向是「あ段换回い段 ＋ ます」。
+    """
+    stem = (stem or '').strip()
+    if not stem or stem[-1] not in _NAI_TO_I:
+        return '', ''
+    alt = stem[:-1] + _NAI_TO_I[stem[-1]]
+    info = LEXICON.get(alt + 'ます')
+    if not info:
+        hit = VERB_KANA.get(alt + 'ます')
+        info = LEXICON.get(hit) if hit else None
+    if not (info and (info.get('pos') or '').strip() == '动1'):
+        return '', ''
+    zh = clean_gloss(info.get('zh', ''))
+    return (alt + 'ます', zh) if zh else ('', '')
+
+    # 只认带汉字的语干（纯假名的裸语干 すべて／ため／いかにも 与这类形态同形，会误伤），
+    # 而且只走「语干＋え段」这条还原路线（_kana_step_face）——
+    # 否则 食べ（食べたい 的语干）会被当成五段可能形。
+    if _has_kanji(s):
+        bare = ''
+        if s.endswith('ろ') and len(s) > 1:
+            bare = _form_verb_face(s[:-1])
+            label = '（命令形）'
+        elif s[-1] in _E_TO_I:
+            bare = _kana_step_face(s, _E_TO_I)
+            label = '（え段形：命令／可能）'
+        if bare:
+            zh = clean_gloss((LEXICON.get(bare) or {}).get('zh', ''))
+            if zh:
+                return {'zh': zh, 'en': (LEXICON.get(bare) or {}).get('en', ''),
+                        'pos': label, 'honorific': ''}
+                return {'zh': zh, 'en': (LEXICON.get(bare) or {}).get('en', ''),
+                        'pos': label, 'honorific': ''}
+    return None
+
+
+def _suru_face(stem):
+    """する 型复合动词的语干 → 词表词面（留学＋させます → 留学します）。"""
+    base = suru_verb_base(stem)
+    return base + 'します' if base else ''
+
+
+def _layered_face(stem):
+    """语干 → 词表词面；剥不动时再剥掉一层使役／受身（休ま|せて|ください、完成|させ|なければ），
+    以及敬语的 お／ご 前缀（お帰り|になります → 帰ります）。"""
+    face = _form_verb_face(stem)
+    if face:
+        return face
+    if len(stem) > 2 and stem[0] in ('お', 'ご'):
+        face = _layered_face(stem[1:])
+        if face:
+            return face
+    for suf, kind in (('させ', 'cause'), ('され', 'pass'), ('られ', 'pass'),
+                      ('せ', 'pot'), ('れ', 'pass')):
+        if stem.endswith(suf) and len(stem) > len(suf):
+            face = _form_stem_info(stem[:-len(suf)], kind, suf)[0]
+            if face:
+                return face
+    return ''
+
+
+def _ba_face(stem):
+    """假定形（ば／れば）的语干：書け／食べれ／優勝すれ／来れ → 書きます／食べます／優勝します／来ます。"""
+    face = (_form_verb_face(stem) or _kana_step_face(stem, _E_TO_I)
+            or _suru_face(stem))
+    if face:
+        return face
+    for suf, kind in (('すれ', 'suru'), ('され', 'pass'), ('す', 'suru')):
+        if stem.endswith(suf) and len(stem) > len(suf):
+            if kind == 'suru':
+                face = _suru_face(stem[:-len(suf)])
+            else:
+                face = _form_verb_face(stem[:-len(suf)])
+            if face:
+                return face
+    if stem.endswith('れ') and len(stem) > 1:
+        return _form_verb_face(stem[:-1]) or _suru_face(stem[:-1])
+    return ''
+    return ''
+
+
+    return ''
 
 
 # 「でしょう」里的 で 不是助词（是断定助动词的一部分），断词时必须跳过
 _NO_BREAK_AT = ('でしょう', 'でしょうか', 'です', 'でした', 'ます', 'ました',
                 'ません', 'ましょう', 'ください')
-
-
-# 形式名詞：只能跟在谓语之后，所以「左边收在谓语形上」本身就是断词依据——
 # 不必要求左边是词表里的词。見ることが → miru koto、読んだことがある → …ta koto。
 #   こと／もの  抽象名词化（第20课起）
 #   とき／ところ／ため／はず／わけ／つもり／ほう  时间・场所・原因・推测・打算
 _FORM_NOUNS = ('こと', 'もの', 'とき', 'ところ', 'ため', 'はず', 'わけ', 'つもり', 'ほう')
+# 形式名词在句面上的写法：こと／もの… 之外，前／後 既写汉字也写假名
+# （来る前に／終わった後で／あったまえに）。_analyze_segments 用它们判断
+# 「谓语＋形式名词」是不是一个成分块——块里的 た／だ 不切出来。
+_FORM_NOUN_FORMS = _FORM_NOUNS + ('前', '後', 'まえ', 'あと')
 # 补助动词：跟在 形式名詞 或 て形 之后，意义已经虚化（〜ことになる／行っている）。
 # 注意不收「する」系列（して／した／します）：那些是段级谓语，硬收会把
 #     したい → shita i、さがして → saga shite 这种词内假名切开。
@@ -1315,6 +3330,8 @@ _AUX_VERBS = ('なって', 'なった', 'なり', 'なる', 'いる', 'いた', 
 # 谓语形收尾的假名：形式名詞前面的断点靠它把关。
 #   まわる|こと ✓（る）   たべ|もの ✗（べ 不在表里 → tabemono 不切）
 _PRED_END_KANA = set('うくぐすつぬぶむるたてでん')
+
+
 
 
 def _pred_like_left(piece):
@@ -1526,6 +3543,12 @@ def segment_romaji(seg):
         for piece in _split_body_read(body_read, spans):
             parts.append(_emit_piece(piece))
 
+    inner = seg.get('predicate_inner')
+    if inner and seg.get('inner_inflection') and parts:
+        # 连写的活用尾（て／た／たい／ない形）紧跟词体，必须先于助词输出：
+        # 格助词剥在内层之外（行き＋たい＋と 思います），先输出助词会拼成 iki totai。
+        parts[-1] += _spaced_reading(inner)
+        inner = None
     if seg.get('particle'):
         p = seg['particle']
         pro = _PARTICLE_ROMAJI.get(p) or _spaced_reading(p)
@@ -1534,17 +3557,17 @@ def segment_romaji(seg):
             parts[-1] += pro
         else:
             parts.append(pro)
-    if seg.get('predicate_inner'):
+    if inner:
         # 内层谓语尾（い形容词活用）：楽し＋かった → tanoshikatta（连写）、
         # 熱く＋ない → atsuku nai（ない 是独立的否定词，断空格）
-        pro = _spaced_reading(seg['predicate_inner'])
+        pro = _spaced_reading(inner)
         if seg.get('inner_inflection') and parts:
             parts[-1] += pro
         else:
             parts.append(pro)
     if seg.get('predicate'):
         pro = _spaced_reading(seg['predicate'])
-        if seg.get('inflection') and parts:
+        if (seg.get('inflection') or seg.get('predicate_glued')) and parts:
             # 动词活用尾巴是词的一部分：起き＋ます 写成 okimasu，不断空格
             parts[-1] += pro
         else:
@@ -1556,18 +3579,323 @@ def segment_romaji(seg):
         parts.append(_spaced_reading(seg['final']))
     return ' '.join(x for x in parts if x)
 
+def _form_noun_follows(segs, i):
+    """第 i 段的下一段是不是形式名词（こと／ほう／後／前に…）。"""
+    nxt = segs[i + 1] if i + 1 < len(segs) else None
+    if not nxt or nxt['kind'] == 'punct':
+        return False
+    surf = nxt.get('surf') or ''
+    return any(surf.startswith(t) for t in _FORM_NOUN_FORMS)
+
+
+def _word_split_or(analyzed, seg, sentence_final, form_noun_follows):
+    """整段没剥出任何成分、段里又有多个词界时，按词界切开逐段重析（第14课 l14_x1_2）。
+    整段没剥出任何成分、段里又有多个词界时，按词界切开逐段重析（第14课 l14_x1_2）。
+
+    会话／应用课文没有全角空格，一整串动作会连成一个段：
+        !帰(かえ)ってから!書(か)きました → 段='帰ってから書きました'
+    它的 words 已经是 ['かえってから', 'かきました']，按这个词界切开，
+    才能切出 帰っ＋て＋から／書き＋ました。
+
+    采纳条件（两条都满足才切）：
+      ① 切开后至少有子段切出了谓语／活用尾／接续助词——只切出格助词不够。
+         「三か月」按 ! 词界切开后，前半截 三か 会被当成 三＋か（か 只是那个词的尾字），
+         整块留下才是对的。
+      ② 切开后一个新成分也剥不出来（かばん売り場 这种本来就是词的复合词）就退回整段，
+         免得把复合词拆成两块。
+    """
+    if seg['kind'] == 'punct' or len(seg.get('words') or []) < 2:
+        return [analyzed]
+    if analyzed.get('particle') or analyzed.get('predicate') \
+            or analyzed.get('predicate_inner') or analyzed.get('conj') \
+            or analyzed.get('final') or (analyzed.get('body') or '') != seg.get('surf'):
+        return [analyzed]
+    subs = _split_segment_by_words(seg)
+    if not subs:
+        return [analyzed]
+    cand = [analyze_segment(x, sentence_final=(sentence_final and k == len(subs) - 1),
+                            form_noun_follows=(form_noun_follows and k == len(subs) - 1))
+            for k, x in enumerate(subs)]
+    if not any(x.get('predicate') or x.get('predicate_inner') or x.get('conj') for x in cand):
+        return [analyzed]
+    return cand
+
+
+def _body_deficient(body):
+    """段体是不是「还不成词」：查不到词义，或只靠前缀残配（老年人｜の荷物を… 这种半截词）。"""
+    if not body:
+        return False
+    g = gloss_of(body)
+    return g is None or bool(g.get('partial'))
+
+
+def _rentai_cut_pt(surf, body):
+    """连体词（この／その／あの／どんな…）与它修饰的名词黏在一段里时，切在连体词之后。
+
+    连体词不能独立充当成分——「この」不是个东西，「このマーク」才是；切开之后
+    折块那一步（build_exemplars_auto._fold_rentai）才能把两者合成一个成分。
+    段体只有连体词自己时（この）不动：那是上册已上线的写法。
+    """
+    if not body:
+        return None
+    for r in sorted(_RENTAI_PARTS, key=len, reverse=True):
+        if body.startswith(r) and len(body) > len(r) \
+                and surf.startswith(r) and len(surf) > len(r):
+            return len(r)
+    return None
+
+
+def _na_adj_cut_pt(surf, body):
+    """な形容词连体形（簡単な／いろいろな）后面黏着名词时，切在 な 之后。
+
+    な 是连体助词，必须留在左边（折块那一步会给它补出助词框）；右边那个名词
+    要自己成段，否则「簡単なパソコン」整块只能用前缀残配到「简单」（审计 C3）。
+    """
+    if not body:
+        return None
+    for k in range(len(body) - 2, 0, -1):
+        if body[k] != 'な':
+            continue
+        dic, _f = adj_form(body[:k + 1])
+        if dic and (_adj_pos(dic, '形2') or dic in _NA_ADJ_EXTRA):
+            return k + 1
+    return None
+
+
+def _splitter_pts(seg, analyzed):
+    """断词器片边界里**落在段体内部**的字面切点（罗马音一字不变）。
+
+    断词器（_split_body_read）给出的片就是整句罗马音的断词依据，按它切片不会多出
+    任何空格；片首的助词／接尾／补助动词黏回左边一片（テレビを｜見ます）。
+    切点落在注音词内部（京都 不能被切成 きょう｜と）或落在被剥出来的谓语尾上时丢掉。
+    """
+    surf = seg.get('surf') or ''
+    read = seg.get('read') or ''
+    body_read = analyzed.get('body_read') or ''
+    if not surf or not read or not body_read or len(body_read) >= len(read):
+        return None
+    ref = _split_body_read(read, _ann_spans(seg, analyzed.get('body') or ''))
+    if not ref or len(ref) < 2:
+        return None
+    # 片首的助词／接尾／补助动词一律黏回左边一片（テレビ｜を → テレビを）：
+    # 切点只能落在「黏完之后」的组边界上，所以绝不会切进一个词里
+    # （ところに／もらった 内部没有片边界，也就不会被切成 と｜ころに、も｜らった）。
+    # 注意：这里只按**整片的**黏合判据，不做「片首助词剥出来另起一片」——
+    # 那会把 ところ 的 と、もらった 的 も 当成助词（罗马音会多出空格）。
+    groups = []
+    for pc in ref:
+        if groups and _piece_glues_left(pc, groups[-1]):
+            groups[-1] += pc
+        else:
+            groups.append(pc)
+    # 段体收在**名词性成分**上时不切：那是「话题＋名词谓语」（今日は平日）或
+    # 「谓语＋形式名词」（見ること）的写法，上册已经上线，按片切开会把上册的块改掉
+    # （上册 610 条条目必须逐字节相同）。下册留在报告里的那几条属这一类，另有原因。
+    # 判据只看**段体自己那一段**的最后一片（被剥出来的谓语尾 でしょう 之类不算）。
+    right = ''
+    _acc = 0
+    for g in groups:
+        if _acc < len(body_read):
+            right = g
+        _acc += len(g)
+    if not right or right in _FORM_NOUN_FORMS:
+        return None
+    rpos = (gloss_of(right, prefer_verb=True) or {}).get('pos') or ''
+    if rpos.startswith(('名词', '专有名词', '数量词', '代词',
+                        '连体词', '人名', '把前面的词组整体名词化')):
+        return None
+    if not rpos and not _pred_like_left(right):
+        return None
+    chars = _read_align(seg.get('parts'))
+    if not chars:
+        return None
+    if ''.join(c[0] for c in chars) != surf or ''.join(c[1] for c in chars) != read:
+        return None
+    starts = []
+    ro = so = 0
+    for s, r, _ann in chars:
+        starts.append((ro, so, len(r)))
+        ro += len(r)
+        so += len(s)
+    pts = []
+    acc = 0
+    for g in groups[:-1]:
+        acc += len(g)
+        if acc >= len(body_read):
+            break                     # 再往后就是被剥出来的谓语尾了
+        off = None
+        for ro0, so0, rl in starts:
+            if ro0 == acc:
+                off = so0
+                break
+            if ro0 < acc < ro0 + rl:
+                break                 # 切点落在注音词内部：丢掉这一个切点
+        if off is None or off <= 0 or off >= len(surf):
+            continue
+        pts.append(off)
+    return sorted(set(pts)) or None
+
+
+def _two_sided_pt(surf, body):
+    """段尾挂着一个「孤立单位」时把它切出来（只在段体查不到完整词义时调用）。
+
+    三种情形都有同一个来源：教材的 ! 只标「注音词的起点」，于是段尾会落下孤立的
+    接头词 お／ご 或数字——它们自己与左边各自都能查到词义，切出来才对。
+      第30／42／46课 もう１１／会議は５／明日の９ → 左边 ＋ 段尾孤立的数字
+      第36／47课 毎日お｜酒、もうお｜帰りに、どうぞお｜座りください → 左边 ＋ 孤立的 お
+      第33课 とても｜おいしそう → 左边副词 ＋ 段尾的样态形
+
+    判据刻意收紧（否则 お大事に→お｜大事に、そうして→そう｜して 这类会把上册改掉）：
+      * 数字／お 只认 _EXTRA_WORDS 里显式补过的单条；お 还必须是**段的最后一个字**
+        （「お大事に」的 お 在段首，切出来只会把词拆坏）；
+      * 样态 そう 那一支只认右侧真是样态形（词性标签以「（样态」开头），
+        所以 〜する／〜して／名词性右侧一概不切；
+      * 左边与右边都必须查得到完整词义（不能是前缀残配或空）。
+    """
+    if len(body) < 2 or not surf.endswith(body[-1]):
+        return None
+    # ① 段尾孤立的数字（１１／５／９…）
+    for n in (3, 2, 1):
+        right = body[-n:]
+        if len(body) <= n or right not in _EXTRA_WORDS:
+            continue
+        if all(c in '0123456789０１２３４５６７８９' for c in right) \
+                and surf.endswith(right) \
+                and not _body_deficient(body[:-n]) and not _body_deficient(right):
+            return len(body) - n
+    # ② 段尾孤立的接头词 お／ご（段的最后一个字，且左边成词）
+    if body[-1] in HONORIFIC_PREFIX and body[-1] in _EXTRA_WORDS \
+            and surf[-1] == body[-1] \
+            and len(body) > 1 and not _body_deficient(body[:-1]):
+        return len(body) - 1
+    # ③ 段尾的样态形（とても｜おいしそう）：右侧的词性标签以「（样态」开头，左边也成词
+    # ③ 段尾的样态形（とても｜おいしそう）：右侧的词性标签以「（样态」开头，左边也成词
+    for n in range(2, len(body)):
+        right, left = body[-n:], body[:len(body) - n]
+        rpos = (gloss_of(right, prefer_verb=True) or {}).get('pos') or ''
+        if not rpos.startswith('（样态'):
+            continue
+        if _body_deficient(right) or _body_deficient(left):
+            continue
+        return len(left)
+    return None
+
+def _extra_subs(seg, analyzed):
+    """段体内还压着两层成分时的补充切法（只在段体查不到完整词义时调用）。
+
+    四条都保证「切开之后每一片都查得到词义」：
+      ① 连体词＋名词（この｜マーク）    ② な形容词连体形＋名词（簡単な｜パソコン）
+      ③ 断词器片边界（眼鏡を｜かけて、会議は｜５）——这一条不改罗马音
+      ④ 两边都成词的最短切点（とても｜おいしそう、毎日｜お）
+    """
+    body = analyzed.get('body') or ''
+    surf = seg.get('surf') or ''
+    if seg.get('kind') == 'punct' or not body:
+        return None
+    pt = _rentai_cut_pt(surf, body)
+    if pt is None:
+        pt = _na_adj_cut_pt(surf, body)
+    pts = [pt] if pt else _splitter_pts(seg, analyzed)
+    if not pts:
+        pt = _two_sided_pt(surf, body)
+        pts = [pt] if pt else None
+    if not pts:
+        return None
+    return _surface_split(seg, pts)
+
+
+def _analyze_deep(seg, sentence_final=False, form_noun_follows=False,
+                  deep=True, depth=0):
+    """段内兜底再切的驱动：把一段切开并逐片分析（递归），返回已分析的子段列表。
+
+    递归是必须的：_fn_tail_subs／_inner_resplit 吐出来的子段过去直接落地，段里压着的
+    を／が／は 再没机会剥出来——第31课「上手にレポートをまとめました」、第40课
+    「資料をそろえているところです」、第42课「テレビをつけたまま」都是同一个病：
+    切出子段之后没再走同一套判据。子段只会更短，深度上限 3 层足够。
+    """
+    if seg.get('kind') == 'punct':
+        return [seg]
+    mode = ''
+    subs = _fn_tail_subs(seg, sentence_final=sentence_final) if deep else None
+    if subs:
+        mode = 'fn'
+    if not subs:
+        a = analyze_segment(seg, sentence_final=sentence_final,
+                            form_noun_follows=form_noun_follows, deep=deep)
+        outs = _word_split_or(a, seg, sentence_final, form_noun_follows)
+        if len(outs) > 1:
+            subs, mode = outs, 'word'
+        elif _body_deficient(a.get('body')):
+            subs, mode = _extra_subs(seg, a), 'piece'
+        if not subs and deep:
+            # 段内兜底再切（按词表重切）与「助詞＋述語」硬切：
+            # 道が込んでいます → 道が｜込んでいます；時までにこの → 時までに｜この。
+            subs, mode = _inner_resplit_subs(seg, a, sentence_final, form_noun_follows), 'piece'
+            if not subs:
+                subs = _particle_cut_subs(seg)
+        if not subs:
+            return [a]
+    out = []
+    n = len(subs)
+    for k, y in enumerate(subs):
+        lastp = (k == n - 1)
+        if mode == 'fn':
+            # 形式名词就在最后一片上：前几片的 た／だ 不能切出来（与 _form_noun_follows 同一理由）
+            nxt_fn = k < n - 1
+        else:
+            nxt_fn = form_noun_follows and lastp
+        sf = sentence_final and lastp
+        if depth < 3:
+            out.extend(_analyze_deep(y, sentence_final=sf, form_noun_follows=nxt_fn,
+                                     deep=deep, depth=depth + 1))
+        else:
+            out.append(analyze_segment(y, sentence_final=sf, form_noun_follows=nxt_fn,
+                                       deep=deep))
+    return out
+
+
+def _analyze_segments(segs, inner_split=False):
+    """逐段分析：切不动就整段留；「多词整段」按词界切开（见 _word_split_or）。
+
+    inner_split：本句没有全角空格分块（下册体例）时打开「段内兜底再切」与「形式名词再切」。
+    打开后：
+      * analyze_segment 走 deep 支路（多认 だけ／しか／ばかり／とか／ながら 等副助词）；
+      * 整段查不到词义 + 段体内残留核心格助词的段按词表重切（见 _inner_resplit）；
+      * 段体里压着的形式名词（はず／つもり／こと／の／ほど）单独成段（见 _fn_tail_subs）；
+      * 切出来的每一片都继续走同一套判据（见 _analyze_deep）；
+      * 已经切好的段（查得到词义、结构已经对）一个字节都不动。
+    本句有全角空格时（上册基本课文 96/96）只多走「段体查不到完整词义」的补充切法
+    （连体词／な形容词连体形／断词器片边界），上册的段体都查得到词义，因此不动。
+    """
+    last = -1
+    for i, s in enumerate(segs):
+        if s['kind'] != 'punct':
+            last = i
+    analyzed = []
+    for i, s in enumerate(segs):
+        if s['kind'] == 'punct':
+            analyzed.append(s)
+            continue
+        fn_next = _form_noun_follows(segs, i)
+        analyzed.extend(_analyze_deep(s, sentence_final=(i == last),
+                                      form_noun_follows=fn_next, deep=inner_split))
+    return analyzed
+
 
 def analyze_sentence(jp_raw):
     """
     整句分析入口。
     返回 {'segments': [...], 'clean': 纯文本, 'romaji': 整句罗马音}
     """
-    segs = group_tokens(tokenize_raw(jp_raw))
+    tokens = tokenize_raw(jp_raw)
+    # 本句一个全角空格都没有 → 下册体例（! 只标注音词首，不标词块边界），
+    # 打开段内兜底再切；上册基本课文 96/96 有空格，走不到这条支路。
+    inner = not any(t.get('sep') for t in tokens)
+    segs = _analyze_segments(group_tokens(tokens), inner_split=inner)
     analyzed = []
     romaji_parts = []
     clean_parts = []
-    for s in segs:
-        a = analyze_segment(s)
+    for a in segs:
         analyzed.append(a)
         if a['kind'] == 'punct':
             romaji_parts.append(a['punct'])
@@ -1619,12 +3947,15 @@ def render_text(raw):
 
     # 罗马音单独走一遍：按语块段生成，段间双空格。
     # 不能复用上面的循环——那个循环的粒度是注音 token，会把句读重复计入。
+    # 段的分析与 analyze_sentence 走同一条路（_analyze_segments：句尾的 の、
+    # 多词整段的词界切开、无全角空格时的段内兜底再切），两处罗马音必须始终一致。
     romaji_parts = []
-    for seg in group_tokens(tokens):
+    inner = not any(t.get('sep') for t in tokens)
+    for seg in _analyze_segments(group_tokens(tokens), inner_split=inner):
         if seg['kind'] == 'punct':
             romaji_parts.append(seg['punct'])
         else:
-            romaji_parts.append(segment_romaji(analyze_segment(seg)))
+            romaji_parts.append(segment_romaji(seg))
             romaji_parts.append('  ')
 
     romaji = ''.join(romaji_parts)

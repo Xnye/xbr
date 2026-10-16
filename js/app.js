@@ -522,7 +522,7 @@
             <span class="sub-en">Basic Conversational Exchanges</span>
           </div>
           <div class="dialogue-exchanges-container">
-            ${renderBasicDialogues(lesson.basicc)}
+            ${renderBasicDialogues(lesson.basicc, num)}
           </div>
         </section>
       `;
@@ -538,7 +538,7 @@
             <span class="sub-en">${lesson.contitle || '本课情景对话'} ${lesson.contitlet ? `(${lesson.contitlet})` : ''}</span>
           </div>
           <div class="applied-story-container">
-            ${renderAppliedStory(lesson.context_sections)}
+            ${renderAppliedStory(lesson.context_sections, num)}
           </div>
         </section>
       `;
@@ -652,11 +652,73 @@
     }
   }
 
-  function renderBasicDialogues(basiccList) {
+  /* ====================================================================
+     课文「简单透视图」
+     会话课文（basicc）与应用课文（context_sections 的对白）每句一个折叠按钮，
+     默认折叠；展开后只画「词块 ＋ 助词框（含块内连接框 jp_units）＋ 振假名」
+     ——不画词下词义小字、不画逐词直译行、不画认知心法、不画 Ø が 红框。
+     数据里没有 simple 条目时：不渲染按钮、不留空容器，整段输出与改动前一致。
+     ==================================================================== */
+
+  /** 句面规范化：抹掉句读与空白（含全角空格）后再比，只认汉字假名本身。 */
+  function normalizeSentence(s) {
+    if (!s) return '';
+    return String(s).replace(/[。．！？，、,.\s]/g, '');
+  }
+
+  /**
+   * 取一句课文对应的 simple 条目，按协议优先级：
+   *   1. 先按 id：会话 l{课}_c{i}（i 从 1 起）／应用 l{课}_x{段}_{j}（段从 0 起，j 从 1 起）；
+   *   2. 再退回「课号相等 且 规范化句面相等」。
+   * 只认 simple: true 的条目——其余条目的 schema 里没有对白句，命中也渲染不出词块。
+   */
+  function findSimpleExemplar(lessonNum, id, jpClean) {
+    if (!exemplarsData || !exemplarsData.length) return null;
+
+    const byId = exemplarsData.find(e => e.simple && e.id === id);
+    if (byId) return byId;
+
+    const target = normalizeSentence(jpClean);
+    if (!target) return null;
+    return exemplarsData.find(e => {
+      return e.simple && e.lesson === lessonNum && normalizeSentence(e.sentence_raw) === target;
+    }) || null;
+  }
+
+  /** 对白日文行：命中 simple 条目才在句尾挂一个折叠按钮，未命中就原样输出。 */
+  function renderDialogueJp(line, simpleEx, slotId) {
+    const jpLine = `
+      <div class="dlg-jp jp-text" onclick="JapaneseTTS.speak('${escapeQuotes(cleanForSentence(line))}', this)">
+        ${rubyForSentence(line)}
+      </div>`;
+
+    if (!simpleEx) return jpLine;
+
+    return `
+      <div class="dlg-jp-line">
+        ${jpLine}
+        <div class="sentence-tools">
+          <button class="icon-btn simple-xray-btn" type="button" id="${slotId}_btn"
+                  aria-expanded="false" aria-controls="${slotId}"
+                  title="展开词块透视：只画词块、助词框与振假名"
+                  onclick="App.toggleSimpleXray('${slotId}', '${simpleEx.id}', this)">
+            <span class="simple-xray-arrow" aria-hidden="true">▸</span><span>词块透视</span>
+          </button>
+        </div>
+      </div>`;
+  }
+
+  /** 简单透视图槽位：默认折叠、零高度；未命中条目时连容器都不输出。 */
+  function renderSimpleXraySlot(simpleEx, slotId) {
+    if (!simpleEx) return '';
+    return `<div class="xray-embed-slot simple-xray-slot" id="${slotId}"></div>`;
+  }
+
+  function renderBasicDialogues(basiccList, lessonNum) {
     let currentGroup = '';
     let html = '';
 
-    basiccList.forEach((line) => {
+    basiccList.forEach((line, idx) => {
       if (line.group && line.group !== currentGroup) {
         if (currentGroup !== '') html += `</div>`;
         currentGroup = line.group;
@@ -666,15 +728,18 @@
         `;
       }
 
+      // 会话课文 id：l{课}_c{i}，i 从 1 起
+      const simpleEx = findSimpleExemplar(lessonNum, `l${lessonNum}_c${idx + 1}`, line.jp_clean);
+      const slotId = `c_slot_${lessonNum}_${idx + 1}`;
+
       html += `
         <div class="dialogue-bubble-row">
           <div class="speaker-tag">${line.speaker || '•'}</div>
           <div class="dlg-content">
-            <div class="dlg-jp jp-text" onclick="JapaneseTTS.speak('${escapeQuotes(cleanForSentence(line))}', this)">
-              ${rubyForSentence(line)}
-            </div>
+            ${renderDialogueJp(line, simpleEx, slotId)}
             <div class="dlg-romaji">${romajiForSentence(line)}</div>
             <div class="dlg-zh">${line.zh}</div>
+            ${renderSimpleXraySlot(simpleEx, slotId)}
           </div>
         </div>
       `;
@@ -684,29 +749,39 @@
     return html;
   }
 
-  function renderAppliedStory(sections) {
-    return sections.map((sec, secIdx) => `
-      <div style="margin-bottom: 2rem;">
-        ${sec.map(item => {
-          if (item.type === 'narration') {
-            return `<div class="narration-line">${item.zh}</div>`;
-          }
-          return `
-            <div class="dialogue-bubble-row">
-              <div class="speaker-tag">${item.speaker || '•'}</div>
-              <div class="dlg-content">
-                <div class="dlg-jp jp-text" onclick="JapaneseTTS.speak('${escapeQuotes(cleanForSentence(item))}', this)">
-                  ${rubyForSentence(item)}
-                </div>
-                <div class="dlg-romaji">${romajiForSentence(item)}</div>
-                <div class="dlg-zh">${item.zh}</div>
-              </div>
+  function renderAppliedStory(sections, lessonNum) {
+    return sections.map((sec, secIdx) => {
+      let dlgNo = 0;   // 段内对白序号，从 1 起；旁白不计数（协议只给 dialogue 配简单透视）
+
+      const body = sec.map(item => {
+        if (item.type === 'narration') {
+          return `<div class="narration-line">${item.zh}</div>`;
+        }
+        dlgNo += 1;
+        // 应用课文 id：l{课}_x{段号}_{段内对白序号}，段号从 0 起
+        const simpleEx = findSimpleExemplar(lessonNum, `l${lessonNum}_x${secIdx}_${dlgNo}`, item.jp_clean);
+        const slotId = `x_slot_${lessonNum}_${secIdx}_${dlgNo}`;
+
+        return `
+          <div class="dialogue-bubble-row">
+            <div class="speaker-tag">${item.speaker || '•'}</div>
+            <div class="dlg-content">
+              ${renderDialogueJp(item, simpleEx, slotId)}
+              <div class="dlg-romaji">${romajiForSentence(item)}</div>
+              <div class="dlg-zh">${item.zh}</div>
+              ${renderSimpleXraySlot(simpleEx, slotId)}
             </div>
-          `;
-        }).join('')}
-        ${secIdx < sections.length - 1 ? `<div style="margin: 1.5rem 0; border-bottom: 1px dashed var(--border-hairline);"></div>` : ''}
-      </div>
-    `).join('');
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div style="margin-bottom: 2rem;">
+          ${body}
+          ${secIdx < sections.length - 1 ? `<div style="margin: 1.5rem 0; border-bottom: 1px dashed var(--border-hairline);"></div>` : ''}
+        </div>
+      `;
+    }).join('');
   }
 
   /* ====================================================================
@@ -1036,6 +1111,34 @@
     setTimeout(() => GrammarDiagram.updateArrows(containerId), 60);
   }
 
+  /**
+   * 课文「简单透视图」的折叠开关（会话课文／应用课文每句一个）。
+   * 与 toggleExampleXray 同一套 slot + .open 机制：默认折叠、首次展开才挂图，
+   * 所以整课重渲染时槽位天然回到空且折叠。简单模式不画 Ø が，无需重算箭头几何。
+   * 按钮自身同步 .open 与 aria-expanded，键盘焦点环由 CSS :focus-visible 提供。
+   */
+  function toggleSimpleXray(slotId, exemplarId, btn) {
+    const slot = document.getElementById(slotId);
+    if (!slot) return;
+
+    const willOpen = !slot.classList.contains('open');
+    slot.classList.toggle('open', willOpen);
+
+    const button = btn || document.getElementById(`${slotId}_btn`);
+    if (button) {
+      button.classList.toggle('open', willOpen);
+      button.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    }
+    if (!willOpen) return;
+
+    if (!renderedXraySlots.has(slotId)) {
+      const ex = exemplarsData.find(e => e.id === exemplarId);
+      if (!ex) return;
+      slot.innerHTML = GrammarDiagram.render(ex, { id: `${slotId}_dg`, simple: true });
+      renderedXraySlots.add(slotId);
+    }
+  }
+
   /** 关联条目跳转：可能跨课，需要先切课再展开、滚动、闪一下 */
   function gotoGrammar(id) {
     const entry = grammarDeepIndex[id];
@@ -1080,6 +1183,7 @@
     init: init,
     selectLesson: selectLesson,
     toggleSentenceXray: toggleSentenceXray,
+    toggleSimpleXray: toggleSimpleXray,
     toggleGrammarCard: toggleGrammarCard,
     toggleAllGrammarCards: toggleAllGrammarCards,
     toggleQuiz: toggleQuiz,

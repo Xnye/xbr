@@ -1936,3 +1936,110 @@ body.theme-paper .slate-u   { color: #5c6675; }
   .legend-sample { justify-content: flex-start; }
   .legend-sub { display: none; }
 }
+
+
+/* ==========================================================================
+   课文「简单透视图」（会话课文 / 应用课文的对白）
+   默认只显示日文原句；点句尾的「▸ 词块透视」才画 词块＋助词框＋振假名。
+   视觉全部沿用 GrammarDiagram 的既有类名（.grammar-diagram-container /
+   .diagram-canvas / .sentence-chunks-row / .syntax-chunk-unit / .particle-box），
+   这里只做三件事：收敛留白与字号、给折叠按钮一个焦点环、给展开一个入场过渡。
+   基本课文（basic4）的完整透视图不经过这里，样式与行为都不受影响。
+   ========================================================================== */
+.dlg-jp-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* min-width: 0 让长句在窄屏换行，而不是把按钮挤出容器 */
+.dlg-jp-line .dlg-jp {
+  flex: 1;
+  min-width: 0;
+}
+
+.simple-xray-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  color: var(--text-faint);
+  /* 明确列出参与过渡的属性，不用 transition: all */
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.simple-xray-btn:hover {
+  color: var(--accent-gold);
+}
+.simple-xray-btn.open {
+  color: var(--text-muted);
+}
+.simple-xray-arrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  line-height: 1;
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.simple-xray-btn.open .simple-xray-arrow {
+  transform: rotate(90deg);
+}
+/* 键盘焦点必须看得见：按钮是原生 button，Tab 可达 */
+.simple-xray-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 折叠时零高度、零占位；展开才入场，箭头与内容同步动 */
+.simple-xray-slot {
+  display: none;
+  margin-top: 0.5rem;
+}
+.simple-xray-slot.open {
+  display: block;
+  animation: simple-xray-in 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes simple-xray-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 内嵌画布：沿用同一套画框，只收窄留白与字号（与窄屏断点取同一档 1.6rem），
+   否则对白区会被完整透视图的 2.2rem 巨型词块撑爆 */
+.grammar-diagram-container.simple-mode {
+  margin: 0.5rem 0 0;
+}
+.grammar-diagram-container.simple-mode .diagram-canvas.simple-canvas {
+  padding: 1.3rem 1.1rem 1rem;
+.simple-xray-btn:active {
+  transform: translateY(1px);
+  background: var(--bg-subtle);
+}
+  border-radius: 6px;
+}
+.grammar-diagram-container.simple-mode .sentence-chunks-row {
+  margin-bottom: 0;
+  gap: 0.6rem 1.1rem;
+}
+.grammar-diagram-container.simple-mode .chunk-jp-wrapper {
+  font-size: 1.6rem;
+}
+
+/* 全站「語法透視」关闭时：按钮与槽位一起隐去，不留下点不动的死按钮与 8px 空隙 */
+body.hide-xray .simple-xray-btn,
+body.hide-xray .simple-xray-slot {
+  display: none !important;
+}
+.grammar-diagram-container.simple-mode .syntax-chunk-unit {
+  max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  .dlg-jp-line { gap: 0.5rem; }
+  .simple-xray-btn span:not(.simple-xray-arrow) { display: none; }
+  .grammar-diagram-container.simple-mode .diagram-canvas.simple-canvas { padding: 1rem 0.8rem 0.8rem; }
+}
+
+/* 动效偏好：去掉入场位移与箭头旋转，状态切换仍然立即可见 */
+@media (prefers-reduced-motion: reduce) {
+  .simple-xray-slot.open { animation: none; }
+  .simple-xray-arrow { transition: none; }
+}

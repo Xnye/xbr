@@ -18093,8 +18093,8 @@
   },
   {
     "number": 25,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "これは明日会議で使う資料です",
+    "title_ruby": "これは<ruby>明日<rt>あした</rt></ruby><ruby>会議<rt>かいぎ</rt></ruby>で<ruby>使<rt>つか</rt></ruby>う<ruby>資料<rt>しりょう</rt></ruby>です",
     "title_romaji": "",
     "basic4": [
       {
@@ -18728,8 +18728,8 @@
   },
   {
     "number": 26,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "自転車に２人で乗るのは危ないです。",
+    "title_ruby": "<ruby>自転車<rt>じてんしゃ</rt></ruby>に<ruby>２人<rt>ふたり</rt></ruby>で<ruby>乗<rt>の</rt></ruby>るのは<ruby>危<rt>あぶ</rt></ruby>ないです。",
     "title_romaji": "",
     "basic4": [
       {
@@ -19467,8 +19467,8 @@
   },
   {
     "number": 27,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "子供の時，大きな地震がありました。",
+    "title_ruby": "<ruby>子供<rt>こども</rt></ruby>の<ruby>時<rt>とき</rt></ruby>，<ruby>大<rt>おお</rt></ruby>きな<ruby>地震<rt>じしん</rt></ruby>がありました。",
     "title_romaji": "",
     "basic4": [
       {
@@ -20304,8 +20304,8 @@
   },
   {
     "number": 28,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "馬さんは私に地図をくれました。",
+    "title_ruby": "<ruby>馬<rt>ば</rt></ruby>さんは<ruby>私<rt>わたし</rt></ruby>に<ruby>地図<rt>ちず</rt></ruby>をくれました。",
     "title_romaji": "",
     "basic4": [
       {
@@ -20948,8 +20948,8 @@
   },
   {
     "number": 29,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "電気を消せ。",
+    "title_ruby": "<ruby>電気<rt>でんき</rt></ruby>を<ruby>消<rt>け</rt></ruby>せ。",
     "title_romaji": "",
     "basic4": [
       {
@@ -21744,8 +21744,8 @@
   },
   {
     "number": 30,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "もう１１時だから寝よう。",
+    "title_ruby": "もう１１<ruby>時<rt>じ</rt></ruby>だから<ruby>寝<rt>ね</rt></ruby>よう。",
     "title_romaji": "",
     "basic4": [
       {
@@ -22388,8 +22388,8 @@
   },
   {
     "number": 31,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "このボタンを押すと，電源が入ります。",
+    "title_ruby": "このボタンを<ruby>押<rt>お</rt></ruby>すと，<ruby>電源<rt>でんげん</rt></ruby>が<ruby>入<rt>はい</rt></ruby>ります。",
     "title_romaji": "",
     "basic4": [
       {
@@ -23086,8 +23086,8 @@
   },
   {
     "number": 32,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "今度の日曜日に遊園地へ行くつもりです。",
+    "title_ruby": "<ruby>今度<rt>こんど</rt></ruby>の<ruby>日曜日<rt>にちようび</rt></ruby>に<ruby>遊園<rt>ゆうえん</rt></ruby><ruby>地<rt>ち</rt></ruby>へ<ruby>行<rt>い</rt></ruby>くつもりです。",
     "title_romaji": "",
     "basic4": [
       {
@@ -23799,8 +23799,8 @@
   },
   {
     "number": 33,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "電車が急に止まりました。",
+    "title_ruby": "<ruby>電車<rt>でんしゃ</rt></ruby>が<ruby>急<rt>きゅう</rt></ruby>に<ruby>止<rt>と</rt></ruby>まりました。",
     "title_romaji": "",
     "basic4": [
       {
@@ -24555,8 +24555,8 @@
   },
   {
     "number": 34,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "壁にカレンダーが掛けてあります",
+    "title_ruby": "<ruby>壁<rt>かべ</rt></ruby>にカレンダーが<ruby>掛<rt>か</rt></ruby>けてあります",
     "title_romaji": "",
     "basic4": [
       {
@@ -25408,8 +25408,8 @@
   },
   {
     "number": 35,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "明日雨が降ったら，マラソン大会は中止です。",
+    "title_ruby": "<ruby>明日<rt>あした</rt></ruby><ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>ったら，マラソン<ruby>大会<rt>たいかい</rt></ruby>は<ruby>中止<rt>ちゅうし</rt></ruby>です。",
     "title_romaji": "",
     "basic4": [
       {
@@ -26133,8 +26133,8 @@
   },
   {
     "number": 36,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "遅くなって，すみません。",
+    "title_ruby": "<ruby>遅<rt>おそ</rt></ruby>くなって，すみません。",
     "title_romaji": "",
     "basic4": [
       {
@@ -26975,8 +26975,8 @@
   },
   {
     "number": 37,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "優勝すれば，オリンピックに出場することができます。",
+    "title_ruby": "<ruby>優勝<rt>ゆうしょう</rt></ruby>すれば，オリンピックに<ruby>出場<rt>しゅつじょう</rt></ruby>することができます。",
     "title_romaji": "",
     "basic4": [
       {
@@ -27686,8 +27686,8 @@
   },
   {
     "number": 38,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "戴さんは英語が話せます。",
+    "title_ruby": "<ruby>戴<rt>たい</rt></ruby>さんは<ruby>英語<rt>えいご</rt></ruby>が<ruby>話<rt>はな</rt></ruby>せます。",
     "title_romaji": "",
     "basic4": [
       {
@@ -28372,8 +28372,8 @@
   },
   {
     "number": 39,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "眼鏡をかけて本を読みます。",
+    "title_ruby": "<ruby>眼鏡<rt>めがね</rt></ruby>をかけて<ruby>本<rt>ほん</rt></ruby>を<ruby>読<rt>よ</rt></ruby>みます。",
     "title_romaji": "",
     "basic4": [
       {
@@ -29132,8 +29132,8 @@
   },
   {
     "number": 40,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "これから友達と食事に行くところです",
+    "title_ruby": "これから<ruby>友達<rt>ともだち</rt></ruby>と<ruby>食事<rt>しょくじ</rt></ruby>に<ruby>行<rt>い</rt></ruby>くところです",
     "title_romaji": "",
     "basic4": [
       {
@@ -29734,8 +29734,8 @@
   },
   {
     "number": 41,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "李さんは部長にほめられました。",
+    "title_ruby": "<ruby>李<rt>り</rt></ruby>さんは<ruby>部長<rt>ぶちょう</rt></ruby>にほめられました。",
     "title_romaji": "",
     "basic4": [
       {
@@ -30769,8 +30769,8 @@
   },
   {
     "number": 42,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "テレビをつけたまま，出かけてしまいました。",
+    "title_ruby": "テレビをつけたまま，<ruby>出<rt>で</rt></ruby>かけてしまいました。",
     "title_romaji": "",
     "basic4": [
       {
@@ -31435,8 +31435,8 @@
   },
   {
     "number": 43,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "陳さんは息子をアメリカに留学させます。",
+    "title_ruby": "<ruby>陳<rt>ちん</rt></ruby>さんは<ruby>息子<rt>むすこ</rt></ruby>をアメリカに<ruby>留学<rt>りゅうがく</rt></ruby>させます。",
     "title_romaji": "",
     "basic4": [
       {
@@ -32410,8 +32410,8 @@
   },
   {
     "number": 44,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "玄関のところにだれかいるようです。",
+    "title_ruby": "<ruby>玄関<rt>げんかん</rt></ruby>のところにだれかいるようです。",
     "title_romaji": "",
     "basic4": [
       {
@@ -33388,8 +33388,8 @@
   },
   {
     "number": 45,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "少子化が進んで，日本の人口はだんだん減っていくでしょう。",
+    "title_ruby": "<ruby>少子化<rt>しょうしか</rt></ruby>が<ruby>進<rt>すす</rt></ruby>んで，<ruby>日本<rt>にほん</rt></ruby>の<ruby>人口<rt>じんこう</rt></ruby>はだんだん<ruby>減<rt>へ</rt></ruby>っていくでしょう。",
     "title_romaji": "",
     "basic4": [
       {
@@ -34171,8 +34171,8 @@
   },
   {
     "number": 46,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "これは柔らかくて，まるで本物の毛皮のようです。",
+    "title_ruby": "これは<ruby>柔<rt>やわ</rt></ruby>らかくて，まるで<ruby>本物<rt>ほんもの</rt></ruby>の<ruby>毛皮<rt>けがわ</rt></ruby>のようです。",
     "title_romaji": "",
     "basic4": [
       {
@@ -34982,8 +34982,8 @@
   },
   {
     "number": 47,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "周先生は明日日本へ行かれます。",
+    "title_ruby": "<ruby>周<rt>しゅう</rt></ruby><ruby>先生<rt>せんせい</rt></ruby>は<ruby>明日<rt>あした</rt></ruby><ruby>日本<rt>にほん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>かれます。",
     "title_romaji": "",
     "basic4": [
       {
@@ -35491,8 +35491,8 @@
   },
   {
     "number": 48,
-    "title_clean": "",
-    "title_ruby": "",
+    "title_clean": "お荷物は私がお持ちします。",
+    "title_ruby": "お<ruby>荷物<rt>にもつ</rt></ruby>は<ruby>私<rt>わたくし</rt></ruby>がお<ruby>持<rt>も</rt></ruby>ちします。",
     "title_romaji": "",
     "basic4": [
       {

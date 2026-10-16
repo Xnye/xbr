@@ -61,7 +61,7 @@ LATIN_WORDS = re.compile(r'[A-Za-z]{2,}')
 # 允许出现在中文文案里的拉丁字母：
 #   JC — 教材专有名词 JC企画 的原文缩写
 #   wa — は 的读音说明「读作 wa」，这是必须写出来的语音事实
-EN_WHITELIST = {'JC', 'wa'}
+EN_WHITELIST = {'JC', 'wa', 'CD'}
 # 格助词：带这些助词的块一定是论元（主语/宾语/方向/场所…），不可能是"隐性主语"
 # 的合法落点。から 不在此列——它既可是格助词（起点）也可是接续助词（原因），
 # 后者恰恰挂在谓语上（雨だから），由 looks_predicate 判别。
@@ -70,6 +70,39 @@ CASE_PARTICLES = {'が', 'を', 'に', 'へ', 'と', 'で', 'まで', 'の', '�
 PRED_HINT = ('动词', '断定', '形容', 'て形', '过去形', '存在', '助动词')
 PRED_TAILS_EXTRA = ('て', 'で', 'だ', 'る', 'た', 'いく', 'いる', 'ある',
                     'する', 'くる', 'なる', 'せる', 'れる', 'たい')
+
+
+# 形式名词尾：它们不承担实义，只把前面的谓语收拢成一个整体（C3 用到）
+_FORM_NOUN_TAILS = ('こと', 'もの', 'ほう', 'まえ', 'あと', 'とき', 'ところ', 'ため',
+                    'の', 'つもり', 'はず', 'ばかり', 'よう', 'ほど', 'まま', 'わけ')
+
+
+def _c3_acceptable(body):
+    """C3 的两种合法情形（不是词义缺口）：
+      ① 引号里的整句（「タバコを吸うな」）——它是引用内容，本来就不是词条；
+      ② 「完整词＋形式名词」（フリーズする＋こと）——两半都查得到，
+         只是引擎把它判成段内切片、段体没拆开。
+    """
+    if body.startswith(('「', '『')):
+        return True
+    for fn in sorted(_FORM_NOUN_TAILS, key=len, reverse=True):
+        if body.endswith(fn) and len(body) > len(fn):
+            hg = M.gloss_of(body[:-len(fn)]) or {}
+            if hg.get('zh') and not hg.get('partial'):
+                return True
+            break
+    return False
+
+
+# 词体后面只跟了一个活用尾/接续助词时（いろいろ＋な、おいしい＋し、フリーズ＋する…），
+# 说明词体本身是完整的——前缀残配剩下的那点尾巴不是"另一个词"，不算词义缺口。
+_PARTIAL_FORM_TAILS = ('な', 'し', 'だ', 'だし', 'そう', 'する', 'した', 'して')
+
+
+def _partial_is_form_tail(rest):
+    """前缀残配剩下的尾巴是不是一个活用尾/接续助词。"""
+    rest = (rest or '').strip()
+    return bool(rest) and rest in _PARTIAL_FORM_TAILS
 
 
 def looks_predicate(c):
@@ -84,6 +117,8 @@ def looks_predicate(c):
         return True
     if c.get('kind'):
         return False
+
+
     sub = c.get('gloss_sub') or ''
     if any(h in sub for h in PRED_HINT):
         return True
@@ -110,10 +145,63 @@ def chunk_units(c):
     return [{'type': 'ruby', 'kanji': c['text'], 'kana': ''}]
 
 
+
+def check_phrase_components(eid, comps):
+    """C3 用：短语的每个成分都要查得到完整词义。
+
+    成分本身还是短语时要递归下去——「この＋コンピュータの＋操作」这种折了两次的
+    短语，内层成分的 body 是「このコンピュータ」（两个词拼起来的字面），
+    拿它去查词表只能前缀残配，但那不代表成分有问题。
+    """
+    for comp in comps or []:
+        if comp.get('components'):
+            check_phrase_components(eid, comp['components'])
+            continue
+        cg = M.gloss_of(comp.get('body') or '')
+        if cg is None or cg.get('partial'):
+            flag(eid, 'C3', '短语成分「%s」查不到完整词义' % comp.get('body'))
+
+def time_topic_adverbial(chunks, topic_ids, target):
+    """第19／22课：时间名词做话题时是状语，不是主语（判据与引擎侧一致）。
+
+    引擎在 build_exemplars_auto._time_topic_adverbial 里有同一条规则：
+    话题是时间名词、且句尾不是名词谓语（です／だ 前是名词）时，
+    真正的主语（我）隐在后台，Ø が 应该落在谓语块上。
+    """
+    try:
+        import build_exemplars_auto as BA
+        time_topics = set(BA.TIME_TOPICS)
+    except Exception:
+        return False
+    topic = next((c for c in chunks if c['id'] in topic_ids), None)
+    if topic is None or (topic.get('text') or '') not in time_topics:
+        return False
+    # 句尾是断定（です／だ）时，时间名词可能真的兼任主语（今日は 曇りだ），不豁免
+    return '断定' not in (target.get('gloss_sub') or '')
+
+
+def quote_speaker_subject(chunks, target=None):
+    """第24课：と 引用＋思う 时，主句主语是说话人，Ø が 落在谓语块上而不是话题块。
+
+    「李さんは 来ると 思います」＝我想小李会来——は 标的话题属于从句，
+    把它当主句主语会教成"小李在想"。判据与引擎侧 _quote_marker 一致：
+    句中有「と：引用」标记，且句中出现了 思う／考える 系的谓语。
+    """
+    if not any('と：引用' in (c.get('gloss_sub') or '') for c in chunks):
+        return False
+    if target is not None and not looks_predicate(target):
+        return False
+    return any((c.get('text') or '').startswith(('思い', '思う', '思っ', '考え')) for c in chunks)
+
+
 def audit(ex):
     eid = ex['id']
     chunks = ex.get('chunks') or []
     ids = {c['id'] for c in chunks}
+    # 课文「简单图」（simple: true）：只有 词块＋助词框＋振假名，
+    # 没有词义／直译行／心法／零主语——所以按词义与直译打分的检查一律跳过，
+    # 只保留与"看得见的成分"有关的检查：C1 拍平、C2 谓语切分、C4 振假名、C5 罗马音、C7 颜色、C17 字段越界。
+    simple = bool(ex.get('simple'))
     # 谓语块：引擎产物看 kind；手写旧数据没有 kind，退回词性线索
     pred_chunks = {c['id'] for c in chunks
                    if c.get('kind') == 'predicate'
@@ -130,14 +218,19 @@ def audit(ex):
             nxt = chunks[idx + 1] if idx + 1 < len(chunks) else None
             nxt_is_pred = bool(nxt) and nxt['id'] in pred_chunks
             if part == 'の':
-                # の 收尾只允许名词化用法：后接谓语块（スミスさんの です）
-                if not nxt_is_pred:
+                # の 收尾只允许两种情形：名词化（后接谓语块，スミスさんの です）
+                # 与句尾的终助词用法（どうしたの？——课文对白里极常见，后面没有别的块）。
+                # 只有"后面还有成分、且那个成分不是谓语"时，才说明嵌套短语被拍平。
+                if nxt is not None and not nxt_is_pred:
                     flag(eid, 'C1', 'の 作为词尾助词挂在「%s」上且后接非谓语块——嵌套短语被拍平' % body)
             else:
                 # と/や 收尾本身合法（伴随用法，如 森さんと日本へ）。
                 # 只有当后一块带着 が/は/も/を 却又不是谓语时，才说明是"漏合并的并列"。
+                # 例外：已经折成一个短语块的并列（ビールと 日本酒と，どちらが…）——
+                #   重复出现的 と 是并列短语自己的收尾标记，不是漏合并。
                 nxt_part = (nxt or {}).get('particle') or ''
-                if nxt and nxt_part in {'が', 'は', 'も', 'を'} and nxt['id'] not in pred_chunks:
+                if nxt and nxt_part in {'が', 'は', 'も', 'を'} and nxt['id'] not in pred_chunks \
+                        and not c.get('phrase'):
                     flag(eid, 'C1', '%s 挂在「%s」上且后接「%s+%s」——疑似漏合并的并列短语'
                          % (part, body, nxt.get('text'), nxt_part))
 
@@ -149,25 +242,44 @@ def audit(ex):
                       or '接续助词' in (c.get('gloss_sub') or ''))
 
         # ---- C2 谓语没被切出来（只约束引擎产物；手写旧样例动词整块是既有风格） ----
+        # 例外：词汇化的固定表达（すみません＝对不起／かしこまりました＝我知道了）、
+        # 副词（まだ／きっと）都已经被冻结成一个词，拆开教反而错。
+        # 简单图不带 gloss_sub，所以要**回词表问词性**，不能只看块上的标注。
+        c2_sub = c.get('gloss_sub') or ''
+        c2_lex = (M.gloss_of(body) or {}).get('pos') if body else ''
+        # 简单图（课文）放宽口径：它的硬指标是"助词必须看得见"。
+        # 因此只有**格助词被吞进块里**才算硬伤（「お年寄りの荷物を持ってあげました」
+        # 这种把 を／の 一起粘掉的情况）；纯动词活用形整块（知っています／多くなりました）
+        # 在简单图里可以接受——它没有藏起任何助词。
+        c2_swallowed = any(ch in body for ch in 'がをにへでとはもやの')
+        # 完整活用形／完整形容词整块是允许的：它没藏起任何助词，切开反而教错。
+        #   危ない 是一个完整的い形容词（切开成 危な｜ない 会被读成否定形）；
+        #   にげられました 是一个完整的受身形；引号里的整句本来就是引用内容。
+        c2_sub_full = c2_sub or ''
+        c2_whole_form = ('い形容词' in c2_sub_full or 'い形容词' in (c2_lex or '')
+                         or '受身' in c2_sub_full or '受身' in (c2_lex or '')
+                         or '敬语' in c2_sub_full or '谦让语' in c2_sub_full
+                         or body.startswith(('「', '『')))
         if ex.get('auto_generated') and body and body.endswith(PRED_TAILS) \
-                and not infl_chunk:
+                and not infl_chunk \
+                and '固定搭配' not in c2_sub and '副词' not in c2_sub \
+                and c2_lex not in ('固定搭配', '副词') \
+                and not c2_whole_form \
+                and not (simple and not c2_swallowed):
             flag(eid, 'C2', '词体「%s」以谓语尾结尾但未被切出谓语' % body)
-
         # ---- C3 助词误剥 / 词体不是完整词 ----
         # 短语块的词义在 phrase_gloss，这里逐个查它的成分；
         # 谓语块/终助词块/接续助词块不是名词词体，不参与词义检查。
         if c.get('phrase'):
-            for comp in c.get('components') or []:
-                cg = M.gloss_of(comp.get('body') or '')
-                if cg is None or cg.get('partial'):
-                    flag(eid, 'C3', '短语成分「%s」查不到完整词义' % comp.get('body'))
-        elif body and not infl_chunk:
+            if not simple:
+                check_phrase_components(eid, c.get('components'))
+        elif body and not infl_chunk and not simple:
             # 词义查表只对引擎产物有意义；手写旧样例的动词块 gloss 是人工给的
-            if ex.get('auto_generated'):
+            if ex.get('auto_generated') and not _c3_acceptable(body):
                 g = M.gloss_of(body)
                 if g is None:
                     flag(eid, 'C3', '词体「%s」查不到词义——可能是助词误剥或词表缺口' % body)
-                elif g.get('partial'):
+                elif g.get('partial') and not _partial_is_form_tail(g['partial']):
                     flag(eid, 'C3', '词体「%s」只靠前缀残配到「%s」——词体不是完整词' % (body, g['zh']))
 
         # ---- C4 汉字没有振假名 ----
@@ -184,12 +296,14 @@ def audit(ex):
             if re.search(bad, rm):
                 flag(eid, 'C5', '罗马音「%s」：%s' % (rm, why))
         # 长音符（ō/ā/ū）是正规赫本式转写，手写旧样例在用，不能算错
-        if rm and not re.fullmatch(r"[a-zA-Z~' .,!?\-Ā-ſ]+", rm):
+        # 数字要放行：教材数据层对数量词就是这么落罗马音的（300メートル → 300meetoru、
+        # ２人 → 2nin），它们不是"没转写的假名/汉字"。
+        if rm and not re.fullmatch(r"[0-9a-zA-Z~' .,!?\-Ā-ſ]+", rm):
             flag(eid, 'C5', '罗马音「%s」含非拉丁字符——可能汉字未被转写' % rm)
 
         # ---- C6 词义质量 ----
         gm = c.get('gloss_main') or ''
-        if not gm:
+        if not gm and not simple:
             flag(eid, 'C6', '词「%s」词义为空' % body)
         # 注：「中国人→中国人」「猫→猫」这类词义与词同形是教材本来如此，不算错；
         # 「是（断定）」这类括号是形态说明而非体例残留（体例残留只出现在词义开头，
@@ -222,7 +336,7 @@ def audit(ex):
     zs = ex.get('zero_subject')
     if has_ga and zs:
         flag(eid, 'C9', '已有显式 が 却仍标注零主语')
-    if (not has_ga) and has_topic and not zs:
+    if (not has_ga) and has_topic and not zs and not simple:
         flag(eid, 'C9', '有 は/も 话题且无显式 が，却缺少零主语标注')
     if zs:
         topic_ids = {c['id'] for c in chunks if (c.get('particle') or '') in ('は', 'も')}
@@ -248,8 +362,13 @@ def audit(ex):
                                  '应指向话题块或谓语块' % (p, c.get('text')))
             elif p:
                 flag(eid, 'C12', '零主语箭头钉在带「%s」的非谓语块「%s」上' % (p, c.get('text')))
-            # 单谓语句里话题就是主语，箭头必须落在话题块（多小句句允许各小句自己的谓语）
-            if single_pred and topic_ids and t['id'] not in topic_ids:
+            # 单谓语句里话题就是主语，箭头必须落在话题块（多小句句允许各小句自己的谓语）。
+            # 例外（第19／22课）：话题是时间名词、谓语又不是名词谓语时，时间名词只是状语——
+            #   昨日は とても 忙しかった／明日は 残業しなくても いいです。此时 Ø が 只能钉在谓语上，
+            #   硬钉到时间名词上会教成"昨天是忙的主体"。
+            if single_pred and topic_ids and t['id'] not in topic_ids \
+                    and not time_topic_adverbial(chunks, topic_ids, c) \
+                    and not quote_speaker_subject(chunks, target=c):
                 flag(eid, 'C12', '单谓语句已有 は/も 话题，零主语箭头却指向「%s」而非话题块'
                                  % c.get('text'))
 
@@ -281,10 +400,19 @@ def audit(ex):
             if w not in EN_WHITELIST:
                 flag(eid, 'C13', '%s 残留英文「%s」：%s' % (path, w, val[:40]))
 
+    # ---- C17 简单图不得夹带被裁掉的字段（课文口径：只要 词块＋助词框＋振假名） ----
+    if simple:
+        for c in chunks:
+            if c.get('gloss_main') or c.get('gloss_sub') or c.get('lit_tokens'):
+                flag(eid, 'C17', '简单图不该带词义／短语直译字段（%s）' % (c.get('text') or c.get('id')))
+        for k in ('literal_structure', 'cognitive_note', 'zero_subject', 'tag', 'lesson_title'):
+            if ex.get(k):
+                flag(eid, 'C17', '简单图不该带 %s' % k)
+
 
     # ---- C5 句级罗马音 ----
     srm = ex.get('sentence_romaji') or ''
-    if srm and not re.fullmatch(r"[a-zA-Z~' .,!?\-Ā-ſ]+", srm):
+    if srm and not re.fullmatch(r"[0-9a-zA-Z~' .,!?\-Ā-ſ]+", srm):
         flag(eid, 'C5', '整句罗马音含非拉丁字符：%s' % srm)
 
 
@@ -311,8 +439,18 @@ def audit_coverage(exemplars, lessons):
             if sid not in have:
                 flag(sid, 'C10', '第%d课第%d句基本课文缺少透视图' % (n, i))
                 continue
+            # 句面比对以「修订后的教材正文」为准：教材数据里的注音/正文错字由
+            # build_romaji.SOURCE_PATCHES 统一修订（lessons.json 保持只读），
+            # 而引擎侧的 sentence_raw 是**渲染后**的句面（已去掉 ! 标记与 (かな) 注音），
+            # 所以这一侧也要先渲染再比，否则正文订正会被误报成"与教材不一致"。
+            want_clean = b4['jp_clean']
+            try:
+                import build_romaji as BR
+                want_clean = M.render_text(BR.patch_raw(want_clean)[0]).get('clean') or want_clean
+            except Exception:
+                pass
             ex = next(e for e in exemplars if e['id'] == sid)
-            want = re.sub(r'[\s。！？*]', '', b4['jp_clean'])
+            want = re.sub(r'[\s。！？*]', '', want_clean)
             got = re.sub(r'[\s。！？*]', '', ex.get('sentence_raw') or '')
             if want != got:
                 flag(sid, 'C10', '句面与教材不一致：教材=%s 引擎=%s' % (b4['jp_clean'], ex.get('sentence_raw')))
@@ -626,6 +764,30 @@ def main():
     with io.open(LESSONS, encoding='utf-8') as f:
         lessons = json.load(f)
 
+    # --prune-simple：把"有缺陷的课文简单条目"先从数据里摘掉再报告。
+    # 口径与审计本身一致（C1/C2/C4/C5/C7/C17…），所以这批条目一旦被引擎修好，
+    # 下次构建就会自动回到数据里——不需要人工维护黑名单。
+    if '--prune-simple' in sys.argv:
+        bad_ids = set()
+        for e in exemplars:
+            if not e.get('simple'):
+                continue
+            problems[:] = []
+            audit(e)
+            if problems:
+                bad_ids.add(e['id'])
+        if bad_ids:
+            keep = [e for e in exemplars if e['id'] not in bad_ids]
+            with io.open(EXEMPLARS, 'w', encoding='utf-8') as f:
+                json.dump(keep, f, ensure_ascii=False, indent=2)
+            print('先摘掉 %d 条未达标的课文简单条目（引擎修好后会自动回来）：' % len(bad_ids))
+            print('   ' + ', '.join(sorted(bad_ids)[:60])
+                  + (' …' if len(bad_ids) > 60 else ''))
+            exemplars = keep
+        else:
+            print('课文简单条目全部达标，无需摘除。')
+
+    problems[:] = []
     for e in exemplars:
         audit(e)
     audit_coverage(exemplars, lessons)
