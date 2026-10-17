@@ -28,33 +28,6 @@ const GrammarDiagram = (function () {
 
     let html = `
       <div class="grammar-diagram-container ${hasZeroSubject ? 'zero-collapsed' : ''}" id="${containerId}" data-diagram-id="${data.id}">
-        <!-- Top Action & Tag Bar -->
-        <div class="diagram-meta-bar">
-          <div class="meta-tag-group">
-            <span class="meta-tag-pill">${data.tag || '语法透视'}</span>
-            <span class="meta-lesson-title">${data.lesson_title || ''}</span>
-          </div>
-          <div class="meta-action-group">
-            <button class="icon-btn audio-play-btn" title="听原声朗读" onclick="JapaneseTTS.speak('${escapeQuotes(data.sentence_raw)}', this)">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-              </svg>
-              <span>朗读</span>
-            </button>
-            <button class="icon-btn explain-toggle-btn" title="展开/收起认知语法心法" onclick="GrammarDiagram.toggleNote('${containerId}')">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              <span>解构秘籍</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- The 1:1 Cinematic Canvas matching the Screenshot -->
         <div class="diagram-canvas">
           <!-- Zero Pronoun Row (Top Layer) -->
           <!-- 默认收起：Ø が 只是一枚浅色小角标。悬停预览、点击固定， -->
@@ -63,7 +36,8 @@ const GrammarDiagram = (function () {
             ${hasZeroSubject ? `
               <div class="zero-badge-wrapper">
                 <button class="zero-badge red-box" id="${containerId}_zero_badge" type="button"
-                     title="隐性主语：悬停预览，点击固定展开"
+                     title="隐性主语"
+                     aria-label="隐性主语，点一下展开"
                      data-tooltip="${escapeQuotes(data.zero_subject.tooltip)}"
                      onmouseenter="GrammarDiagram.revealZero('${containerId}', true); GrammarDiagram.highlightElement('${containerId}', 'zero_ga')"
                      onmouseleave="GrammarDiagram.revealZero('${containerId}', false); GrammarDiagram.clearHighlight('${containerId}')"
@@ -71,13 +45,11 @@ const GrammarDiagram = (function () {
                   <span class="zero-sym">${data.zero_subject.symbol}</span>
                   <span class="zero-particle">${data.zero_subject.particle}</span>
                 </button>
-                <span class="zero-hint">隐性主语 · 悬停查看</span>
               </div>
             ` : ''}
           </div>
 
           ${hasZeroSubject ? `
-            <!-- SVG Arrow Layer directly on diagram-canvas -->
             <svg class="diagram-arrows-svg" id="${containerId}_svg" preserveAspectRatio="none">
               <defs>
                 <marker id="${containerId}_arrow_head" viewBox="0 0 10 10" refX="7" refY="5" 
@@ -88,37 +60,45 @@ const GrammarDiagram = (function () {
             </svg>
           ` : ''}
 
-          <!-- Main Sentence & Particle Breakdown Row -->
           <div class="sentence-chunks-row" id="${containerId}_chunks_row">
             ${data.chunks.map(chunk => renderChunk(chunk, containerId)).join('')}
           </div>
 
-          <!-- Structured Literal Translation Row (Cure Dolly Style) -->
-          <!-- 默认折叠：初学者先看自然译文；需要观察日语语序时再点开。 -->
           <div class="literal-toggle-row">
             <button class="literal-toggle-btn" id="${containerId}_litbtn" type="button"
                     onclick="GrammarDiagram.toggleLiteral('${containerId}')">
-              <span class="lit-toggle-arrow">▸</span> 看日语语序（逐词直译）
+              <span class="lit-toggle-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg></span> 按日语顺序读
             </button>
           </div>
           <div class="literal-clause-row" id="${containerId}_literal" style="display: none;">
             ${renderLiteralStructure(data.literal_structure, containerId)}
           </div>
 
-          <!-- Natural Idiomatic Translation Row -->
-          <div class="natural-translation-row">
-            <span class="zh-sentence">${data.natural_translation}</span>
-          </div>
+          ${options.hideNatural ? '' : `
+            <div class="natural-translation-row">
+              <span class="zh-sentence">${data.natural_translation}</span>
+            </div>
+          `}
         </div>
 
-        <!-- Cognitive Grammar Deep Explanation Accordion -->
+        ${data.cognitive_note ? `
+          <div class="diagram-foot">
+            <button class="diagram-note-btn" id="${containerId}_notebtn" type="button"
+                    aria-expanded="false" aria-controls="${containerId}_note"
+                    onclick="GrammarDiagram.toggleNote('${containerId}')">
+              <span class="note-btn-label">为什么这么说</span>
+              <span class="note-btn-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg></span>
+            </button>
+          </div>
+        ` : ''}
+
         <div class="cognitive-note-panel" id="${containerId}_note" style="display: none;">
           <div class="note-inner">
-            <div class="note-header">
-              <span class="note-badge">深层认知结构剖析</span>
-              <span class="note-quote">“把谓语当作列车引擎，助词是车厢连接器，隐形主语随时在后台就绪。”</span>
-            </div>
-            <p class="note-body">${data.cognitive_note}</p>
+            <p class="note-body">${formatNote(data.cognitive_note)}</p>
             <div class="particle-legend-grid">
               ${data.chunks.filter(c => c.particle).map(c => `
                 <div class="legend-card ${c.particle_color}-accent">
@@ -133,7 +113,7 @@ const GrammarDiagram = (function () {
                 <div class="legend-card red-accent">
                   <span class="legend-badge red-box">${data.zero_subject.symbol} ${data.zero_subject.particle}</span>
                   <div class="legend-text">
-                    <strong>零代词主语 (Zero Subject)</strong>
+                    <strong>隐性主语</strong>
                     <span>${data.zero_subject.tooltip}</span>
                   </div>
                 </div>
@@ -142,7 +122,6 @@ const GrammarDiagram = (function () {
           </div>
         </div>
 
-        <!-- Floating Interactive Tooltip -->
         <div class="diagram-tooltip" id="${containerId}_tooltip" style="display: none;"></div>
       </div>
     `;
@@ -409,9 +388,16 @@ const GrammarDiagram = (function () {
 
   function toggleNote(containerId) {
     const note = document.getElementById(`${containerId}_note`);
+    const btn = document.getElementById(`${containerId}_notebtn`);
     if (!note) return;
-    const isHidden = note.style.display === 'none';
-    note.style.display = isHidden ? 'block' : 'none';
+    const willOpen = note.style.display === 'none';
+    note.style.display = willOpen ? 'block' : 'none';
+    if (btn) {
+      btn.classList.toggle('open', willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      const label = btn.querySelector('.note-btn-label');
+      if (label) label.textContent = willOpen ? '收起' : '为什么这么说';
+    }
   }
 
   /**
@@ -457,6 +443,16 @@ const GrammarDiagram = (function () {
   function escapeQuotes(str) {
     if (!str) return '';
     return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  /** 认知心法里允许 **加粗**；其余 HTML 一律转义。 */
+  function formatNote(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
   }
 
   return {

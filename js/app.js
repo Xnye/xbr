@@ -68,7 +68,18 @@
   function cleanForSentence(s) {
     if (!s) return '';
     const entry = romajiData && romajiData.sentences && romajiData.sentences[s.jp_raw];
-    return (entry && entry.clean) || s.jp_clean || '';
+    return ((entry && entry.clean) || s.jp_clean || '').replace(/^\*\s*/, '');
+  }
+
+  /** 教材里的前导星号是抓取标记，不进入阅读面。 */
+  function stripLeadStar(text) {
+    return String(text || '').replace(/^\*\s*/, '');
+  }
+
+  function cleanDialogueZh(zh) {
+    return String(zh || '')
+      .replace(/^[Ａ-ＤA-D]\s*[甲乙丙丁]\s*[：:]\s*/, '')
+      .replace(/^[甲乙丙丁]\s*[：:]\s*/, '');
   }
 
   function showToast(msg) {
@@ -86,7 +97,7 @@
         border: 1px solid rgba(255, 255, 255, 0.15);
         padding: 0.5rem 1.2rem;
         border-radius: 20px;
-        font-size: 0.88rem;
+        font-size: var(--fs-meta);
         box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         backdrop-filter: blur(8px);
         z-index: 1000;
@@ -105,10 +116,17 @@
     }, 1800);
   }
 
+  // 纸白版首发：旧用户如果还存着 dark，给一次迁移机会，之后仍尊重手动选择。
+  const UI_REV = '2026-10-17-paper';
+  if (localStorage.getItem('xbr_ui_rev') !== UI_REV) {
+    localStorage.setItem('xbr_theme', 'paper');
+    localStorage.setItem('xbr_ui_rev', UI_REV);
+  }
+
   const STATE = {
-    theme: localStorage.getItem('xbr_theme') || 'dark', // 'dark' (video screenshot) or 'paper'
+    theme: localStorage.getItem('xbr_theme') || 'paper', // 'paper' | 'dark'
     furigana: localStorage.getItem('xbr_furigana') !== 'false',
-    romaji: localStorage.getItem('xbr_romaji') === 'true', // default subtle off or on
+    romaji: localStorage.getItem('xbr_romaji') === 'true',
     translation: localStorage.getItem('xbr_trans') !== 'false',
     xray: localStorage.getItem('xbr_xray') !== 'false'
   };
@@ -173,7 +191,7 @@
       document.getElementById('lesson_content_root').innerHTML = `
         <div style="text-align:center; padding: 4rem 1rem; color: var(--text-muted);">
           <p>加载数据失败，请确保本地服务器正常运行或刷新页面重试。</p>
-          <p style="font-size:0.85rem; margin-top:0.5rem;">${err.message}</p>
+          <p style="font-size:var(--fs-meta); margin-top:0.5rem;">${err.message}</p>
         </div>
       `;
     }
@@ -186,7 +204,7 @@
     } else {
       document.body.classList.remove('theme-paper');
     }
-    updateToggleBtn('theme_toggle', STATE.theme === 'paper', STATE.theme === 'paper' ? '书卷纸白' : '视频黑板');
+    updateToggleBtn('theme_toggle', STATE.theme === 'paper', STATE.theme === 'paper' ? '纸白' : '黑板');
 
     // Furigana
     document.body.classList.toggle('hide-furigana', !STATE.furigana);
@@ -203,6 +221,15 @@
     // X-Ray
     document.body.classList.toggle('hide-xray', !STATE.xray);
     updateToggleBtn('xray_toggle', STATE.xray);
+
+    // 「设置」入口提示：面板里只要有一项不是默认值，就在按钮上加一条下划线。
+    // 否则 F/R/T/M 快捷键改到隐藏在面板里的开关时，顶栏完全没有反馈。
+    const settingsBtn = document.getElementById('settings_btn');
+    if (settingsBtn) {
+      const modified = !STATE.furigana || STATE.romaji || !STATE.translation
+        || STATE.theme !== 'paper' || !STATE.xray;
+      settingsBtn.classList.toggle('active', modified);
+    }
   }
 
   function updateToggleBtn(id, isActive, textOverride) {
@@ -251,6 +278,30 @@
       setTimeout(() => GrammarDiagram.updateAllArrows(), 100);
     });
 
+    // 「设置」面板：把 假名／罗马音／中文翻译／版面／朗读 收在一层里，
+    // 顶栏顶层控件降为 2 个（设置・目录）。
+    const settingsBtn = document.getElementById('settings_btn');
+    const settingsPanel = document.getElementById('settings_panel');
+    if (settingsBtn && settingsPanel) {
+      const setPanelOpen = (open) => {
+        settingsPanel.hidden = !open;
+        settingsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
+      settingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();     // 否则会被下面的「点在外面」立刻收掉
+        setPanelOpen(settingsPanel.hidden);
+      });
+      document.addEventListener('click', (e) => {
+        if (!settingsPanel.hidden && !settingsPanel.contains(e.target)) setPanelOpen(false);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !settingsPanel.hidden) {
+          setPanelOpen(false);
+          settingsBtn.focus();
+        }
+      });
+    }
+
     // Voice & speed selection
     const voiceSelect = document.getElementById('voice_select');
     if (voiceSelect) {
@@ -260,7 +311,7 @@
       }
       voiceSelect.addEventListener('change', (e) => {
         JapaneseTTS.setVoice(e.target.value);
-        showToast(e.target.value.includes('Keita') ? '🎙️ 已切换为：庆太 (男声)' : '🎙️ 已切换为：七海 (女声)');
+        showToast(e.target.value.includes('Keita') ? '已切换为庆太（男声）' : '已切换为七海（女声）');
       });
     }
 
@@ -273,7 +324,7 @@
       speedSelect.addEventListener('change', (e) => {
         const rate = parseFloat(e.target.value);
         JapaneseTTS.setRate(rate);
-        showToast(`⚡ 语速已调整为：${rate}x`);
+        showToast(`语速 ${rate}x`);
       });
     }
 
@@ -292,7 +343,9 @@
 
     // Keyboard shortcuts
     window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      // Ctrl/⌘/Alt 组合键不是本站快捷键（否则 Ctrl+R 会被当成「罗马音」并被写进 localStorage）
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
       if (e.key === 'f' || e.key === 'F') {
         document.getElementById('furi_toggle')?.click();
       } else if (e.key === 'r' || e.key === 'R') {
@@ -352,7 +405,7 @@
    * 内嵌连接框、淡色 Ø が、折叠的直译行）对我们是常识，对他是天书。
    * 没有这张图例，他就只能靠猜——而猜错一次就会把错误的句法结构记进脑子。
    *
-   * 密度控制：全站只出现一次（每课顶部），看过之后自动折叠（localStorage），
+   * 密度控制：全站只出现一次（每课顶部），默认折叠，需要时点开，
    * 不违背"高密度视觉元素不得逐句常驻"的原则。
    */
   const LEGEND_ROWS = [
@@ -365,7 +418,7 @@
                <span class="particle-box yellow-box">と</span>
                <span class="particle-box teal-box">の</span>
                <span class="particle-box pink-box">も</span>`,
-      title: '彩色方框 = 助词，颜色永远不变',
+      title: '彩色方框：助词的固定配色',
       body: '蓝=は（话题）、红=が（主语）、橙=を（宾语）、紫=に（地点/时间）、洋红=へ（方向）、黄=と（和/并列）、青=の（的）、粉=も（也）。认颜色比认字快，看多了不用想。'
     },
     {
@@ -374,7 +427,7 @@
                  <div class="chunk-underline-bar blue-line"></div>
                  <div class="chunk-gloss-box"><span class="gloss-main">小李</span><span class="gloss-sub">名词</span></div>
                </div>`,
-      title: '彩色横线 = 这个助词管到哪个词',
+      title: '彩色横线：这个助词管到哪',
       body: '横线盖住的词 + 方框里的助词，合起来才是一个完整成分。词下面的小字是中文意思和词性，汉字头上的假名是读音。'
     },
     {
@@ -383,27 +436,41 @@
                  <div class="chunk-underline-bar purple-line"></div>
                  <div class="chunk-gloss-box"><span class="gloss-main">车站的外面</span><span class="gloss-sub">名词短语</span></div>
                </div>`,
-      title: '词块内部的小方框 = 这几层是一个整体，不能拆',
+      title: '块内小方框：一个整体，不能拆',
       body: '「駅の外」是"车站的外面"这<em>一个</em>地点，不是"车站"和"外面"两个并列的东西。所以整条紫色下划线只画一次，画在整个短语底下。同理「机といす」是"桌子和椅子"一个整体。'
     },
     {
       sample: `<span class="zero-badge red-box legend-demo-zero" type="button">Ø が</span>
                <span class="zero-hint">隐性主语 · 悬停查看</span>`,
-      title: '淡红色小圆片 Ø が = 日语没说出口的主语',
+      title: '淡红 Ø が：没说出口的主语',
       body: '日语只要语境清楚就不说主语，但语法上它一直在。这个圆片平时缩成很淡的一小点，不吵你；鼠标移上去（手机点一下）就展开，告诉你"是谁在做这个动作"。'
     },
     {
-      sample: `<span class="literal-toggle-btn legend-demo-btn" type="button"><span class="lit-toggle-arrow">▸</span> 看日语语序（逐词直译）</span>`,
-      title: '这个按钮点开 = 按日语原顺序的逐词中文',
+      sample: `<span class="literal-toggle-btn legend-demo-btn" type="button"><span class="lit-toggle-arrow">${chevRight()}</span> 按日语顺序读</span>`,
+      title: '按日语顺序读：把语序差摆出来',
       body: '用来对照"日语和中文的语序差在哪"。比如日语说「至于 小李 中国人 是」，中文说"小李是中国人"。不点它不影响你看懂句子。'
     }
   ];
 
+  /** 折叠箭头统一用描边 SVG。
+      ▸/▾ 这两个字形不在衬线族里，浏览器会回落到 Arial，
+      笔画粗细与周围文字明显不是一套；换成 SVG 后与文字同色同重。 */
+  function chevRight() {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 6 15 12 9 18"></polyline>
+            </svg>`;
+  }
+  function chevDown() {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>`;
+  }
+
   function renderDiagramLegend() {
-    // 第一次进来完整展开，渲染的同时就记一笔；从下一课起默认折叠，
-    // 需要时一键展开。不让"看过很多遍的说明"长期占着屏幕。
-    const seen = localStorage.getItem('xbr_legend_seen') === '1';
-    if (!seen) localStorage.setItem('xbr_legend_seen', '1');
+    // 默认折叠：这张表展开接近 800px，铺在每课开头会把课文推到两屏之外。
+    // 它是速查表，需要时点开，不需要时不占位置。
     const rows = LEGEND_ROWS.map(r => `
       <div class="legend-row">
         <div class="legend-sample">${r.sample}</div>
@@ -414,13 +481,13 @@
       </div>`).join('');
 
     return `
-      <section class="diagram-legend ${seen ? 'legend-collapsed' : ''}" id="diagram_legend">
-        <button class="legend-head" type="button" onclick="App.toggleDiagramLegend()">
-          <span class="legend-arrow">${seen ? '▸' : '▾'}</span>
-          <span class="legend-title">怎么读这张「语法透视图」</span>
-          <span class="legend-sub">${seen ? '忘了符号意思时点开' : '第一次用请先看这 30 秒'}</span>
+      <section class="diagram-legend legend-collapsed" id="diagram_legend">
+        <button class="legend-head" type="button" aria-expanded="false" aria-controls="diagram_legend_body" onclick="App.toggleDiagramLegend()">
+          <span class="legend-arrow" aria-hidden="true">${chevDown()}</span>
+          <span class="legend-title">第一次看透视图？</span>
+          <span class="legend-sub">认识这些颜色和框</span>
         </button>
-        <div class="legend-body" id="diagram_legend_body" ${seen ? 'style="display:none;"' : ''}>
+        <div class="legend-body" id="diagram_legend_body" style="display:none;">
           ${rows}
           <div class="legend-steps">
             <div class="legend-row-title">读任何一句日语，都按这三步</div>
@@ -436,16 +503,16 @@
   }
 
   function toggleDiagramLegend(force) {
+    // 折叠态只有一条摘要条；展开态才铺出完整速查表。
     const box = document.getElementById('diagram_legend');
     const body = document.getElementById('diagram_legend_body');
     if (!box || !body) return;
     const open = force !== undefined ? force : box.classList.contains('legend-collapsed');
     box.classList.toggle('legend-collapsed', !open);
+    box.classList.toggle('is-open', open);
     body.style.display = open ? '' : 'none';
-    const arrow = box.querySelector('.legend-arrow');
-    const sub = box.querySelector('.legend-sub');
-    if (arrow) arrow.textContent = open ? '▾' : '▸';
-    if (sub) sub.textContent = open ? '符号速查 · 点一下收起' : '忘了符号意思时点开';
+    const head = box.querySelector('.legend-head');
+    if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
   /**
@@ -460,48 +527,21 @@
     // 懒渲染记录必须一并清空，否则回到同一课时槽位会一直是空的。
     renderedXraySlots.clear();
 
-    // Check if there is a featured exemplar to display at top
-    // For Lesson 1, we also show the 1:1 Video Exemplar (`今日は雨だから傘を持っていく`) as the opening pedagogical showcase!
-    const videoShowcaseExemplar = exemplarsData.find(e => e.id === 'screenshot_showcase');
-    const isLessonOne = num === 1;
-
     let html = `
-      <!-- 课文卷头 -->
       <header class="chapter-header">
-        <div class="chapter-number">標準日本語 · 第 ${lesson.number} 課</div>
+        <div class="chapter-number">标准日本语 · 第 ${lesson.number} 课</div>
         <h1 class="chapter-title jp-text">${lesson.title_ruby || lesson.title_clean}</h1>
         <div class="chapter-romaji">${romajiForLessonTitle(lesson)}</div>
       </header>
+      ${renderLessonIntro(num)}
       ${renderDiagramLegend()}
     `;
 
-    // If Lesson 1, render the 1:1 Video Screenshot Showcase as the Master Demonstration
-    if (isLessonOne && videoShowcaseExemplar) {
-      html += `
-        <section class="textbook-section">
-          <div class="section-editorial-title">
-            <span class="num-kanji">★</span>
-            <span>B站原片 1:1 语法透视复刻</span>
-            <span class="sub-en">Masterclass Video Screenshot Exemplar</span>
-          </div>
-          <div style="margin-bottom: 1.2rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.7;">
-            本模块 1:1 复刻原片的视觉系统：<strong>「Ø が 隐性主语红框与弧形箭头」</strong>、
-            <strong>「[は][から][を] 彩色助词框」</strong>、<strong>「词下形态拆解」</strong>与<strong>「逻辑小句直译」</strong>。
-            鼠标悬停任一助词或直译词，即可触发全句关联高亮与心法提示。
-            词注一律改用中文——原片是英文词注，但对中文学习者而言那是一道多余的坎，故只复刻视效、不复刻语种。
-          </div>
-          ${GrammarDiagram.render(videoShowcaseExemplar, { id: 'showcase_embed' })}
-        </section>
-      `;
-    }
-
-    // Section 1: 基本课文 (Basic 4 Sentences)
     html += `
       <section class="textbook-section">
         <div class="section-editorial-title">
           <span class="num-kanji">一、</span>
-          <span>基本課文</span>
-          <span class="sub-en">Core Syntactic Patterns</span>
+          <span>基本课文</span>
         </div>
         <div class="basic-sentences-list">
           ${lesson.basic4.map((b4, idx) => renderBasicSentence(b4, idx, num)).join('')}
@@ -509,17 +549,14 @@
       </section>
     `;
 
-    // Section 2: 核心语法讲义（有深度讲义数据时用卡片，否则回退教材原始笔记）
     html += renderGrammarSection(lesson, num);
 
-    // Section 3: 基础对话 (A, B, C, D Dialogues)
     if (lesson.basicc && lesson.basicc.length > 0) {
       html += `
         <section class="textbook-section">
           <div class="section-editorial-title">
             <span class="num-kanji">三、</span>
-            <span>会話演習</span>
-            <span class="sub-en">Basic Conversational Exchanges</span>
+            <span>会话练习</span>
           </div>
           <div class="dialogue-exchanges-container">
             ${renderBasicDialogues(lesson.basicc, num)}
@@ -528,14 +565,13 @@
       `;
     }
 
-    // Section 4: 应用课文 (Full Applied Dialogue Story)
     if (lesson.context_sections && lesson.context_sections.length > 0) {
       html += `
         <section class="textbook-section">
           <div class="section-editorial-title">
             <span class="num-kanji">四、</span>
-            <span>応用本文</span>
-            <span class="sub-en">${lesson.contitle || '本课情景对话'} ${lesson.contitlet ? `(${lesson.contitlet})` : ''}</span>
+            <span>应用课文</span>
+            <span class="sub-note">${lesson.contitle || ''} ${lesson.contitlet ? `（${lesson.contitlet}）` : ''}</span>
           </div>
           <div class="applied-story-container">
             ${renderAppliedStory(lesson.context_sections, num)}
@@ -544,62 +580,111 @@
       `;
     }
 
-    // Section 5: 词汇表 (Vocabulary List)
     if (lesson.words && lesson.words.length > 0) {
-      html += `
-        <section class="textbook-section">
-          <div class="section-editorial-title">
-            <span class="num-kanji">五、</span>
-            <span>単語リスト</span>
-            <span class="sub-en">Vocabulary &amp; Pitch Accents</span>
-          </div>
+      html += renderWordList(lesson.words);
+    }
+
+    html += renderLessonFooter(num);
+
+    root.innerHTML = html;
+    document.title = `第 ${num} 课 ${lesson.title_clean} · 新标日语法透视读本`;
+
+    // 第一句的透视图默认展开，作为这一课的示范；其余句子按需展开。
+    setTimeout(() => {
+      GrammarDiagram.updateAllArrows();
+    }, 120);
+  }
+
+  /** 第 1 课的老师开场：只在这一课出现，别每课复读。 */
+  function renderLessonIntro(num) {
+    if (num !== 1) return '';
+    return `
+      <section class="lesson-intro">
+        <p class="lesson-intro-lead">这一课只做一件事：用「は」把话题提出来，用「です」下一个判断。</p>
+        <p>先把下面四句话读顺。哪一句想不通，就点句尾的「拆开看」。</p>
+      </section>
+    `;
+  }
+
+  /** 单词表默认收起；按词性分组，避免把 56 个词一次性倒给初学者。 */
+  function renderWordList(words) {
+    const POS_GROUPS = [
+      { key: '名', label: '名词' },
+      { key: '专', label: '专有名词' },
+      { key: '熟语', label: '寒暄语' },
+      { key: '代', label: '代词' },
+      { key: '叹', label: '感叹词' },
+      { key: '副', label: '副词' },
+      { key: '形', label: '形容词' },
+      { key: '动', label: '动词' },
+      { key: '数', label: '数量词' }
+    ];
+
+    const groups = new Map();
+    words.forEach(w => {
+      const key = w.pos || '其他';
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(w);
+    });
+
+    const ordered = POS_GROUPS.filter(g => groups.has(g.key));
+    groups.forEach((list, key) => {
+      if (!POS_GROUPS.some(g => g.key === key)) ordered.push({ key, label: key });
+    });
+
+    const body = ordered.map(group => {
+      const list = groups.get(group.key);
+      return `
+        <div class="vocab-group">
+          <h3 class="vocab-group-title">${group.label}<span>${list.length}</span></h3>
           <div class="words-editorial-grid">
-            ${lesson.words.map(w => `
+            ${list.map(w => `
               <div class="word-card-item" onclick="JapaneseTTS.speak('${escapeQuotes(w.word_clean)}')">
                 <div class="word-top-row">
                   <span class="word-jp jp-text">${w.word_ruby || w.word_clean}</span>
-                  ${w.pitch ? `<span class="word-pitch">⓪${w.pitch}</span>` : ''}
+                  ${w.pitch ? `<span class="word-pitch" title="音调标记">⓪${w.pitch}</span>` : ''}
                 </div>
                 <div class="word-bottom-row">
-                  ${w.pos ? `<span class="word-pos">${w.pos}</span>` : ''}
                   <span class="word-zh">${w.desc}</span>
                   <span class="word-romaji">${romajiForWord(w)}</span>
                 </div>
               </div>
             `).join('')}
           </div>
-        </section>
+        </div>
       `;
-    }
+    }).join('');
 
-    // Bottom Lesson Navigation Bar
-    html += `
-      <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center;">
-        ${num > 1 ? `
-          <button class="lesson-selector-btn" onclick="App.selectLesson(${num - 1})">
-            ← 上一课 (第${num - 1}课)
-          </button>
-        ` : '<div></div>'}
-        <span style="font-size:0.85rem; color:var(--text-muted);">第 ${num} 课 / 共 48 课</span>
-        ${num < 48 ? `
-          <button class="lesson-selector-btn" onclick="App.selectLesson(${num + 1})">
-            下一课 (第${num + 1}课) →
-          </button>
-        ` : '<div></div>'}
-      </div>
+    return `
+      <section class="textbook-section vocab-section">
+        <details class="vocab-fold">
+          <summary class="section-editorial-title vocab-summary">
+            <span class="num-kanji">五、</span>
+            <span>单词表</span>
+            <span class="sub-note">${words.length} 词 · 点词听音</span>
+          </summary>
+          <div class="vocab-body">${body}</div>
+        </details>
+      </section>
     `;
+  }
 
-    root.innerHTML = html;
-
-    // After DOM insertion, calculate and draw SVG arrows
-    setTimeout(() => {
-      GrammarDiagram.updateAllArrows();
-    }, 120);
+  function renderLessonFooter(num) {
+    return `
+      <nav class="lesson-footer">
+        ${num > 1
+          ? `<button class="lesson-footer-btn" onclick="App.selectLesson(${num - 1})">← 上一课</button>`
+          : '<span></span>'}
+        <span class="lesson-footer-meta">第 ${num} 课 / 共 48 课</span>
+        ${num < 48
+          ? `<button class="lesson-footer-btn" onclick="App.selectLesson(${num + 1})">下一课 →</button>`
+          : '<span></span>'}
+      </nav>
+    `;
   }
 
   function renderBasicSentence(b4, idx, lessonNum) {
-    // Check if there is an exemplar corresponding to this sentence
-    const cleanJp = b4.jp_clean.replace(/[。！？\s]/g, '');
+    const cleanJp = b4.jp_clean.replace(/[*。！？\s]/g, '');
     const matchedExemplar = exemplarsData.find(e => {
       const eClean = e.sentence_raw.replace(/[。！？\s]/g, '');
       return e.lesson === lessonNum && (eClean === cleanJp || e.id === `l${lessonNum}_b${idx+1}`);
@@ -607,49 +692,71 @@
 
     const hasExemplar = !!matchedExemplar;
     const slotId = `b4_slot_${lessonNum}_${idx+1}`;
+    const openFirst = hasExemplar && idx === 0;
+    const jpDisplay = stripLeadStar(rubyForSentence(b4));
+    const zhDisplay = stripLeadStar(b4.zh);
 
     return `
       <div class="basic-sentence-item">
         <div class="basic-main-row">
           <div class="basic-left">
-            <span class="basic-index">${idx + 1}.</span>
-            <span class="basic-jp jp-text">${rubyForSentence(b4)}</span>
+            <span class="basic-index">${idx + 1}</span>
+            <span class="basic-jp jp-text">${jpDisplay}</span>
           </div>
           <div class="sentence-tools">
-            <button class="icon-btn" title="朗读" onclick="JapaneseTTS.speak('${escapeQuotes(cleanForSentence(b4))}', this)">
+            <button class="icon-btn" title="朗读这句" aria-label="朗读这句"
+                    onclick="JapaneseTTS.speak('${escapeQuotes(cleanForSentence(b4))}', this)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
               </svg>
             </button>
             ${hasExemplar ? `
-              <button class="icon-btn" style="color: var(--accent-gold);" title="切换语法透视图" onclick="App.toggleSentenceXray('${slotId}', '${matchedExemplar.id}')">
-                ✦ 语法透视
+              <button class="text-btn basic-xray-btn ${openFirst ? 'open' : ''}"
+                      type="button" aria-expanded="${openFirst ? 'true' : 'false'}"
+                      aria-controls="${slotId}"
+                      onclick="App.toggleBasicXray('${slotId}', '${matchedExemplar.id}', this)">
+                <span class="text-btn-label">${openFirst ? '收起' : '拆开看'}</span>
+                <span class="text-btn-chev" aria-hidden="true">${chevRight()}</span>
               </button>
             ` : ''}
           </div>
         </div>
-        <div class="basic-romaji">${romajiForSentence(b4)}</div>
-        <div class="basic-zh">${b4.zh}</div>
+        <div class="basic-romaji">${stripLeadStar(romajiForSentence(b4))}</div>
+        <div class="basic-zh">${zhDisplay}</div>
 
-        <!-- Inline Visual Breakdown Container -->
         ${hasExemplar ? `
-          <div class="xray-embed-slot" id="${slotId}">
-            ${GrammarDiagram.render(matchedExemplar, { id: `embed_${matchedExemplar.id}` })}
+          <div class="xray-embed-slot basic-xray-slot ${openFirst ? 'open' : ''}" id="${slotId}">
+            ${openFirst ? GrammarDiagram.render(matchedExemplar, { id: `embed_${matchedExemplar.id}`, hideNatural: true }) : ''}
           </div>
         ` : ''}
       </div>
     `;
   }
 
-  function toggleSentenceXray(slotId, exemplarId) {
+  /** 基本句的「拆开看」：首次展开才挂图，之后只切换显示。 */
+  function toggleBasicXray(slotId, exemplarId, btn) {
     const slot = document.getElementById(slotId);
     if (!slot) return;
-    const isHidden = slot.style.display === 'none';
-    slot.style.display = isHidden ? 'block' : 'none';
-    if (isHidden) {
-      setTimeout(() => GrammarDiagram.updateAllArrows(), 80);
+
+    const willOpen = !slot.classList.contains('open');
+    slot.classList.toggle('open', willOpen);
+
+    if (btn) {
+      btn.classList.toggle('open', willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      const label = btn.querySelector('.text-btn-label');
+      if (label) label.textContent = willOpen ? '收起' : '拆开看';
     }
+
+    if (!willOpen) return;
+
+    if (!slot.firstElementChild) {
+      const ex = exemplarsData.find(e => e.id === exemplarId);
+      if (!ex) return;
+      slot.innerHTML = GrammarDiagram.render(ex, { id: `${slotId}_dg`, hideNatural: true });
+    }
+    setTimeout(() => GrammarDiagram.updateAllArrows(), 80);
   }
 
   /* ====================================================================
@@ -698,11 +805,12 @@
       <div class="dlg-jp-line">
         ${jpLine}
         <div class="sentence-tools">
-          <button class="icon-btn simple-xray-btn" type="button" id="${slotId}_btn"
+          <button class="text-btn simple-xray-btn" type="button" id="${slotId}_btn"
                   aria-expanded="false" aria-controls="${slotId}"
-                  title="展开词块透视：只画词块、助词框与振假名"
+                  title="拆开看这句的词块与助词"
                   onclick="App.toggleSimpleXray('${slotId}', '${simpleEx.id}', this)">
-            <span class="simple-xray-arrow" aria-hidden="true">▸</span><span>词块透视</span>
+            <span class="text-btn-label">拆开看</span>
+            <span class="text-btn-chev simple-xray-arrow" aria-hidden="true">${chevRight()}</span>
           </button>
         </div>
       </div>`;
@@ -724,7 +832,7 @@
         currentGroup = line.group;
         html += `
           <div class="dialogue-group">
-            <div class="dialogue-group-header">【对话场景 ${currentGroup}】</div>
+            <div class="dialogue-group-header">对话 ${currentGroup}</div>
         `;
       }
 
@@ -738,7 +846,7 @@
           <div class="dlg-content">
             ${renderDialogueJp(line, simpleEx, slotId)}
             <div class="dlg-romaji">${romajiForSentence(line)}</div>
-            <div class="dlg-zh">${line.zh}</div>
+            <div class="dlg-zh">${cleanDialogueZh(line.zh)}</div>
             ${renderSimpleXraySlot(simpleEx, slotId)}
           </div>
         </div>
@@ -768,7 +876,7 @@
             <div class="dlg-content">
               ${renderDialogueJp(item, simpleEx, slotId)}
               <div class="dlg-romaji">${romajiForSentence(item)}</div>
-              <div class="dlg-zh">${item.zh}</div>
+              <div class="dlg-zh">${cleanDialogueZh(item.zh)}</div>
               ${renderSimpleXraySlot(simpleEx, slotId)}
             </div>
           </div>
@@ -808,12 +916,10 @@
         <section class="textbook-section">
           <div class="section-editorial-title">
             <span class="num-kanji">二、</span>
-            <span>文法ノート</span>
-            <span class="sub-en">Grammar Notes (Textbook Original)</span>
+            <span>语法笔记</span>
           </div>
-          <div class="gdeep-coverage">
-            本课的深度讲义尚未撰写，以下是教材原始语法笔记。
-            第 ${(grammarDeep && grammarDeep.meta && grammarDeep.meta.coverage || []).join('、') || '1～4'} 课已完成七层拆解，可先去看那几课。
+          <div class="gd-fallback-note">
+            这一课的深度讲义还没写好，先看教材原注。后面的课会补上。
           </div>
           <div class="grammar-notes-flow">
             ${lesson.grammar.map(gn => `
@@ -830,25 +936,15 @@
       `;
     }
 
-    const exCount = deep.reduce((n, e) => n + (e.examples || []).length, 0);
-    const pitCount = deep.reduce((n, e) => n + (e.pitfalls || []).length, 0);
-    const grammarCount = deep.filter(e => !e.concept).length;
-    const conceptCount = deep.length - grammarCount;
     const minOrder = Math.min.apply(null, deep.map(e => e.order === undefined ? 99 : e.order));
 
     return `
       <section class="textbook-section">
         <div class="section-editorial-title">
           <span class="num-kanji">二、</span>
-          <span>文法ノート</span>
-          <span class="sub-en">Deep Grammar &amp; Cognitive Models</span>
+          <span>语法笔记</span>
           <button class="lesson-selector-btn" style="margin-left:auto;"
                   onclick="App.toggleAllGrammarCards(${num}, this)">展开全部</button>
-        </div>
-        <div class="gdeep-coverage">
-          本课 ${grammarCount} 个语法点${conceptCount ? `＋${conceptCount} 条认知地基` : ''}已做七层拆解：一句话本质 → 结构公式 → 为什么日语这样想 →
-          课文原句（可点读、可开透视图）→ 中文母语者的坑 → 近义辨析 → 自检题。
-          共 ${exCount} 条例句、${pitCount} 组错对对照。点击任意一条展开。
         </div>
         <div class="gdeep-list" id="gdeep_list_${num}" data-open-order="${minOrder}">
           ${deep.map(e => renderDeepCard(e, num, minOrder)).join('')}
@@ -870,7 +966,7 @@
             ${e.category ? `<span class="gdeep-cat">${esc(e.category)}</span>` : ''}
             <h3 class="gdeep-pattern jp-text">${esc(e.pattern)}</h3>
           </div>
-          <button class="gdeep-chevron" tabindex="-1" aria-label="展开或收起">▾</button>
+          <button class="gdeep-chevron" tabindex="-1" aria-label="展开或收起">${chevDown()}</button>
           <div class="gdeep-essence">${md(e.essence)}</div>
         </div>
 
@@ -939,21 +1035,26 @@
           return `
             <div class="gd-example">
               <div class="gd-ex-top">
-                <span class="gd-ex-jp jp-text" onclick="JapaneseTTS.speak('${escapeQuotes(x.jp)}', this)"
-                      title="点击朗读">${x.jp_ruby || esc(x.jp)}</span>
-                <button class="icon-btn" title="朗读这句" onclick="JapaneseTTS.speak('${escapeQuotes(x.jp)}', this)">
+                <span class="gd-ex-jp jp-text">${x.jp_ruby || esc(x.jp)}</span>
+                <button class="icon-btn" title="朗读这句" aria-label="朗读这句"
+                        onclick="JapaneseTTS.speak('${escapeQuotes(x.jp)}', this)">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                   </svg>
                 </button>
                 ${hasXray ? `
-                  <button class="icon-btn" style="color: var(--accent-gold);" title="打开这句的语法透视图"
-                          onclick="App.toggleExampleXray('${slotId}', '${esc(x.xid)}')">✦ 语法透视</button>` : ''}
+                  <button class="text-btn example-xray-btn" type="button"
+                          title="拆开看这句的结构"
+                          aria-controls="${slotId}"
+                          onclick="App.toggleExampleXray('${slotId}', '${esc(x.xid)}', this)">
+                    <span class="text-btn-label">拆开看</span>
+                    <span class="text-btn-chev" aria-hidden="true">${chevRight()}</span>
+                  </button>` : ''}
                 ${x.src ? `<span class="gd-ex-src">${esc(x.src)}</span>` : ''}
               </div>
               ${x.romaji ? `<div class="gd-ex-rm">${esc(x.romaji)}</div>` : ''}
-              ${x.lit ? `<div class="gd-ex-lit"><span class="lit-label">逐词直译</span>${esc(x.lit)}</div>` : ''}
+              ${x.lit ? `<div class="gd-ex-lit"><span class="lit-label">按语序</span>${esc(x.lit)}</div>` : ''}
               ${x.zh ? `<div class="gd-ex-zh">${esc(x.zh)}</div>` : ''}
               ${x.note ? `<div class="gd-ex-note">${md(x.note)}</div>` : ''}
               ${hasXray ? `<div class="gd-xray-slot" id="${slotId}"></div>` : ''}
@@ -1018,7 +1119,7 @@
     const as = e.answers || [];
     return `
       <div class="gd-sec">
-        <div class="gd-sec-title">自检（点击看答案）</div>
+        <div class="gd-sec-title">自检<span class="gd-sec-hint">点题干看答案</span></div>
         ${qs.map((q, i) => `
           <div class="gd-quiz" id="${e.id}_q${i}">
             <div class="gd-q" onclick="App.toggleQuiz('${e.id}_q${i}')">
@@ -1036,11 +1137,11 @@
     if (!rel.length) return '';
     return `
       <div class="gd-related">
-        <span class="gd-related-label">关联条目</span>
+        <span class="gd-related-label">相关笔记</span>
         ${rel.map(r => r.pending
           ? `<span class="gd-rel-chip pending" title="该条目在后续课程，尚未撰写">${esc(r.label)}</span>`
           : `<button class="gd-rel-chip" onclick="App.gotoGrammar('${esc(r.id)}')"
-                    title="跳到第${r.lesson}课">${esc(r.label)}<span style="opacity:.5;font-size:.8em;">　第${r.lesson}课</span></button>`
+                    title="跳到第${r.lesson}课">${esc(r.label)}<span style="opacity:.6;">　第${r.lesson}课</span></button>`
         ).join('')}
       </div>
     `;
@@ -1050,9 +1151,9 @@
     if (e.legacy_missing) {
       return `
         <details class="gd-legacy">
-          <summary>原教材笔记</summary>
+          <summary>教材原注</summary>
           <div class="gd-legacy-body gd-legacy-empty">
-            教材此条笔记为空——原数据抓下来时就没有任何解释。上面的讲义是从零补写的。
+            教材里这一条没有留下解释，上面的讲义是后来补写的。
           </div>
         </details>
       `;
@@ -1060,7 +1161,7 @@
     if (!e.legacy) return '';
     return `
       <details class="gd-legacy">
-        <summary>原教材笔记（对照用）</summary>
+        <summary>教材原注</summary>
         <div class="gd-legacy-body">${formatGrammarExplanation(e.legacy)}</div>
       </details>
     `;
@@ -1094,18 +1195,25 @@
   }
 
   /** 例句的透视图按需渲染：77 条例句若一次性铺满会拖慢首屏。 */
-  function toggleExampleXray(slotId, xid) {
+  function toggleExampleXray(slotId, xid, btn) {
     const slot = document.getElementById(slotId);
     if (!slot) return;
     const willOpen = !slot.classList.contains('open');
     slot.classList.toggle('open', willOpen);
+
+    if (btn) {
+      btn.classList.toggle('open', willOpen);
+      const label = btn.querySelector('.text-btn-label');
+      if (label) label.textContent = willOpen ? '收起' : '拆开看';
+    }
+
     if (!willOpen) return;
 
     const containerId = slotId + '_dg';
     if (!renderedXraySlots.has(slotId)) {
       const ex = exemplarsData.find(e => e.id === xid);
       if (!ex) return;
-      slot.innerHTML = GrammarDiagram.render(ex, { id: containerId });
+      slot.innerHTML = GrammarDiagram.render(ex, { id: containerId, hideNatural: true });
       renderedXraySlots.add(slotId);
     }
     setTimeout(() => GrammarDiagram.updateArrows(containerId), 60);
@@ -1128,6 +1236,8 @@
     if (button) {
       button.classList.toggle('open', willOpen);
       button.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      const label = button.querySelector('.text-btn-label');
+      if (label) label.textContent = willOpen ? '收起' : '拆开看';
     }
     if (!willOpen) return;
 
@@ -1182,7 +1292,7 @@
   window.App = {
     init: init,
     selectLesson: selectLesson,
-    toggleSentenceXray: toggleSentenceXray,
+    toggleBasicXray: toggleBasicXray,
     toggleSimpleXray: toggleSimpleXray,
     toggleGrammarCard: toggleGrammarCard,
     toggleAllGrammarCards: toggleAllGrammarCards,

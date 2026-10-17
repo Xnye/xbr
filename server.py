@@ -1,5 +1,4 @@
 import http.server
-import socketserver
 import urllib.parse
 import hashlib
 import os
@@ -85,9 +84,11 @@ class EducationalHTTPHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
 if __name__ == '__main__':
-    # Allow port reuse
-    socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(('', PORT), EducationalHTTPHandler) as httpd:
+    # 单线程 TCPServer 会被浏览器的一条 keep-alive 连接卡住，
+    # 导致后续静态资源请求一直等待；改用 ThreadingHTTPServer。
+    from http.server import ThreadingHTTPServer
+    ThreadingHTTPServer.allow_reuse_address = True
+    with ThreadingHTTPServer(('', PORT), EducationalHTTPHandler) as httpd:
         print("======================================================")
         print(" Standard Japanese Cognitive Reader Audio Server Ready")
         print(f" URL: http://localhost:{PORT}/")
