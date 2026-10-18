@@ -44,9 +44,17 @@ class EducationalHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(b'Missing text parameter')
                 return
 
-            # Clean markup tags and all whitespace/punctuation for unified cache hits
-            text_clean = text.replace('<ruby>', '').replace('</ruby>', '').replace('<rt>', '').replace('</rt>', '')
-            text_clean = re.sub(r'[!！\s　。、.?,?？]', '', text_clean).strip()
+            # 只清标记和空白；标点决定 TTS 的句读停顿，不能进清洗规则
+            text_clean = re.sub(r'<rt[^>]*>.*?</rt>', '', text, flags=re.I | re.S)
+            text_clean = re.sub(r'<[^>]*>', '', text_clean)
+            text_clean = re.sub(r'[\s　]+', '', text_clean).strip()
+            text_clean = text_clean.lstrip('*').strip()
+
+            if not text_clean:
+                self.send_response(400)
+                self.end_headers()
+                self.wfile.write(b'Empty text after cleaning')
+                return
 
             # Check cache
             key = f"{voice}_{text_clean}"

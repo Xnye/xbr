@@ -61,10 +61,12 @@ const JapaneseTTS = (function () {
   function speak(rawText, btnElement) {
     if (!rawText) return;
 
-    // Clean text: strip HTML, furigana tags, and all Japanese/Western punctuation
+    // 只清标记和空白；标点必须保留，Edge TTS 靠 。，！？ 来生成句读停顿
     const cleanText = rawText
+      .replace(/<rt[^>]*>.*?<\/rt>/gi, '')
       .replace(/<[^>]*>/g, '')
-      .replace(/[!！\s　。、.?,?？]/g, '')
+      .replace(/^\*\s*/, '')
+      .replace(/[\s　]+/g, '')
       .trim();
 
     if (!cleanText) return;

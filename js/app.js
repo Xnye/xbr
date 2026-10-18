@@ -595,7 +595,7 @@
     }
 
     const html = `
-      <header class="chapter-header">
+      <header class="chapter-header" data-lesson-num="${String(lesson.number).padStart(2, '0')}">
         <div class="chapter-number">标准日本语 · 第 ${lesson.number} 课</div>
         <h1 class="chapter-title jp-text">${lesson.title_ruby || lesson.title_clean}</h1>
         <div class="chapter-romaji">${romajiForLessonTitle(lesson)}</div>
@@ -615,6 +615,11 @@
     setTimeout(() => {
       GrammarDiagram.updateAllArrows();
     }, 120);
+
+    // 网络字体替换会改变字宽，箭头要在字体稳定后重算一次。
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => GrammarDiagram.updateAllArrows());
+    }
   }
 
   function buildLessonSteps(lesson, num) {

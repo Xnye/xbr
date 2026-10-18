@@ -14,9 +14,10 @@ VOICES = [
 ]
 
 def clean_text(raw):
-    t = re.sub(r'<[^>]*>', '', raw)
-    t = re.sub(r'[!！\s　。、.?,?？]', '', t)
-    return t.strip()
+    t = re.sub(r'<rt[^>]*>.*?</rt>', '', raw, flags=re.I | re.S)
+    t = re.sub(r'<[^>]*>', '', t)
+    t = re.sub(r'[\s　]+', '', t)
+    return t.strip().lstrip('*').strip()
 
 def get_cache_path(voice, text):
     c = clean_text(text)

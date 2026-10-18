@@ -3483,3 +3483,2268 @@ select:focus-visible {
     display: none;
   }
 }
+
+/* ==========================================================================
+   2026-10-18 纸本杂志视觉精修（最终覆盖层）
+   只处理视觉：纸纹、版心、巨号课号、折叠段索引、墨色助词、细线语法卡。
+   不改动课段节奏与任何内容结构。
+   ========================================================================== */
+
+/* ---------- 0. 令牌 ---------- */
+:root {
+  --bg-app: #151412;
+  --bg-paper: #1c1a17;
+  --bg-canvas: #181613;
+  --bg-subtle: #24211d;
+  --text-main: #ece7dd;
+  --text-muted: #b0a99e;
+  --text-faint: #8a8378;
+  --border-hairline: rgba(236, 231, 221, 0.12);
+  --accent-gold: #d4684f;
+  --accent-vermilion: #d4684f;
+
+  --rule-soft: rgba(236, 231, 221, 0.08);
+  --rule-strong: rgba(236, 231, 221, 0.20);
+  --header-glass: rgba(21, 20, 18, 0.82);
+  --accent-soft: rgba(212, 104, 79, 0.12);
+  --paper-wash: rgba(255, 255, 255, 0.025);
+  --shadow-panel: 0 18px 44px rgba(0, 0, 0, 0.50);
+  --shadow-drawer: -18px 0 48px rgba(0, 0, 0, 0.55);
+  --grain: radial-gradient(rgba(255, 255, 255, 0.035) 0.5px, transparent 0.7px);
+  --grain-size: 4px 4px;
+
+  --color-particle-blue: #8fb4c9;
+  --color-particle-cyan: #82b8b0;
+  --color-particle-orange: #c99a63;
+  --color-particle-red: #d98a7a;
+  --color-particle-purple: #b49ac0;
+  --color-particle-yellow: #c8ae6a;
+  --color-particle-green: #8fb59a;
+  --color-particle-magenta: #c48aa8;
+  --color-particle-teal: #7fb4a4;
+  --color-particle-pink: #cf94a5;
+  --color-particle-indigo: #93a3d6;
+  --color-particle-brown: #bd9b78;
+  --color-particle-slate: #a3adb9;
+}
+
+body.theme-paper {
+  --bg-app: #f4f0e8;
+  --bg-paper: #faf7f1;
+  --bg-canvas: #f0ebe1;
+  --bg-subtle: #ece6da;
+  --text-main: #211f1a;
+  --text-muted: #5c564c;
+  --text-faint: #726a5d;
+  --border-hairline: rgba(33, 31, 26, 0.12);
+  --accent-gold: #a13b2b;
+  --accent-vermilion: #a13b2b;
+
+  --rule-soft: rgba(33, 31, 26, 0.09);
+  --rule-strong: rgba(33, 31, 26, 0.22);
+  --header-glass: rgba(244, 240, 232, 0.82);
+  --accent-soft: rgba(161, 59, 43, 0.08);
+  --paper-wash: rgba(255, 255, 255, 0.42);
+  --shadow-panel: 0 18px 44px rgba(40, 32, 20, 0.14);
+  --shadow-drawer: -18px 0 48px rgba(40, 32, 20, 0.16);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+  --grain-size: 160px 160px;
+
+  --color-particle-blue: #2c5f7c;
+  --color-particle-cyan: #2f6f68;
+  --color-particle-orange: #9a5a25;
+  --color-particle-red: #a13b2b;
+  --color-particle-purple: #6d4a78;
+  --color-particle-yellow: #80611c;
+  --color-particle-green: #3f6b4a;
+  --color-particle-magenta: #8c3f6b;
+  --color-particle-teal: #2e6b5e;
+  --color-particle-pink: #9c4a5f;
+  --color-particle-indigo: #3f568f;
+  --color-particle-brown: #7a5636;
+  --color-particle-slate: #5c6675;
+}
+
+/* ---------- 1. 纸面与基础排版 ---------- */
+body {
+  background-color: var(--bg-app);
+  background-image:
+    var(--grain),
+    radial-gradient(1200px 620px at 50% -8%, var(--paper-wash), transparent 72%);
+  background-size: var(--grain-size), auto;
+  background-repeat: repeat, no-repeat;
+  background-position: 0 0, 50% 0;
+  letter-spacing: 0.012em;
+  text-rendering: optimizeLegibility;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--accent-gold);
+  color: var(--bg-paper);
+}
+
+/* 阅读进度：只在支持滚动时间线的浏览器出现 */
+@supports (animation-timeline: scroll()) {
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-gold);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 150;
+    animation: xbr-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  @keyframes xbr-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
+
+/* ---------- 2. 顶栏 ---------- */
+.site-header {
+  background: var(--header-glass);
+  border-bottom-color: var(--rule-soft);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  backdrop-filter: blur(18px) saturate(1.12);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header {
+    background: var(--bg-app);
+  }
+}
+
+.header-inner {
+  padding: 0.78rem 2rem;
+}
+
+.brand-area {
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.brand-title::before {
+  content: '日';
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  background: var(--accent-gold);
+  color: var(--bg-paper);
+  font-family: var(--font-serif-jp), serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  border-radius: 1px;
+  transform: translateY(-0.03em);
+}
+
+.brand-subtitle {
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+.nav-actions {
+  gap: 0.3rem;
+}
+
+.editorial-toggle-btn {
+  padding: 0.32rem 0.55rem;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+.editorial-toggle-btn:hover {
+  background: var(--accent-soft);
+}
+
+.editorial-toggle-btn.active {
+  box-shadow: inset 0 -1px 0 var(--accent-gold);
+  font-weight: 500;
+}
+
+.lesson-selector-btn {
+  border-color: var(--rule-soft);
+  padding: 0.3rem 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.lesson-selector-btn:hover {
+  border-color: var(--accent-gold);
+  background: transparent;
+}
+
+.settings-panel {
+  border-radius: 2px;
+  border-color: var(--rule-soft);
+  background: var(--bg-paper);
+  box-shadow: var(--shadow-panel);
+}
+
+.settings-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+}
+
+/* ---------- 3. 卷头 ---------- */
+.chapter-header {
+  position: relative;
+  isolation: isolate;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.7rem;
+}
+
+.chapter-header::before {
+  content: attr(data-lesson-num);
+  position: absolute;
+  top: -0.5em;
+  right: -0.02em;
+  z-index: -1;
+  font-family: var(--font-serif-jp), serif;
+  font-size: clamp(6rem, 13vw, 9.5rem);
+  font-weight: 600;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: var(--accent-gold);
+  opacity: 0.07;
+  pointer-events: none;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.chapter-number {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+}
+
+.chapter-number::before {
+  content: '';
+  width: 1.8rem;
+  height: 1px;
+  background: var(--accent-gold);
+  opacity: 0.75;
+}
+
+.chapter-title {
+  position: relative;
+  z-index: 1;
+  max-width: 84%;
+  font-size: clamp(2.2rem, 4.6vw, 3.2rem);
+  line-height: 1.2;
+  letter-spacing: 0.015em;
+  font-weight: 600;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.chapter-romaji {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.7rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chapter-header::after {
+  width: 3.2rem;
+  height: 2px;
+  margin-top: 1.5rem;
+  background: var(--accent-gold);
+  opacity: 0.9;
+}
+
+.lesson-intro {
+  max-width: 44rem;
+  margin: 1.7rem 0 2.1rem;
+}
+
+.lesson-intro-lead {
+  font-size: 1.25rem;
+  line-height: 1.85;
+  letter-spacing: 0.008em;
+  color: var(--text-main);
+}
+
+.lesson-intro p + p {
+  margin-top: 0.35rem;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+/* ---------- 4. 课段路线 ---------- */
+.lesson-route-row {
+  gap: 0.9rem;
+  margin: 1.4rem 0 1.4rem;
+}
+
+.lesson-route {
+  gap: 0.7rem;
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+.route-step {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.16rem;
+  padding-bottom: 0.14rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  transition: color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.route-step:hover {
+  color: var(--text-main);
+}
+
+.route-step.is-current {
+  color: var(--text-main);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: inset 0 -1px 0 var(--accent-gold);
+}
+
+.route-num {
+  margin-right: 0.1rem;
+  font-family: var(--font-serif-jp), serif;
+  font-size: 0.94em;
+  letter-spacing: 0;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.route-step.is-current .route-num {
+  color: var(--accent-gold);
+}
+
+.route-sep {
+  flex: none;
+  width: 0;
+  height: 10px;
+  overflow: hidden;
+  border-left: 1px solid var(--rule-soft);
+  font-size: 0;
+  line-height: 0;
+  color: transparent;
+}
+
+.route-mode {
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  padding: 0.22rem 0.55rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.route-mode:hover {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+/* ---------- 5. 图例与课段索引 ---------- */
+.diagram-legend {
+  margin: 1rem 0 2.8rem;
+  border: 0;
+  border-top: 1px solid var(--rule-soft);
+  border-radius: 0;
+  background: transparent;
+}
+
+.legend-head {
+  padding: 0.72rem 0.05rem;
+  gap: 0.5rem;
+}
+
+.legend-head:hover {
+  background: transparent;
+}
+
+.legend-title {
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.legend-sub {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--text-faint);
+}
+
+.legend-body {
+  padding: 0.2rem 0.05rem 1rem;
+}
+
+.legend-row {
+  gap: 1.5rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.legend-row-title {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.legend-row-body {
+  font-size: 0.86rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+.lesson-step {
+  margin-top: 4.6rem;
+}
+
+#lesson_content_root > .lesson-step:first-of-type {
+  margin-top: 0.4rem;
+}
+
+.lesson-step:not([open]) {
+  margin-top: 0.85rem;
+}
+
+.lesson-step > .step-summary {
+  gap: 0.65rem;
+  padding-bottom: 0.72rem;
+  border-bottom-color: var(--rule-strong);
+  font-size: 1.32rem;
+  letter-spacing: 0.035em;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.lesson-step[open] > .step-summary {
+  margin-bottom: 1.8rem;
+}
+
+.lesson-step > .step-summary .num-kanji {
+  font-family: var(--font-serif-jp), serif;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--accent-gold);
+}
+
+.lesson-step > .step-summary .sub-note {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.lesson-step > .step-summary::after {
+  align-self: center;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-left: auto;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text-faint);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.lesson-step[open] > .step-summary::after {
+  color: var(--accent-gold);
+  border-color: var(--accent-soft);
+}
+
+.lesson-step > .step-summary:hover::after {
+  color: var(--accent-gold);
+  border-color: var(--rule-strong);
+}
+
+.lesson-step:not([open]) > .step-summary {
+  padding-top: 0.35rem;
+  padding-bottom: 0.78rem;
+  border-bottom-color: var(--rule-soft);
+}
+
+.lesson-step:not([open]) > .step-summary:hover {
+  color: var(--accent-gold);
+}
+
+.step-body {
+  padding-bottom: 0.5rem;
+}
+
+.step-next {
+  margin-top: 2.6rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule-soft);
+  text-align: right;
+}
+
+.step-next button {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.step-next button:hover {
+  color: var(--accent-gold);
+}
+
+.lesson-close {
+  position: relative;
+  max-width: 46rem;
+  margin: 4rem 0 2rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.lesson-close::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 3rem;
+  height: 2px;
+  background: var(--accent-gold);
+}
+
+.lesson-close .lesson-intro-lead {
+  font-size: 1.18rem;
+  line-height: 1.85;
+  margin-bottom: 0.35rem;
+}
+
+.lesson-close p + p {
+  font-size: 0.86rem;
+  color: var(--text-faint);
+}
+
+/* 换课时的版面进场；只影响新插入的节点 */
+@keyframes xbr-page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chapter-header,
+.lesson-intro,
+.lesson-route-row,
+.lesson-step,
+.lesson-close {
+  /* 不要 fill-mode：结束后必须回到无 transform 的状态，
+     否则会变成 position: fixed 提示条的包含块。 */
+  animation: xbr-page-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.lesson-step {
+  animation-delay: 0.04s;
+}
+
+/* ---------- 6. 基本课文 ---------- */
+.basic-sentences-list {
+  margin-top: 0.4rem;
+}
+
+.basic-sentence-item {
+  gap: 0.3rem;
+  margin-bottom: 2.9rem;
+  padding: 0;
+}
+
+.basic-sentence-item:last-child {
+  margin-bottom: 0;
+}
+
+.basic-main-row {
+  gap: 0.7rem;
+}
+
+.basic-left {
+  gap: 0.7rem;
+}
+
+.basic-index {
+  min-width: 0.9em;
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.basic-jp {
+  font-size: clamp(1.6rem, 2.8vw, 1.95rem);
+  font-weight: 500;
+  line-height: 1.72;
+  letter-spacing: 0.04em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.basic-romaji {
+  margin-left: 1.55rem;
+  margin-top: 0.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-style: normal;
+  letter-spacing: 0.09em;
+  color: var(--text-faint);
+}
+
+.basic-zh {
+  margin-left: 1.55rem;
+  margin-top: 0.28rem;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+.sentence-tools {
+  opacity: 0.55;
+  transition: opacity 0.2s ease;
+}
+
+.basic-sentence-item:hover .sentence-tools,
+.sentence-tools:focus-within {
+  opacity: 1;
+}
+
+.text-btn {
+  letter-spacing: 0.03em;
+}
+
+/* ---------- 7. 语法透视图 ---------- */
+.grammar-diagram-container {
+  position: relative;
+  margin: 0;
+}
+
+.diagram-canvas {
+  padding: 2rem 0 1.7rem;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: 0;
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+
+.sentence-chunks-row {
+  gap: 0.9rem 1.5rem;
+  margin-bottom: 1.4rem;
+}
+
+.chunk-jp-wrapper {
+  font-size: clamp(2rem, 3.6vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-main);
+  margin-bottom: 0.45rem;
+}
+
+.particle-box {
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 0.04rem 0.3rem;
+  font-size: 0.82em;
+  font-weight: 500;
+  background: rgba(128, 128, 128, 0.05);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  box-shadow: none;
+  filter: none;
+  transform: none;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.particle-box:hover,
+.hover-highlight .particle-box {
+  filter: none;
+  transform: none;
+  box-shadow: none;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.particle-box.inner-connector {
+  padding: 0.01rem 0.22rem;
+  font-size: 0.76em;
+}
+
+.chunk-underline-bar {
+  height: 2px;
+  margin-bottom: 0.5rem;
+  border-radius: 0;
+  opacity: 0.9;
+}
+
+.chunk-gloss-box {
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+.gloss-main {
+  font-family: var(--font-serif-sc), serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+body.theme-paper .gloss-main {
+  color: var(--text-muted);
+}
+
+.gloss-sub {
+  margin-top: 0.12rem;
+  font-size: 0.68rem;
+  color: var(--text-faint);
+}
+
+.zero-subject-layer {
+  height: 44px;
+}
+
+.zero-subject-layer.no-zero {
+  height: 10px;
+}
+
+.zero-badge.red-box {
+  border-width: 1px;
+  border-radius: 2px;
+  padding: 0.1rem 0.45rem;
+  color: var(--color-particle-red);
+  background: rgba(161, 59, 43, 0.06);
+  background: color-mix(in srgb, var(--color-particle-red) 8%, transparent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.zero-badge.red-box:hover,
+.zero-badge.red-box.hover-highlight {
+  box-shadow: none;
+  background: color-mix(in srgb, var(--color-particle-red) 14%, transparent);
+}
+
+.grammar-diagram-container.zero-pinned .zero-badge.red-box {
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.arrow-curve-path {
+  stroke-width: 1.4;
+  opacity: 0.9;
+}
+
+.arrow-curve-path.path-highlight {
+  stroke-width: 2.2;
+  filter: none;
+}
+
+.diagram-arrows-svg marker path {
+  fill: var(--color-particle-red);
+}
+
+.literal-toggle-row {
+  margin: -0.2rem 0 0.5rem;
+}
+
+.literal-toggle-btn {
+  padding: 0.1rem 0.2rem 0.2rem;
+  border-bottom: 1px solid var(--rule-soft);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.literal-toggle-btn:hover {
+  border-bottom-color: var(--accent-gold);
+}
+
+.literal-clause-row {
+  gap: 0.4rem;
+  margin-bottom: 1.3rem;
+  font-size: 1.02rem;
+  letter-spacing: 0.02em;
+  color: var(--text-main);
+}
+
+body.theme-paper .literal-clause-row {
+  color: var(--text-main);
+}
+
+.lit-token {
+  padding: 0 0.04rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+body .lit-token[class*="-u"] {
+  color: var(--text-main);
+  border-bottom-width: 1px;
+}
+
+.lit-token:hover,
+.lit-token.hover-highlight {
+  filter: none;
+  transform: none;
+  background: var(--accent-soft);
+}
+
+.natural-translation-row {
+  font-size: 1.05rem;
+  color: var(--text-main);
+}
+
+body.theme-paper .natural-translation-row {
+  color: var(--text-main);
+}
+
+.diagram-foot {
+  padding-top: 0.7rem;
+}
+
+.diagram-note-btn {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+}
+
+.diagram-note-btn:hover {
+  color: var(--accent-gold);
+}
+
+.cognitive-note-panel {
+  padding: 1.4rem 0 1.6rem;
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+  background: transparent;
+}
+
+.note-body {
+  max-width: 46rem;
+  font-size: 0.96rem;
+  line-height: 1.95;
+  color: var(--text-main);
+}
+
+.particle-legend-grid {
+  gap: 0.7rem 1.4rem;
+  margin-top: 1.2rem;
+}
+
+.legend-card {
+  padding: 0.15rem 0.7rem;
+  border-left: 1px solid var(--rule-soft);
+  background: transparent;
+}
+
+.particle-legend-grid .legend-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.particle-legend-grid .legend-text strong {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.diagram-tooltip {
+  position: fixed;
+  top: auto;
+  bottom: 1.5rem;
+  left: 50%;
+  max-width: min(36rem, calc(100vw - 2rem));
+  padding: 0.55rem 1rem;
+  transform: translateX(-50%);
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  background: var(--bg-paper);
+  color: var(--text-main);
+  box-shadow: var(--shadow-panel);
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  line-height: 1.6;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  z-index: 160;
+}
+
+body.theme-paper .diagram-tooltip {
+  background: var(--bg-paper);
+  color: var(--text-main);
+  border-color: var(--rule-strong);
+  box-shadow: var(--shadow-panel);
+}
+
+/* ---------- 8. 深度语法卡 ---------- */
+.gdeep-toolbar {
+  margin: 0 0 1.2rem;
+}
+
+.gdeep-toolbar .lesson-selector-btn {
+  padding: 0 0 0.1rem;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+.gdeep-toolbar .lesson-selector-btn:hover {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+
+.gdeep-list {
+  margin-top: 0.5rem;
+}
+
+.gdeep-card {
+  padding: 1.9rem 0 2.1rem;
+  border-top-color: var(--rule-soft);
+}
+
+.gdeep-card:last-child {
+  border-bottom-color: var(--rule-soft);
+}
+
+@keyframes gd-flash {
+  0%, 40% { background: var(--accent-soft); }
+  100% { background: transparent; }
+}
+
+@keyframes pulse-audio {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px var(--accent-soft)); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 7px var(--accent-soft)); }
+}
+
+.gdeep-head {
+  row-gap: 0.55rem;
+}
+
+.gdeep-pattern-row {
+  gap: 0.65rem;
+}
+
+.gdeep-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--accent-gold);
+  white-space: nowrap;
+}
+
+.gdeep-cat::before {
+  content: '';
+  width: 0.28rem;
+  height: 0.28rem;
+  background: currentColor;
+}
+
+.gdeep-pattern {
+  font-size: clamp(1.35rem, 2.4vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.gdeep-essence {
+  max-width: 46rem;
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--text-muted);
+}
+
+.gdeep-chevron {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0.42rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: 50%;
+  color: var(--text-faint);
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.25s ease;
+}
+
+.gdeep-head:hover .gdeep-chevron {
+  color: var(--accent-gold);
+  border-color: var(--rule-strong);
+}
+
+.gdeep-card.open .gdeep-chevron {
+  color: var(--accent-gold);
+  border-color: var(--accent-soft);
+}
+
+.gdeep-body {
+  max-width: 46rem;
+  margin-top: 2rem;
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--rule-soft);
+}
+
+.gd-sec {
+  margin-bottom: 2.5rem;
+}
+
+.gd-sec-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+}
+
+.gd-sec-title::after {
+  content: '';
+  display: block;
+  flex: 1;
+  height: 1px;
+  background: var(--rule-soft);
+}
+
+.gd-prose {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.95;
+}
+
+.gd-formula {
+  margin-bottom: 1.2rem;
+  padding: 1.15rem 0.3rem;
+  border: 0;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+  background: transparent;
+  font-size: 1.26rem;
+  line-height: 1.75;
+  letter-spacing: 0.04em;
+  white-space: normal;
+}
+
+.gd-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.gd-table th,
+.gd-table td {
+  padding: 0.8rem 0.7rem;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+}
+
+.gd-table thead th {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+}
+
+.gd-table tbody th {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.gd-table td {
+  color: var(--text-muted);
+}
+
+.gd-table tr:last-child td,
+.gd-table tr:last-child th {
+  border-bottom: 0;
+}
+
+.gd-example {
+  padding: 1.3rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.gd-ex-top {
+  gap: 0.6rem;
+}
+
+.gd-ex-jp {
+  font-size: 1.42rem;
+  line-height: 1.65;
+  letter-spacing: 0.03em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.gd-ex-jp:hover {
+  color: var(--text-main);
+}
+
+.gd-ex-rm {
+  margin-top: 0.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+.gd-ex-lit {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.gd-ex-lit .lit-label {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+}
+
+.gd-ex-zh {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.gd-ex-note {
+  margin-top: 0.45rem;
+  padding-left: 0.7rem;
+  border-left: 1px solid var(--rule-soft);
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--text-faint);
+}
+
+.gd-ex-src {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+.gd-pitfall {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.gd-wrong,
+.gd-right {
+  font-size: 1.28rem;
+}
+
+.gd-right::before {
+  color: var(--color-particle-green);
+}
+
+.gd-pit-why {
+  padding-left: 1.5rem;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+}
+
+.gd-q {
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.gd-q-num {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--text-faint);
+}
+
+.gd-q:hover {
+  color: var(--text-main);
+}
+
+.gd-a {
+  margin: 0.4rem 0 0 1.5rem;
+  padding-left: 0.8rem;
+  border-left: 1px solid var(--rule-strong);
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+}
+
+.gd-related {
+  margin-top: 1.8rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.gd-related-label {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+}
+
+.gd-rel-chip {
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.gd-rel-chip:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.gd-legacy {
+  border-top-color: var(--rule-soft);
+}
+
+.gd-legacy-body {
+  padding-left: 0.8rem;
+  border-left: 1px solid var(--rule-soft);
+  font-size: 0.9rem;
+  line-height: 1.9;
+}
+
+.grammar-notes-flow {
+  gap: 2rem;
+}
+
+.gn-body {
+  font-size: 0.95rem;
+  line-height: 1.95;
+  color: var(--text-muted);
+}
+
+/* ---------- 9. 会话与应用课文 ---------- */
+.dialogue-group-header {
+  margin: 0.2rem 0 0.8rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold);
+}
+
+.dialogue-bubble-row {
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.speaker-tag {
+  min-width: 2.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold);
+}
+
+.dlg-jp {
+  font-size: 1.5rem;
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.dlg-romaji {
+  margin-top: 0.15rem;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-style: normal;
+  letter-spacing: 0.07em;
+  color: var(--text-faint);
+}
+
+.dlg-zh {
+  margin-top: 0.2rem;
+  font-size: 0.94rem;
+  color: var(--text-muted);
+}
+
+.simple-xray-btn {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.narration-line {
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--rule-strong);
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: var(--text-faint);
+}
+
+/* ---------- 10. 单词表 ---------- */
+.vocab-body {
+  padding-top: 0.4rem;
+}
+
+.vocab-group {
+  margin-top: 2rem;
+}
+
+.vocab-group-title {
+  margin-bottom: 0.45rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.words-editorial-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.2rem 2.4rem;
+}
+
+.word-card-item {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.word-jp {
+  font-size: 1.22rem;
+}
+
+.word-pitch {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+
+.word-zh {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.word-romaji {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+}
+
+/* ---------- 11. 页脚与目录 ---------- */
+.lesson-footer {
+  margin-top: 5.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.lesson-footer-btn {
+  padding: 0.2rem 0;
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.lesson-footer-btn:hover {
+  color: var(--accent-gold);
+}
+
+.lesson-footer-meta {
+  font-family: var(--font-ui);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+}
+
+.drawer-panel {
+  background: var(--bg-paper);
+  box-shadow: var(--shadow-drawer);
+}
+
+.drawer-header {
+  border-bottom-color: var(--rule-soft);
+}
+
+.drawer-title {
+  font-family: var(--font-serif-sc), serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.drawer-search-box {
+  padding: 0.7rem 1.6rem 0.9rem;
+  border-bottom: 0;
+}
+
+.drawer-search-input {
+  padding: 0.5rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--text-main);
+}
+
+.drawer-search-input::placeholder {
+  color: var(--text-faint);
+}
+
+.drawer-item {
+  padding: 0.8rem 0.6rem;
+  border-bottom-color: var(--rule-soft);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.drawer-item:hover {
+  background: var(--accent-soft);
+}
+
+.drawer-item.active {
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--accent-gold);
+  background: transparent;
+}
+
+.drawer-item-title {
+  font-family: var(--font-serif-sc), serif;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.drawer-item-sub {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+
+/* ---------- 12. 窄屏 ---------- */
+@media (max-width: 720px) {
+  .header-inner {
+    padding: 0.65rem 1.1rem;
+  }
+
+  .brand-title {
+    font-size: 0.95rem;
+  }
+
+  .brand-title::before {
+    width: 1.15rem;
+    height: 1.15rem;
+    font-size: 0.66rem;
+  }
+
+  .book-container {
+    padding: 2.2rem 1.1rem 5rem;
+  }
+
+  .chapter-header {
+    padding-bottom: 1.4rem;
+  }
+
+  .chapter-header::before {
+    top: -0.35em;
+    right: 0.1rem;
+    font-size: 5.2rem;
+    opacity: 0.06;
+  }
+
+  .chapter-number {
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    gap: 0.5rem;
+  }
+
+  .chapter-number::before {
+    width: 1.2rem;
+  }
+
+  .chapter-title {
+    max-width: 100%;
+    font-size: clamp(1.85rem, 7.4vw, 2.4rem);
+  }
+
+  .chapter-romaji {
+    font-size: 0.62rem;
+    letter-spacing: 0.13em;
+  }
+
+  .lesson-intro {
+    margin: 1.4rem 0 1.8rem;
+  }
+
+  .lesson-intro-lead {
+    font-size: 1.08rem;
+  }
+
+  .lesson-route-row {
+    margin: 1.2rem 0 1.2rem;
+    gap: 0.6rem;
+  }
+
+  .lesson-route {
+    gap: 0.55rem;
+    font-size: 0.7rem;
+  }
+
+  .route-mode {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.66rem;
+  }
+
+  .diagram-legend {
+    margin-bottom: 2.2rem;
+  }
+
+  .lesson-step {
+    margin-top: 3.4rem;
+  }
+
+  .lesson-step:not([open]) {
+    margin-top: 0.7rem;
+  }
+
+  .lesson-step > .step-summary {
+    gap: 0.5rem;
+    font-size: 1.12rem;
+  }
+
+  .lesson-step > .step-summary::after {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.76rem;
+  }
+
+  .basic-main-row {
+    align-items: flex-start;
+  }
+
+  .basic-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+  }
+
+  .basic-jp {
+    min-width: 0;
+    font-size: 1.55rem;
+  }
+
+  .sentence-tools {
+    flex: none;
+  }
+
+  .basic-romaji,
+  .basic-zh {
+    margin-left: 1.45rem;
+  }
+
+  .diagram-canvas {
+    padding: 1.4rem 0 1.2rem;
+  }
+
+  .chunk-jp-wrapper {
+    font-size: 1.72rem;
+  }
+
+  .zero-subject-layer {
+    height: 38px;
+  }
+
+  .sentence-chunks-row {
+    gap: 0.55rem 0.9rem;
+  }
+
+  .gdeep-pattern {
+    font-size: 1.28rem;
+  }
+
+  .gdeep-body {
+    padding-left: 0.9rem;
+  }
+
+  .gd-formula {
+    font-size: 1.08rem;
+  }
+
+  .gd-table {
+    font-size: 0.86rem;
+  }
+
+  .gd-table th,
+  .gd-table td {
+    padding: 0.55rem 0.5rem;
+  }
+
+  .gd-ex-jp {
+    font-size: 1.28rem;
+  }
+
+  .dialogue-bubble-row {
+    gap: 0.2rem;
+  }
+
+  .speaker-tag {
+    font-size: 0.72rem;
+  }
+
+  .dlg-jp {
+    font-size: 1.3rem;
+  }
+
+  .dlg-zh {
+    font-size: 0.9rem;
+  }
+
+  .words-editorial-grid {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 0.2rem 1.4rem;
+  }
+
+  .lesson-close {
+    margin: 3rem 0 1.5rem;
+  }
+
+  .lesson-footer {
+    margin-top: 3.5rem;
+  }
+
+  .lesson-footer-btn {
+    font-size: 0.74rem;
+  }
+
+  .diagram-tooltip {
+    bottom: 0.9rem;
+    font-size: 0.72rem;
+  }
+}
+
+/* ---------- 13. 动效与可访问性 ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .audio-playing {
+    animation: none !important;
+  }
+
+  body::after {
+    display: none;
+  }
+}
+
+/* ---------- 14. 打印 ---------- */
+@media print {
+  :root,
+  body.theme-paper {
+    --bg-app: #fff;
+    --bg-paper: #fff;
+    --bg-canvas: #fff;
+    --bg-subtle: #fff;
+    --text-main: #111;
+    --text-muted: #333;
+    --text-faint: #555;
+    --border-hairline: rgba(0, 0, 0, 0.18);
+    --rule-soft: rgba(0, 0, 0, 0.12);
+    --rule-strong: rgba(0, 0, 0, 0.28);
+    --accent-gold: #8f2f22;
+    --accent-vermilion: #8f2f22;
+    --accent-soft: rgba(143, 47, 34, 0.06);
+    --paper-wash: transparent;
+    --grain: none;
+    --grain-size: auto;
+
+    --color-particle-blue: #2c5f7c;
+    --color-particle-cyan: #2f6f68;
+    --color-particle-orange: #9a5a25;
+    --color-particle-red: #a13b2b;
+    --color-particle-purple: #6d4a78;
+    --color-particle-yellow: #80611c;
+    --color-particle-green: #3f6b4a;
+    --color-particle-magenta: #8c3f6b;
+    --color-particle-teal: #2e6b5e;
+    --color-particle-pink: #9c4a5f;
+    --color-particle-indigo: #3f568f;
+    --color-particle-brown: #7a5636;
+    --color-particle-slate: #5c6675;
+  }
+
+  body {
+    background: #fff !important;
+    background-image: none !important;
+    color: #111;
+  }
+
+  .site-header,
+  .drawer-backdrop,
+  .lesson-footer,
+  .lesson-route-row,
+  .step-next,
+  .gdeep-toolbar,
+  .diagram-foot,
+  .diagram-legend,
+  .diagram-tooltip,
+  .sentence-tools,
+  .text-btn,
+  .icon-btn,
+  .literal-toggle-row {
+    display: none !important;
+  }
+
+  .chapter-header::before,
+  body::after,
+  .lesson-step > .step-summary::after {
+    display: none !important;
+  }
+
+  .book-container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .chapter-header {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .chapter-title {
+    max-width: 100%;
+    font-size: 2rem;
+  }
+
+  .lesson-step {
+    margin-top: 2rem;
+  }
+
+  .gdeep-card,
+  .gd-example,
+  .gd-pitfall,
+  .gd-sec {
+    break-inside: avoid;
+  }
+
+  .gdeep-body {
+    padding-left: 0.8rem;
+  }
+}
+
+/* ==========================================================================
+   2026-10-18 最后 5%：透视图开卷、卷头微动、折叠段与路线微交互
+   只做一次性动效；不改 DOM、内容、分步逻辑或布局尺寸。
+   ========================================================================== */
+
+/* ---------- 1. 透视图开卷编排 ---------- */
+
+/* 基本课文槽位原本用带位移的 paper-fade-in；改成纯透明度，
+   避免 80ms 后量箭头时 chunk 仍在位移、导致箭头落点偏几像素。 */
+.basic-xray-slot.open {
+  animation: xbr-slot-in 0.22s ease;
+}
+
+@keyframes xbr-slot-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.xray-embed-slot.open .syntax-chunk-unit,
+.gd-xray-slot.open .syntax-chunk-unit {
+  animation: xbr-ink-in 0.38s ease both;
+  animation-delay: calc(var(--xbr-i, 0) * 45ms);
+}
+
+@keyframes xbr-ink-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.xray-embed-slot.open .chunk-underline-bar,
+.gd-xray-slot.open .chunk-underline-bar {
+  transform-origin: left center;
+  animation: xbr-rule-draw 0.46s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--xbr-i, 0) * 45ms + 40ms);
+}
+
+@keyframes xbr-rule-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(1),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(1) { --xbr-i: 0; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(2),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(2) { --xbr-i: 1; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(3),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(3) { --xbr-i: 2; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(4),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(4) { --xbr-i: 3; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(5),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(5) { --xbr-i: 4; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(6),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(6) { --xbr-i: 5; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(7),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(7) { --xbr-i: 6; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(8),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(8) { --xbr-i: 7; }
+.xray-embed-slot.open .syntax-chunk-unit:nth-child(n+9),
+.gd-xray-slot.open .syntax-chunk-unit:nth-child(n+9) { --xbr-i: 7; }
+
+/* 点击固定 Ø が 时，箭头从顶部向下揭开；悬停预览不重播。 */
+.grammar-diagram-container.zero-pinned .diagram-arrows-svg {
+  animation: xbr-arrow-reveal 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes xbr-arrow-reveal {
+  from { clip-path: inset(0 0 100% 0); opacity: 0.25; }
+  to   { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+/* ---------- 2. 卷头 ---------- */
+
+.chapter-header::after {
+  transform-origin: left center;
+  animation: xbr-rule-in 0.52s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s both;
+}
+
+@keyframes xbr-rule-in {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 0.9; }
+}
+
+@supports (animation-timeline: scroll()) {
+  .chapter-header::before {
+    animation: xbr-ghost-drift linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0px 620px;
+  }
+
+  @keyframes xbr-ghost-drift {
+    from { transform: translateY(0); opacity: 0.07; }
+    to   { transform: translateY(56px); opacity: 0.015; }
+  }
+}
+
+/* ---------- 3. 折叠段 +/− 线条 morph ---------- */
+
+.lesson-step > .step-summary::after,
+.lesson-step[open] > .step-summary::after {
+  content: '';
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: center, center;
+  background-size: 0.55rem 1px, 1px 0.55rem;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-size 0.24s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.lesson-step[open] > .step-summary::after {
+  background-size: 0.55rem 1px, 1px 0;
+}
+
+/* ---------- 4. 路线当前项下划线 ---------- */
+
+.route-step {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.route-step::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--accent-gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.26s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.route-step.is-current {
+  box-shadow: none;
+}
+
+.route-step.is-current::after {
+  transform: scaleX(1);
+}
+
+/* ---------- 5. Reduced motion：回到最终态 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-header::before {
+    animation: none !important;
+    transform: none !important;
+    opacity: 0.07;
+  }
+
+  .chapter-header::after {
+    animation: none !important;
+    transform: none !important;
+    opacity: 0.9;
+  }
+
+  .syntax-chunk-unit,
+  .chunk-underline-bar {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .diagram-arrows-svg {
+    animation: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ---------- 6. 打印：不要截到动画中间态 ---------- */
+
+@media print {
+  .chapter-header::before {
+    display: none !important;
+  }
+
+  .chapter-header::after {
+    animation: none !important;
+    transform: none !important;
+    opacity: 0.9;
+  }
+
+  .syntax-chunk-unit,
+  .chunk-underline-bar {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .diagram-arrows-svg {
+    animation: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ==========================================================================
+   2026-10-18 非线性高弹动效（transform / opacity only）
+   单次过冲，不做 spring 循环；只作用于小面积墨标，不动正文块与 xray chunk。
+   ========================================================================== */
+
+/* ---------- 0. 动效令牌 ---------- */
+
+:root {
+  --xbr-ease-seal: cubic-bezier(0.3, 1.8, 0.55, 1);
+  --xbr-ease-knock: cubic-bezier(0.45, -0.45, 0.25, 1.7);
+  --xbr-ease-snap: cubic-bezier(0.34, 1.4, 0.5, 1);
+  --xbr-ease-soft: cubic-bezier(0.22, 0.9, 0.3, 1.06);
+  --xbr-ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --xbr-t-tap: 70ms;
+  --xbr-t-release: 220ms;
+  --xbr-t-icon: 320ms;
+  --xbr-t-seal: 380ms;
+  --xbr-t-rule: 460ms;
+}
+
+/* ---------- 1. 课段折叠标记：落印 ---------- */
+
+.lesson-step[open] > .step-summary::after {
+  transform-origin: 50% 50%;
+  animation: xbr-seal var(--xbr-t-seal) var(--xbr-ease-seal);
+}
+
+@keyframes xbr-seal {
+  from {
+    transform: scale(0.72) rotate(-12deg);
+    opacity: 0.35;
+  }
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- 2. 全站折叠箭头：弹扣 ---------- */
+
+.gdeep-chevron {
+  transition:
+    transform var(--xbr-t-icon) var(--xbr-ease-knock),
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.text-btn-chev,
+.simple-xray-arrow,
+.literal-toggle-btn .lit-toggle-arrow,
+.legend-arrow,
+.editorial-toggle-btn .chev {
+  transition: transform var(--xbr-t-icon) var(--xbr-ease-knock);
+}
+
+.editorial-toggle-btn .chev {
+  transform-origin: 50% 50%;
+}
+
+/* ---------- 3. 透视图下划线：起笔 ---------- */
+
+.xray-embed-slot.open .chunk-underline-bar,
+.gd-xray-slot.open .chunk-underline-bar {
+  transform-origin: left center;
+  animation: xbr-rule-draw-spring var(--xbr-t-rule) var(--xbr-ease-ink) both;
+  animation-delay: calc(var(--xbr-i, 0) * 45ms + 40ms);
+}
+
+@keyframes xbr-rule-draw-spring {
+  0% {
+    transform: scaleX(0);
+  }
+  72% {
+    transform: scaleX(1.012);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- 4. 路线当前段数字：落印 ---------- */
+
+.route-num {
+  display: inline-block;
+  vertical-align: baseline;
+  transform-origin: 50% 55%;
+}
+
+.route-step.is-current .route-num {
+  animation: xbr-route-seal var(--xbr-t-seal) var(--xbr-ease-seal);
+}
+
+@keyframes xbr-route-seal {
+  from {
+    transform: scale(0.55) translateY(0.08em);
+    opacity: 0.2;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- 5. 小控件按压：回弹 ---------- */
+
+.text-btn,
+.icon-btn,
+.lesson-selector-btn,
+.route-mode,
+.editorial-toggle-btn,
+.drawer-close-btn {
+  --xbr-press-dur: var(--xbr-t-release);
+  transition:
+    transform var(--xbr-press-dur) var(--xbr-ease-snap),
+    color 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.text-btn:active,
+.icon-btn:active,
+.lesson-selector-btn:active,
+.route-mode:active,
+.editorial-toggle-btn:active,
+.drawer-close-btn:active {
+  --xbr-press-dur: var(--xbr-t-tap);
+  transform: scale(0.93);
+}
+
+/* ---------- 6. 设置面板：落桌（只位移，避免文字重栅格化） ---------- */
+
+.settings-panel:not([hidden]) {
+  animation: xbr-panel-pop 300ms var(--xbr-ease-knock);
+}
+
+@keyframes xbr-panel-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- 7. 播放脉冲：收回喇叭图标，去掉 filter ---------- */
+
+.audio-playing {
+  animation: none;
+}
+
+button.audio-playing svg {
+  transform-origin: 50% 50%;
+  animation: xbr-audio-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes xbr-audio-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+/* ---------- 8. Reduced motion：直接到终态 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-step[open] > .step-summary::after,
+  .route-step.is-current .route-num,
+  .settings-panel:not([hidden]) {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .gdeep-chevron,
+  .text-btn-chev,
+  .simple-xray-arrow,
+  .literal-toggle-btn .lit-toggle-arrow,
+  .legend-arrow,
+  .editorial-toggle-btn .chev {
+    transition: none !important;
+  }
+
+  .text-btn,
+  .icon-btn,
+  .lesson-selector-btn,
+  .route-mode,
+  .editorial-toggle-btn,
+  .drawer-close-btn {
+    transition: none !important;
+  }
+
+  .text-btn:active,
+  .icon-btn:active,
+  .lesson-selector-btn:active,
+  .route-mode:active,
+  .editorial-toggle-btn:active,
+  .drawer-close-btn:active {
+    transform: none !important;
+  }
+
+  button.audio-playing svg {
+    animation: none !important;
+  }
+}
+
+/* ---------- 9. 打印：关闭新动画，保留打开角度 ---------- */
+
+@media print {
+  .lesson-step[open] > .step-summary::after,
+  .route-step.is-current .route-num,
+  .settings-panel:not([hidden]) {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .lesson-step > .step-summary::after {
+    transition: none !important;
+  }
+
+  .gdeep-chevron,
+  .text-btn-chev,
+  .simple-xray-arrow,
+  .literal-toggle-btn .lit-toggle-arrow,
+  .legend-arrow,
+  .editorial-toggle-btn .chev {
+    transition: none !important;
+  }
+
+  button.audio-playing svg {
+    animation: none !important;
+  }
+}
