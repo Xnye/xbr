@@ -8,6 +8,7 @@
   let exemplarsData = [];
   let grammarDeep = null;      // data/grammar_deep.json（缺失时为 null，自动回退旧渲染）
   let grammarDeepIndex = {};   // id -> entry，供关联条目跳转
+  let lessonOpeners = {};      // data/lesson_openers.json：每课开场与收束（可缺省）
   // data/romaji.json：全 48 课罗马音（由假名注音重新生成）。
   // lessons.json 自带的 romaji / title_romaji 是 pykakasi 产物，读起来是错的
   // （李→sumomo、は→ha、へ→he），只在取不到新数据时才回落。
@@ -16,6 +17,9 @@
   let activeFilter = '';
   let toastTimer = null;
   const renderedXraySlots = new Set();  // 已懒渲染过的例句透视图槽位
+  // 课段节奏：默认一次只展开一段；full 是给复习用的“看全课”出口。
+  let paceMode = localStorage.getItem('xbr_pace_mode') === 'full' ? 'full' : 'paced';
+  let activeStep = null;
 
   /** 极简 Markdown：**加粗** → <strong>。讲义正文里用来点睛。 */
   function md(str) {
@@ -140,11 +144,12 @@
       // grammar_deep.json 是可选的：没跑构建脚本或课程未覆盖时回退到教材原始笔记
       // 两个会随构建变化的数据文件用 no-store，避免开发期读到旧缓存；
       // lessons.json 体积大且极少变动，沿用浏览器缓存。
-      const [resLessons, resExemplars, resGrammar, resRomaji] = await Promise.all([
+      const [resLessons, resExemplars, resGrammar, resRomaji, resOpeners] = await Promise.all([
         fetch('data/lessons.json'),
         fetch('data/exemplars.json', { cache: 'no-store' }),
         fetch('data/grammar_deep.json', { cache: 'no-store' }).catch(() => null),
-        fetch('data/romaji.json', { cache: 'no-store' }).catch(() => null)
+        fetch('data/romaji.json', { cache: 'no-store' }).catch(() => null),
+        fetch('data/lesson_openers.json', { cache: 'no-store' }).catch(() => null)
       ]);
 
       lessonsData = await resLessons.json();
@@ -168,6 +173,15 @@
         } catch (e) {
           console.warn('grammar_deep.json 解析失败，回退到教材原始笔记', e);
           grammarDeep = null;
+        }
+      }
+
+      if (resOpeners && resOpeners.ok) {
+        try {
+          lessonOpeners = await resOpeners.json() || {};
+        } catch (e) {
+          console.warn('lesson_openers.json 解析失败，跳过课首开场', e);
+          lessonOpeners = {};
         }
       }
 
@@ -341,6 +355,40 @@
       renderDrawerList();
     });
 
+    // 课段开合：拦下 summary 的默认行为，统一交给控制器；
+    // paced 模式下打开新一段会自动收起上一段。
+    document.getElementById('lesson_content_root')?.addEventListener('click', (e) => {
+      const summary = e.target.closest('summary.step-summary');
+      if (!summary) return;
+      e.preventDefault();
+      const step = summary.parentElement.dataset.step;
+      if (step) toggleLessonStep(step);
+    });
+
+    // 打印前临时展开全部课段与语法卡；打印后恢复原来的开合状态。
+    let printState = null;
+    window.addEventListener('beforeprint', () => {
+      const steps = lessonStepEls();
+      const cards = Array.from(document.querySelectorAll('.gdeep-card'));
+      printState = {
+        steps: steps.map(s => s.open),
+        cards: cards.map(c => c.classList.contains('open'))
+      };
+      steps.forEach(s => { s.open = true; });
+      cards.forEach(c => c.classList.add('open'));
+      requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
+    });
+    window.addEventListener('afterprint', () => {
+      if (!printState) return;
+      const steps = lessonStepEls();
+      const cards = Array.from(document.querySelectorAll('.gdeep-card'));
+      steps.forEach((s, i) => { s.open = !!printState.steps[i]; });
+      cards.forEach((c, i) => { c.classList.toggle('open', !!printState.cards[i]); });
+      printState = null;
+      syncRoute();
+      requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
+    });
+
     // Keyboard shortcuts
     window.addEventListener('keydown', (e) => {
       // Ctrl/⌘/Alt 组合键不是本站快捷键（否则 Ctrl+R 会被当成「罗马音」并被写进 localStorage）
@@ -389,13 +437,16 @@
     `).join('');
   }
 
-  function selectLesson(num) {
+  function selectLesson(num, opts) {
     currentLessonNum = num;
     window.location.hash = `#lesson-${num}`;
     closeDrawer();
     renderLesson(num);
     renderDrawerList();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 跨课跳语法条目时由 gotoGrammar 接管滚动，避免和这里的回顶动画打架。
+    if (!opts || opts.scrollTop !== false) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   /**
@@ -527,64 +578,35 @@
     // 懒渲染记录必须一并清空，否则回到同一课时槽位会一直是空的。
     renderedXraySlots.clear();
 
-    let html = `
+    const steps = buildLessonSteps(lesson, num);
+    steps.forEach((step, i) => {
+      if (i < steps.length - 1) {
+        step.next = steps[i + 1].key;
+        step.nextLabel = steps[i + 1].title;
+      }
+    });
+    activeStep = steps.length ? steps[0].key : null;
+
+    const openKeys = new Set();
+    if (paceMode === 'full') {
+      steps.forEach(s => openKeys.add(s.key));
+    } else if (steps.length) {
+      openKeys.add(steps[0].key);
+    }
+
+    const html = `
       <header class="chapter-header">
         <div class="chapter-number">标准日本语 · 第 ${lesson.number} 课</div>
         <h1 class="chapter-title jp-text">${lesson.title_ruby || lesson.title_clean}</h1>
         <div class="chapter-romaji">${romajiForLessonTitle(lesson)}</div>
       </header>
       ${renderLessonIntro(num)}
+      ${steps.length > 1 ? renderLessonRoute(steps) : ''}
       ${renderDiagramLegend()}
+      ${steps.map(s => renderStep(s, openKeys.has(s.key))).join('')}
+      ${renderLessonClose(num)}
+      ${renderLessonFooter(num)}
     `;
-
-    html += `
-      <section class="textbook-section">
-        <div class="section-editorial-title">
-          <span class="num-kanji">一、</span>
-          <span>基本课文</span>
-        </div>
-        <div class="basic-sentences-list">
-          ${lesson.basic4.map((b4, idx) => renderBasicSentence(b4, idx, num)).join('')}
-        </div>
-      </section>
-    `;
-
-    html += renderGrammarSection(lesson, num);
-
-    if (lesson.basicc && lesson.basicc.length > 0) {
-      html += `
-        <section class="textbook-section">
-          <div class="section-editorial-title">
-            <span class="num-kanji">三、</span>
-            <span>会话练习</span>
-          </div>
-          <div class="dialogue-exchanges-container">
-            ${renderBasicDialogues(lesson.basicc, num)}
-          </div>
-        </section>
-      `;
-    }
-
-    if (lesson.context_sections && lesson.context_sections.length > 0) {
-      html += `
-        <section class="textbook-section">
-          <div class="section-editorial-title">
-            <span class="num-kanji">四、</span>
-            <span>应用课文</span>
-            <span class="sub-note">${lesson.contitle || ''} ${lesson.contitlet ? `（${lesson.contitlet}）` : ''}</span>
-          </div>
-          <div class="applied-story-container">
-            ${renderAppliedStory(lesson.context_sections, num)}
-          </div>
-        </section>
-      `;
-    }
-
-    if (lesson.words && lesson.words.length > 0) {
-      html += renderWordList(lesson.words);
-    }
-
-    html += renderLessonFooter(num);
 
     root.innerHTML = html;
     document.title = `第 ${num} 课 ${lesson.title_clean} · 新标日语法透视读本`;
@@ -595,8 +617,122 @@
     }, 120);
   }
 
-  /** 第 1 课的老师开场：只在这一课出现，别每课复读。 */
+  function buildLessonSteps(lesson, num) {
+    const steps = [];
+
+    steps.push({
+      key: 'basic',
+      numeral: '一、',
+      title: '基本课文',
+      short: '基本课文',
+      note: `${lesson.basic4.length} 句`,
+      body: `
+        <div class="basic-sentences-list">
+          ${lesson.basic4.map((b4, idx) => renderBasicSentence(b4, idx, num)).join('')}
+        </div>
+      `
+    });
+
+    const grammar = buildGrammarStep(lesson, num);
+    if (grammar) steps.push(grammar);
+
+    if (lesson.basicc && lesson.basicc.length > 0) {
+      steps.push({
+        key: 'dialogue',
+        numeral: '三、',
+        title: '会话练习',
+        short: '会话',
+        note: `${lesson.basicc.length} 句`,
+        body: `
+          <div class="dialogue-exchanges-container">
+            ${renderBasicDialogues(lesson.basicc, num)}
+          </div>
+        `
+      });
+    }
+
+    if (lesson.context_sections && lesson.context_sections.length > 0) {
+      const scene = `${lesson.contitle || ''}${lesson.contitlet ? `（${lesson.contitlet}）` : ''}`.trim();
+      steps.push({
+        key: 'applied',
+        numeral: '四、',
+        title: '应用课文',
+        short: '应用',
+        note: `${lesson.context_sections.length} 段${scene ? ` · ${esc(scene)}` : ''}`,
+        body: `
+          <div class="applied-story-container">
+            ${renderAppliedStory(lesson.context_sections, num)}
+          </div>
+        `
+      });
+    }
+
+    if (lesson.words && lesson.words.length > 0) {
+      steps.push({
+        key: 'vocab',
+        numeral: '五、',
+        title: '单词表',
+        short: '单词',
+        note: `${lesson.words.length} 词 · 点词听音`,
+        body: renderWordList(lesson.words)
+      });
+    }
+
+    return steps;
+  }
+
+  function renderStep(step, open) {
+    return `
+      <details class="textbook-section lesson-step" data-step="${step.key}" ${open ? 'open' : ''}>
+        <summary class="section-editorial-title step-summary">
+          <span class="num-kanji">${step.numeral}</span>
+          <span>${step.title}</span>
+          <span class="sub-note">${step.note}</span>
+        </summary>
+        <div class="step-body">
+          ${step.body}
+          ${step.next ? `
+            <div class="step-next">
+              <button type="button" onclick="App.goToLessonStep('${step.next}')">接下来：${step.nextLabel} →</button>
+            </div>
+          ` : ''}
+        </div>
+      </details>
+    `;
+  }
+
+  function renderLessonRoute(steps) {
+    const current = paceMode === 'paced' ? activeStep : null;
+    const items = steps.map((step, i) => `
+      ${i > 0 ? '<span class="route-sep" aria-hidden="true">·</span>' : ''}
+      <button type="button" class="route-step ${step.key === current ? 'is-current' : ''}"
+              data-step="${step.key}" onclick="App.goToLessonStep('${step.key}')"
+              ${step.key === current ? 'aria-current="step"' : ''}>
+        <span class="route-num">${step.numeral.replace('、', '')}</span>
+        <span>${step.short}</span>
+      </button>
+    `).join('');
+
+    return `
+      <div class="lesson-route-row">
+        <nav class="lesson-route" aria-label="本课课段">${items}</nav>
+        <button type="button" class="route-mode" onclick="App.togglePaceMode()"
+                aria-pressed="${paceMode === 'full' ? 'true' : 'false'}">${paceMode === 'full' ? '一步步来' : '看全课'}</button>
+      </div>
+    `;
+  }
+
+  /** 课首开场：数据在 data/lesson_openers.json；第 1 课保留一份兜底文案。 */
   function renderLessonIntro(num) {
+    const meta = lessonOpeners[String(num)];
+    if (meta && meta.lead) {
+      return `
+        <section class="lesson-intro">
+          <p class="lesson-intro-lead">${esc(meta.lead)}</p>
+          ${meta.hint ? `<p>${esc(meta.hint)}</p>` : ''}
+        </section>
+      `;
+    }
     if (num !== 1) return '';
     return `
       <section class="lesson-intro">
@@ -606,7 +742,18 @@
     `;
   }
 
-  /** 单词表默认收起；按词性分组，避免把 56 个词一次性倒给初学者。 */
+  function renderLessonClose(num) {
+    const meta = lessonOpeners[String(num)];
+    if (!meta || !meta.takeaway) return '';
+    return `
+      <section class="lesson-intro lesson-close">
+        <p class="lesson-intro-lead">合上这一课，只要记住：${esc(meta.takeaway)}</p>
+        <p>四句能不看中文读下来，这一课就算过了。</p>
+      </section>
+    `;
+  }
+
+  /** 单词表由外层 vocab 课段默认收起；按词性分组，避免把 56 个词一次性倒给初学者。 */
   function renderWordList(words) {
     const POS_GROUPS = [
       { key: '名', label: '名词' },
@@ -656,16 +803,7 @@
     }).join('');
 
     return `
-      <section class="textbook-section vocab-section">
-        <details class="vocab-fold">
-          <summary class="section-editorial-title vocab-summary">
-            <span class="num-kanji">五、</span>
-            <span>单词表</span>
-            <span class="sub-note">${words.length} 词 · 点词听音</span>
-          </summary>
-          <div class="vocab-body">${body}</div>
-        </details>
-      </section>
+      <div class="vocab-body">${body}</div>
     `;
   }
 
@@ -906,18 +1044,19 @@
       .sort((a, b) => (a.order === undefined ? 99 : a.order) - (b.order === undefined ? 99 : b.order));
   }
 
-  function renderGrammarSection(lesson, num) {
+  function buildGrammarStep(lesson, num) {
     const deep = deepEntriesFor(num);
 
     if (!deep.length) {
       // 回退：教材原始笔记（第5课以后尚未撰写深度讲义）
-      if (!lesson.grammar || !lesson.grammar.length) return '';
-      return `
-        <section class="textbook-section">
-          <div class="section-editorial-title">
-            <span class="num-kanji">二、</span>
-            <span>语法笔记</span>
-          </div>
+      if (!lesson.grammar || !lesson.grammar.length) return null;
+      return {
+        key: 'grammar',
+        numeral: '二、',
+        title: '语法笔记',
+        short: '语法',
+        note: `${lesson.grammar.length} 条`,
+        body: `
           <div class="gd-fallback-note">
             这一课的深度讲义还没写好，先看教材原注。后面的课会补上。
           </div>
@@ -932,35 +1071,33 @@
               </div>
             `).join('')}
           </div>
-        </section>
-      `;
+        `
+      };
     }
 
-    const minOrder = Math.min.apply(null, deep.map(e => e.order === undefined ? 99 : e.order));
-
-    return `
-      <section class="textbook-section">
-        <div class="section-editorial-title">
-          <span class="num-kanji">二、</span>
-          <span>语法笔记</span>
-          <button class="lesson-selector-btn" style="margin-left:auto;"
+    return {
+      key: 'grammar',
+      numeral: '二、',
+      title: '语法笔记',
+      short: '语法',
+      note: `${deep.length} 条`,
+      body: `
+        <div class="gdeep-toolbar">
+          <button class="lesson-selector-btn" type="button"
                   onclick="App.toggleAllGrammarCards(${num}, this)">展开全部</button>
         </div>
-        <div class="gdeep-list" id="gdeep_list_${num}" data-open-order="${minOrder}">
-          ${deep.map(e => renderDeepCard(e, num, minOrder)).join('')}
+        <div class="gdeep-list" id="gdeep_list_${num}">
+          ${deep.map(e => renderDeepCard(e, num)).join('')}
         </div>
-      </section>
-    `;
+      `
+    };
   }
 
-  function renderDeepCard(e, lessonNum, minOrder) {
+  function renderDeepCard(e, lessonNum) {
     const cardId = 'gdc_' + e.id;
-    // 只展开排序最靠前的一条（通常是认知地基或第一条句型），
-    // 让页面一进来就能看到讲义长什么样，其余保持可扫读的折叠态。
-    const isOpen = (e.order === undefined ? 99 : e.order) === minOrder;
 
     return `
-      <article class="gdeep-card ${isOpen ? 'open' : ''}" id="${cardId}" data-lesson="${lessonNum}">
+      <article class="gdeep-card" id="${cardId}" data-lesson="${lessonNum}">
         <div class="gdeep-head" onclick="App.toggleGrammarCard('${e.id}')">
           <div class="gdeep-pattern-row">
             ${e.category ? `<span class="gdeep-cat">${esc(e.category)}</span>` : ''}
@@ -986,6 +1123,10 @@
     `;
   }
 
+  function slotLabelLen(s) {
+    return String(s || '').replace(/\s+/g, '').length;
+  }
+
   function renderFormula(f) {
     return `
       <div class="gd-sec">
@@ -997,8 +1138,8 @@
             <tbody>
               ${f.slots.map(s => `
                 <tr>
-                  <td class="jp-text">${esc(s.t)}</td>
-                  <td>${esc(s.r)}</td>
+                  <td class="jp-text${slotLabelLen(s.t) <= 6 ? ' gd-nowrap' : ''}">${esc(s.t)}</td>
+                  <td class="gd-role${slotLabelLen(s.r) <= 7 ? ' gd-nowrap' : ''}">${esc(s.r)}</td>
                   <td>${md(s.n)}</td>
                 </tr>`).join('')}
             </tbody>
@@ -1189,6 +1330,88 @@
     if (!allOpen) setTimeout(() => GrammarDiagram.updateAllArrows(), 120);
   }
 
+  /* ---------------- 课段节奏 ---------------- */
+
+  function lessonStepEls() {
+    return Array.from(document.querySelectorAll('.lesson-step'));
+  }
+
+  function closeOtherLessonSteps(target) {
+    lessonStepEls().forEach(step => {
+      if (step !== target) step.open = false;
+    });
+  }
+
+  /** 打开指定段；不滚动、不抢焦点，供 gotoGrammar 等内部跳转使用。 */
+  function openLessonStep(step) {
+    const target = document.querySelector(`.lesson-step[data-step="${step}"]`);
+    if (!target) return null;
+    if (paceMode === 'paced') closeOtherLessonSteps(target);
+    if (!target.open) target.open = true;
+    activeStep = step;
+    syncRoute();
+    requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
+    return target;
+  }
+
+  function toggleLessonStep(step) {
+    const target = document.querySelector(`.lesson-step[data-step="${step}"]`);
+    if (!target) return;
+    const willOpen = !target.open;
+    if (paceMode === 'paced') {
+      closeOtherLessonSteps(target);
+      target.open = willOpen;
+    } else {
+      target.open = willOpen;
+    }
+    if (willOpen) activeStep = step;
+    syncRoute();
+    if (willOpen) requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
+  }
+
+  function goToLessonStep(step) {
+    const target = openLessonStep(step);
+    if (!target) return;
+    const summary = target.querySelector('summary.step-summary');
+    if (summary) summary.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function syncRoute() {
+    const openSteps = lessonStepEls().filter(step => step.open);
+    const current = paceMode === 'paced' && openSteps.length === 1
+      ? openSteps[0].dataset.step
+      : null;
+    document.querySelectorAll('.route-step').forEach(btn => {
+      const isCurrent = btn.dataset.step === current;
+      btn.classList.toggle('is-current', isCurrent);
+      if (isCurrent) btn.setAttribute('aria-current', 'step');
+      else btn.removeAttribute('aria-current');
+    });
+  }
+
+  function togglePaceMode() {
+    paceMode = paceMode === 'paced' ? 'full' : 'paced';
+    localStorage.setItem('xbr_pace_mode', paceMode);
+
+    const steps = lessonStepEls();
+    if (paceMode === 'full') {
+      steps.forEach(step => { step.open = true; });
+    } else {
+      const keep = steps.find(step => step.dataset.step === activeStep) || steps[0];
+      steps.forEach(step => { step.open = step === keep; });
+      if (keep) activeStep = keep.dataset.step;
+    }
+
+    const modeBtn = document.querySelector('.route-mode');
+    if (modeBtn) {
+      modeBtn.textContent = paceMode === 'full' ? '一步步来' : '看全课';
+      modeBtn.setAttribute('aria-pressed', paceMode === 'full' ? 'true' : 'false');
+    }
+    syncRoute();
+    requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
+  }
+
   function toggleQuiz(qid) {
     const el = document.getElementById(qid);
     if (el) el.classList.toggle('open');
@@ -1257,6 +1480,7 @@
       return;
     }
     const reveal = () => {
+      openLessonStep('grammar');
       toggleGrammarCard(id, true);
       const el = document.getElementById('gdc_' + id);
       if (!el) return;
@@ -1268,7 +1492,7 @@
       }, 60);
     };
     if (entry.lesson !== currentLessonNum) {
-      selectLesson(entry.lesson);
+      selectLesson(entry.lesson, { scrollTop: false });
       setTimeout(reveal, 160);
     } else {
       reveal();
@@ -1299,6 +1523,8 @@
     toggleQuiz: toggleQuiz,
     toggleExampleXray: toggleExampleXray,
     toggleDiagramLegend: toggleDiagramLegend,
+    goToLessonStep: goToLessonStep,
+    togglePaceMode: togglePaceMode,
     gotoGrammar: gotoGrammar
   };
 

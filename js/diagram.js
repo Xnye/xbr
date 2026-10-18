@@ -261,7 +261,12 @@ const GrammarDiagram = (function () {
     const data = (window.exemplarsData || []).find(d => d.id === diagramId);
     if (!data || !data.zero_subject || !data.zero_subject.targets) return;
 
-    const containerRect = container.querySelector('.diagram-canvas').getBoundingClientRect();
+    // 课段收起时内部元素尺寸为 0；此时写 SVG 宽高会得到 0 宽的箭头。
+    // 直接跳过，等段位重新打开后再由 updateAllArrows 重算。
+    const canvas = container.querySelector('.diagram-canvas');
+    if (!canvas) return;
+    const containerRect = canvas.getBoundingClientRect();
+    if (containerRect.width <= 0 || containerRect.height <= 0) return;
     const zeroRect = zeroBadge.getBoundingClientRect();
 
     // Zero badge coordinates relative to canvas
