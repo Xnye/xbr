@@ -16,13 +16,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
   </noscript>
 
-  <link rel="stylesheet" href="css/main.css?v=20261018m">
+  <link rel="stylesheet" href="css/main.css?v=20261019i">
 </head>
 <body class="theme-paper">
 
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand-area" onclick="App.selectLesson(1)" title="回到第 1 课">
+      <div class="brand-area" role="button" tabindex="0" data-kbd-click aria-label="回到第 1 课" onclick="App.selectLesson(1)" title="回到第 1 课">
         <span class="brand-title">新标日</span>
         <span class="brand-subtitle">语法透视读本</span>
       </div>
@@ -69,11 +69,13 @@
                 <option value="1.25">1.25x 较快</option>
                 <option value="1.5">1.5x 高速</option>
               </select>
+              <p class="tts-status" id="tts_status" hidden></p>
             </div>
           </div>
         </div>
 
-        <button class="lesson-selector-btn" id="open_drawer_btn" title="打开课文目录">
+        <button class="lesson-selector-btn" id="open_drawer_btn" title="打开课文目录"
+                aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer_panel">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -91,22 +93,26 @@
     </div>
   </main>
 
+  <button class="selftest-exit" id="selftest_exit" type="button" hidden
+          onclick="App.exitBasicSelfTest()">显示中文</button>
+
   <div class="drawer-backdrop" id="drawer_backdrop">
-    <div class="drawer-panel">
+    <div class="drawer-panel" id="drawer_panel" role="dialog" aria-modal="true" aria-labelledby="drawer_title">
       <div class="drawer-header">
-        <span class="drawer-title">新版标准日本语 · 目录</span>
+        <span class="drawer-title" id="drawer_title">新版标准日本语 · 目录</span>
         <button class="drawer-close-btn" id="close_drawer_btn" aria-label="关闭目录">&times;</button>
       </div>
       <div class="drawer-search-box">
-        <input type="text" class="drawer-search-input" id="drawer_search_input" placeholder="搜索课文标题、人物、语法词…" />
+        <input type="search" class="drawer-search-input" id="drawer_search_input"
+               aria-label="搜索课文、人物或语法" placeholder="搜索课文标题、人物、语法词…" />
       </div>
       <div class="drawer-list" id="drawer_list"></div>
     </div>
   </div>
 
   <script src="js/romaji.js?v=20261018j"></script>
-  <script src="js/tts.js?v=20261018k"></script>
-  <script src="js/diagram.js?v=20261018j"></script>
-  <script src="js/app.js?v=20261018j"></script>
+  <script src="js/tts.js?v=20261019c"></script>
+  <script src="js/diagram.js?v=20261019k"></script>
+  <script src="js/app.js?v=20261019h"></script>
 </body>
 </html>

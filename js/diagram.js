@@ -196,7 +196,7 @@ const GrammarDiagram = (function () {
     return `
       <div class="syntax-chunk-unit" id="${chunkId}" data-chunk-id="${chunk.id}">
         <!-- Japanese Word & Particle -->
-        <div class="chunk-jp-wrapper">
+        <div class="chunk-jp-wrapper" lang="ja">
           <span class="chunk-text">${jpContent}</span>
           ${particleHtml}
           ${suffixHtml}

@@ -32,6 +32,15 @@ class EducationalHTTPHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         
+        # Health probe: the frontend uses this to know whether neural TTS exists.
+        if parsed.path == '/api/health':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Cache-Control', 'no-store')
+            self.end_headers()
+            self.wfile.write(b'{"tts": true}')
+            return
+
         # Neural TTS API Endpoint: /api/tts?text=...&voice=...
         if parsed.path == '/api/tts':
             params = urllib.parse.parse_qs(parsed.query)

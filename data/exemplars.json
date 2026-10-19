@@ -11816,12 +11816,12 @@
     "kind_label": "会话课文",
     "source_id": "basicc_2",
     "sentence_raw": "十一時三十分に寝ます。",
-    "sentence_romaji": "juuichijisanjuupun ni nemasu.",
+    "sentence_romaji": "juuichijisanjuppun ni nemasu.",
     "chunks": [
       {
         "id": "c1",
         "text": "十一時三十分",
-        "romaji": "juuichijisanjuupun",
+        "romaji": "juuichijisanjuppun",
         "particle": "に",
         "particle_color": "purple",
         "particle_name": "格助词（归着点）",
@@ -11833,7 +11833,7 @@
         "ruby_parts": [
           {
             "kanji": "十一時三十分",
-            "kana": "じゅういちじさんじゅうぷん"
+            "kana": "じゅういちじさんじゅっぷん"
           }
         ]
       },
@@ -12963,12 +12963,12 @@
     "kind_label": "应用课文",
     "source_id": "context_1_2",
     "sentence_raw": "十時十五分です。",
-    "sentence_romaji": "juujijuugopun desu.",
+    "sentence_romaji": "juujijuugofun desu.",
     "chunks": [
       {
         "id": "c1",
         "text": "十時十五分",
-        "romaji": "juujijuugopun",
+        "romaji": "juujijuugofun",
         "particle": "",
         "particle_color": "none",
         "particle_name": "",
@@ -12980,7 +12980,7 @@
         "ruby_parts": [
           {
             "kanji": "十時十五分",
-            "kana": "じゅうじじゅうごぷん"
+            "kana": "じゅうじじゅうごふん"
           }
         ]
       },
@@ -28889,26 +28889,26 @@
     "auto_generated": true,
     "kind_label": "应用课文",
     "source_id": "context_2_4",
-    "sentence_raw": "世界上の有名な作家の彫刻です。",
-    "sentence_romaji": "sekaijou no yuumeina sakka no choukoku desu.",
+    "sentence_raw": "世界中の有名な作家の彫刻です。",
+    "sentence_romaji": "sekaijuu no yuumeina sakka no choukoku desu.",
     "chunks": [
       {
         "id": "c1",
-        "text": "世界上の有名な作家の彫刻",
-        "romaji": "sekaijou no yuumei na sakka no choukoku",
+        "text": "世界中の有名な作家の彫刻",
+        "romaji": "sekaijuu no yuumei na sakka no choukoku",
         "particle": "",
         "particle_color": "none",
         "particle_name": "",
         "particle_desc": "",
         "underline_color": "none",
         "underline_span": "full",
-        "src_seg": "世界上の有名な作家の彫刻です",
+        "src_seg": "世界中の有名な作家の彫刻です",
         "kind": "body",
         "jp_units": [
           {
             "type": "ruby",
-            "kanji": "世界上",
-            "kana": "せかいじょう"
+            "kanji": "世界中",
+            "kana": "せかいじゅう"
           },
           {
             "type": "box",
@@ -28949,13 +28949,13 @@
         ],
         "components": [
           {
-            "surf": "世界上の",
-            "read": "せかいじょうの",
+            "surf": "世界中の",
+            "read": "せかいじゅうの",
             "kind": "chunk",
             "parts": [
               {
-                "surf": "世界上",
-                "read": "せかいじょう",
+                "surf": "世界中",
+                "read": "せかいじゅう",
                 "ann": true
               },
               {
@@ -28965,10 +28965,10 @@
               }
             ],
             "words": [
-              "せかいじょうの"
+              "せかいじゅうの"
             ],
             "word_surfs": [
-              "世界上の"
+              "世界中の"
             ],
             "particle": "の",
             "predicate": null,
@@ -28977,8 +28977,8 @@
             "conj": null,
             "final": null,
             "predicate_glued": false,
-            "body": "世界上",
-            "body_read": "せかいじょう"
+            "body": "世界中",
+            "body_read": "せかいじゅう"
           },
           {
             "surf": "有名な",
@@ -29091,7 +29091,7 @@
         "underline_span": "full",
         "kind": "predicate",
         "inflection": false,
-        "src_seg": "世界上の有名な作家の彫刻です"
+        "src_seg": "世界中の有名な作家の彫刻です"
       }
     ]
   },
@@ -32211,8 +32211,8 @@
     "auto_generated": true,
     "kind_label": "应用课文",
     "source_id": "context_1_1",
-    "sentence_raw": "箱根のお土産は何がいいですが。",
-    "sentence_romaji": "hakone no omiyage wa nani ga ii desu ga.",
+    "sentence_raw": "箱根のお土産は何がいいですか。",
+    "sentence_romaji": "hakone no omiyage wa nani ga ii desu ka.",
     "chunks": [
       {
         "id": "c1",
@@ -32352,7 +32352,7 @@
         "particle_desc": "",
         "underline_color": "none",
         "underline_span": "full",
-        "src_seg": "いいですが",
+        "src_seg": "いいですか",
         "kind": "body",
         "ruby": ""
       },
@@ -32368,20 +32368,20 @@
         "underline_span": "full",
         "kind": "predicate",
         "inflection": false,
-        "src_seg": "いいですが"
+        "src_seg": "いいですか"
       },
       {
         "id": "c5",
-        "text": "が",
-        "romaji": "ga",
+        "text": "か",
+        "romaji": "ka",
         "particle": "",
         "particle_color": "none",
         "particle_name": "",
-        "particle_desc": "【が】才是真正的主格标记，指向动作或状态的当事者。新信息、疑问词做主语、存在句的主体，都必须用が而不能用は。",
-        "underline_color": "red",
+        "particle_desc": "【か】把整个句子装进一个「问号盒子」，放在句尾全句变疑问。日语语序不会因为疑问而改变——不需要像英语那样倒装。",
+        "underline_color": "slate",
         "underline_span": "full",
-        "kind": "conj",
-        "src_seg": "いいですが"
+        "kind": "final",
+        "src_seg": "いいですか"
       }
     ]
   },
@@ -62424,8 +62424,8 @@
     "auto_generated": true,
     "kind_label": "应用课文",
     "source_id": "context_2_8",
-    "sentence_raw": "大丈夫です。心配しないてください。",
-    "sentence_romaji": "daijoubu desu. shinpaishinaite kudasai.",
+    "sentence_raw": "大丈夫です。心配しないでください。",
+    "sentence_romaji": "daijoubu desu. shinpaishinai de kudasai.",
     "chunks": [
       {
         "id": "c1",
@@ -62462,15 +62462,15 @@
       },
       {
         "id": "c3",
-        "text": "心配しないて",
-        "romaji": "shinpaishinaite",
-        "particle": "",
-        "particle_color": "none",
-        "particle_name": "",
-        "particle_desc": "",
-        "underline_color": "none",
+        "text": "心配し",
+        "romaji": "shinpaishi",
+        "particle": "で",
+        "particle_color": "indigo",
+        "particle_name": "格助词（活动场所／手段）",
+        "particle_desc": "【で】标记「事情展开的舞台」或「所用的手段材料」。与に的关键区别：に是静态归着点，で是动态活动范围。食堂で食べる（在食堂吃·动作）と食堂にある（在食堂·存在），两个「在」日语分得很清楚。",
+        "underline_color": "indigo",
         "underline_span": "full",
-        "src_seg": "心配しないて",
+        "src_seg": "心配しないで",
         "kind": "body",
         "ruby_parts": [
           {
@@ -62478,13 +62478,27 @@
             "kana": "しんぱい"
           },
           {
-            "kanji": "しないて",
+            "kanji": "し",
             "kana": ""
           }
         ]
       },
       {
         "id": "c4",
+        "text": "ない",
+        "romaji": "nai",
+        "particle": "",
+        "particle_color": "none",
+        "particle_name": "",
+        "particle_desc": "",
+        "underline_color": "green",
+        "underline_span": "full",
+        "kind": "predicate",
+        "inflection": true,
+        "src_seg": "心配しないで"
+      },
+      {
+        "id": "c5",
         "text": "ください",
         "romaji": "kudasai",
         "particle": "",
@@ -69551,7 +69565,7 @@
     "kind_label": "应用课文",
     "source_id": "context_0_3",
     "sentence_raw": "仕事の後で，何度か見に行ったことがあります。終わりは九時過ぎですね。食事はどうしますか。",
-    "sentence_romaji": "shigoto no ato de, nando ka mi ni itta koto ga arimasu. owari wa ku jisugi desu ne. shokuji wa doushimasu ka.",
+    "sentence_romaji": "shigoto no ato de, nando ka mi ni itta koto ga arimasu. owari wa kujisugi desu ne. shokuji wa doushimasu ka.",
     "chunks": [
       {
         "id": "c1",
@@ -69822,7 +69836,7 @@
       {
         "id": "c7",
         "text": "九時過ぎ",
-        "romaji": "ku jisugi",
+        "romaji": "kujisugi",
         "particle": "",
         "particle_color": "none",
         "particle_name": "",
@@ -69833,16 +69847,8 @@
         "kind": "body",
         "ruby_parts": [
           {
-            "kanji": "九",
-            "kana": "く"
-          },
-          {
-            "kanji": "時過",
-            "kana": "じす"
-          },
-          {
-            "kanji": "ぎ",
-            "kana": ""
+            "kanji": "九時過ぎ",
+            "kana": "くじすぎ"
           }
         ]
       },
@@ -82016,8 +82022,8 @@
     "auto_generated": true,
     "kind_label": "应用课文",
     "source_id": "context_2_3",
-    "sentence_raw": "ぼくもいつか北京へ行きたいと思います。李さん，どうぞお気をつけて。“再见！”",
-    "sentence_romaji": "boku mo itsu ka pekin e ikitai to omoimasu. ri san, douzo oki o tsukete. !",
+    "sentence_raw": "ぼくもいつか北京へ行きたいと思います。李さん，どうぞお気をつけて。",
+    "sentence_romaji": "boku mo itsu ka pekin e ikitai to omoimasu. ri san, douzo oki o tsukete.",
     "chunks": [
       {
         "id": "c1",
@@ -91765,7 +91771,7 @@
     "sentence_raw": "李さん，明日パーティーに行くでしょう？",
     "sentence_romaji": "ri san, ashita paatii ni iku deshou?",
     "source_id": "b4_27_4",
-    "natural_translation": "小李，（你）明天参加联欢会吧。",
+    "natural_translation": "小李，（你）明天会参加联欢会吧？。",
     "zero_subject": {
       "symbol": "Ø",
       "particle": "が",
@@ -93440,7 +93446,7 @@
     "auto_generated": true,
     "kind_label": "应用课文",
     "source_id": "context_0_10",
-    "sentence_raw": "そう言えば，小さい時，よく祖母といっしょに公園ヘ行きました。",
+    "sentence_raw": "そう言えば，小さい時，よく祖母といっしょに公園へ行きました。",
     "sentence_romaji": "sou ieba, chiisai toki, yoku sobo to isshoni kouen e ikimashita.",
     "chunks": [
       {
@@ -93629,7 +93635,7 @@
         "particle_desc": "【へ】读作 e。标记移动的方向而非终点，强调「朝那个方向去」的过程感。与に相比，へ更看重方向性，に更看重抵达点。",
         "underline_color": "magenta",
         "underline_span": "full",
-        "src_seg": "公園ヘ",
+        "src_seg": "公園へ",
         "kind": "body",
         "ruby_parts": [
           {
@@ -148616,14 +148622,14 @@
     "auto_generated": true,
     "tag": "第41课 · 受害受身（间接）",
     "lesson_title": "肇事者是小鸟，倒霉的人却站在主语位",
-    "sentence_raw": "陳さんは飼っていた小鳥ににげられました。",
+    "sentence_raw": "陳さんは飼っていた小鳥に逃げられました。",
     "sentence_romaji": "chin san wa katte ita kotori ni nigeraremashita.",
     "source_id": "b4_41_3",
     "natural_translation": "老陈养的小鸟飞走了。",
     "zero_subject": {
       "symbol": "Ø",
       "particle": "が",
-      "tooltip": "【Ø が】深层主语被「は」吸收了。完整深层结构是「陳さんが 飼っていた小鳥ににげられました」——が 标记主格，は 把这个主格成分提升为话题，让它同时兼任\"我们要谈的对象\"和\"动作的当事者\"。所以这里没有省略任何成分：主语就在 は 前面，只是它一个人打了两个角色。这正是「李さんは中国人です」和「李さんが中国人です」两句都能成立、但语气不同的根源：前者是\"关于小李，我告诉你他是中国人\"，后者是\"（你问谁？）是小李这个人\"。",
+      "tooltip": "【Ø が】深层主语被「は」吸收了。完整深层结构是「陳さんが 飼っていた小鳥に逃げられました」——が 标记主格，は 把这个主格成分提升为话题，让它同时兼任\"我们要谈的对象\"和\"动作的当事者\"。所以这里没有省略任何成分：主语就在 は 前面，只是它一个人打了两个角色。这正是「李さんは中国人です」和「李さんが中国人です」两句都能成立、但语气不同的根源：前者是\"关于小李，我告诉你他是中国人\"，后者是\"（你问谁？）是小李这个人\"。",
       "targets": [
         {
           "id": "c1",
@@ -148705,7 +148711,7 @@
       },
       {
         "id": "c4",
-        "text": "にげられました",
+        "text": "逃げられました",
         "romaji": "nigeraremashita",
         "particle": "",
         "particle_color": "none",
@@ -148713,11 +148719,20 @@
         "particle_desc": "",
         "underline_color": "none",
         "underline_span": "full",
-        "src_seg": "にげられました",
+        "src_seg": "逃げられました",
         "kind": "body",
         "gloss_main": "逃跑",
         "gloss_sub": "（受身・过去）",
-        "ruby": ""
+        "ruby_parts": [
+          {
+            "kanji": "逃",
+            "kana": "に"
+          },
+          {
+            "kanji": "げられました",
+            "kana": ""
+          }
+        ]
       }
     ],
     "literal_structure": [
@@ -149842,8 +149857,8 @@
     "auto_generated": true,
     "kind_label": "会话课文",
     "source_id": "basicc_9",
-    "sentence_raw": "ええ。日本の有名なデザインナーによって設計されました。",
-    "sentence_romaji": "ee. nihon no yuumeina dezainnaaniyotte sekkeisaremashita.",
+    "sentence_raw": "ええ。日本の有名なデザイナーによって設計されました。",
+    "sentence_romaji": "ee. nihon no yuumeina dezainaa ni yotte sekkeisaremashita.",
     "chunks": [
       {
         "id": "c1",
@@ -149861,15 +149876,15 @@
       },
       {
         "id": "c2",
-        "text": "日本の有名なデザインナーによって",
-        "romaji": "nihon no yuumei na dezainnaaniyotte",
+        "text": "日本の有名なデザイナーによって",
+        "romaji": "nihon no yuumei na dezainaaniyotte",
         "particle": "",
         "particle_color": "none",
         "particle_name": "",
         "particle_desc": "",
         "underline_color": "none",
         "underline_span": "full",
-        "src_seg": "日本の有名なデザインナーによって",
+        "src_seg": "日本の有名なデザイナーによって",
         "kind": "body",
         "jp_units": [
           {
@@ -149898,7 +149913,7 @@
           },
           {
             "type": "ruby",
-            "kanji": "デザインナーによって",
+            "kanji": "デザイナーによって",
             "kana": ""
           }
         ],
@@ -149968,21 +149983,21 @@
             "body_read": "ゆうめい"
           },
           {
-            "surf": "デザインナーによって",
-            "read": "デザインナーによって",
+            "surf": "デザイナーによって",
+            "read": "デザイナーによって",
             "kind": "chunk",
             "parts": [
               {
-                "surf": "デザインナーによって",
-                "read": "デザインナーによって",
+                "surf": "デザイナーによって",
+                "read": "デザイナーによって",
                 "ann": false
               }
             ],
             "words": [
-              "デザインナーによって"
+              "デザイナーによって"
             ],
             "word_surfs": [
-              "デザインナーによって"
+              "デザイナーによって"
             ],
             "particle": null,
             "predicate": null,
@@ -149991,8 +150006,8 @@
             "conj": null,
             "final": null,
             "predicate_glued": false,
-            "body": "デザインナーによって",
-            "body_read": "デザインナーによって"
+            "body": "デザイナーによって",
+            "body_read": "デザイナーによって"
           }
         ],
         "phrase": true
@@ -159482,8 +159497,8 @@
     "auto_generated": true,
     "kind_label": "应用课文",
     "source_id": "context_0_12",
-    "sentence_raw": "次に，デザインですが，やはりインバクトのあるものが必要です。",
-    "sentence_romaji": "tsugi ni, dezain desu ga, yahariinbakutonoaru mono ga hitsuyou desu.",
+    "sentence_raw": "次に，デザインですが，やはりインパクトのあるものが必要です。",
+    "sentence_romaji": "tsugi ni, dezain desu ga, yahariinpakutonoaru mono ga hitsuyou desu.",
     "chunks": [
       {
         "id": "c1",
@@ -159547,20 +159562,20 @@
       },
       {
         "id": "c5",
-        "text": "やはりインバクトのあるもの",
-        "romaji": "yahariinbakutonoaru mono",
+        "text": "やはりインパクトのあるもの",
+        "romaji": "yahariinpakutonoaru mono",
         "particle": "が",
         "particle_color": "red",
         "particle_name": "主格助词（主语）",
         "particle_desc": "【が】才是真正的主格标记，指向动作或状态的当事者。新信息、疑问词做主语、存在句的主体，都必须用が而不能用は。",
         "underline_color": "red",
         "underline_span": "full",
-        "src_seg": "やはりインバクトのあるものが",
+        "src_seg": "やはりインパクトのあるものが",
         "kind": "body",
         "jp_units": [
           {
             "type": "ruby",
-            "kanji": "やはりインバクトのある",
+            "kanji": "やはりインパクトのある",
             "kana": ""
           },
           {
@@ -159571,21 +159586,21 @@
         ],
         "components": [
           {
-            "surf": "やはりインバクトのある",
-            "read": "やはりインバクトのある",
+            "surf": "やはりインパクトのある",
+            "read": "やはりインパクトのある",
             "kind": "chunk",
             "parts": [
               {
-                "surf": "やはりインバクトのある",
-                "read": "やはりインバクトのある",
+                "surf": "やはりインパクトのある",
+                "read": "やはりインパクトのある",
                 "ann": false
               }
             ],
             "words": [
-              "やはりインバクトのある"
+              "やはりインパクトのある"
             ],
             "word_surfs": [
-              "やはりインバクトのある"
+              "やはりインパクトのある"
             ],
             "particle": null,
             "predicate": null,
@@ -159594,8 +159609,8 @@
             "conj": null,
             "final": null,
             "predicate_glued": false,
-            "body": "やはりインバクトのある",
-            "body_read": "やはりインバクトのある"
+            "body": "やはりインパクトのある",
+            "body_read": "やはりインパクトのある"
           },
           {
             "surf": "ものが",
@@ -160948,8 +160963,8 @@
     "auto_generated": true,
     "kind_label": "应用课文",
     "source_id": "context_0_5",
-    "sentence_raw": "まず，ネーミンダですが，理解しやすくて単純なものがいいと考えます。",
-    "sentence_romaji": "mazu, neeminda desu ga, rikaishiyasukute tanjunna mono ga ii to kangaemasu.",
+    "sentence_raw": "まず，ネーミングですが，理解しやすくて単純なものがいいと考えます。",
+    "sentence_romaji": "mazu, neemingu desu ga, rikaishiyasukute tanjunna mono ga ii to kangaemasu.",
     "chunks": [
       {
         "id": "c1",
@@ -160967,15 +160982,15 @@
       },
       {
         "id": "c2",
-        "text": "ネーミンダ",
-        "romaji": "neeminda",
+        "text": "ネーミング",
+        "romaji": "neemingu",
         "particle": "",
         "particle_color": "none",
         "particle_name": "",
         "particle_desc": "",
         "underline_color": "none",
         "underline_span": "full",
-        "src_seg": "ネーミンダですが",
+        "src_seg": "ネーミングですが",
         "kind": "body",
         "ruby": ""
       },
@@ -160991,7 +161006,7 @@
         "underline_span": "full",
         "kind": "predicate",
         "inflection": false,
-        "src_seg": "ネーミンダですが"
+        "src_seg": "ネーミングですが"
       },
       {
         "id": "c4",
@@ -161004,7 +161019,7 @@
         "underline_color": "red",
         "underline_span": "full",
         "kind": "conj",
-        "src_seg": "ネーミンダですが"
+        "src_seg": "ネーミングですが"
       },
       {
         "id": "c5",
@@ -167110,7 +167125,7 @@
     "sentence_raw": "この本は読めば読むほど面白いです。",
     "sentence_romaji": "kono hon wa yomeba yomu hodo omoshiroi desu.",
     "source_id": "b4_45_4",
-    "natural_translation": "这本书阅读越有意思。",
+    "natural_translation": "这本书越读越有意思。",
     "zero_subject": {
       "symbol": "Ø",
       "particle": "が",
@@ -171383,7 +171398,7 @@
     "sentence_raw": "これは柔らかくて，まるで本物の毛皮のようです。",
     "sentence_romaji": "kore wa yawarakakute, marude honmono no kegawa no you desu.",
     "source_id": "b4_46_1",
-    "natural_translation": "这个软乎乎的，好像真皮一样。",
+    "natural_translation": "这个软乎乎的，好像真的毛皮一样。",
     "zero_subject": {
       "symbol": "Ø",
       "particle": "が",
@@ -172772,7 +172787,7 @@
     "auto_generated": true,
     "kind_label": "会话课文",
     "source_id": "basicc_2",
-    "sentence_raw": "ええ，本当に。まるで果物見たいですね。",
+    "sentence_raw": "ええ，本当に。まるで果物みたいですね。",
     "sentence_romaji": "ee, hontou ni. marude kudamono mitai desu ne.",
     "chunks": [
       {
@@ -172846,7 +172861,7 @@
         "particle_desc": "",
         "underline_color": "none",
         "underline_span": "full",
-        "src_seg": "果物",
+        "src_seg": "果物みたいですね",
         "kind": "body",
         "ruby_parts": [
           {
@@ -172857,41 +172872,8 @@
       },
       {
         "id": "c6",
-        "text": "見",
-        "romaji": "mi",
-        "particle": "",
-        "particle_color": "none",
-        "particle_name": "",
-        "particle_desc": "",
-        "underline_color": "none",
-        "underline_span": "full",
-        "src_seg": "見たいですね",
-        "kind": "body",
-        "ruby_parts": [
-          {
-            "kanji": "見",
-            "kana": "み"
-          }
-        ]
-      },
-      {
-        "id": "c7",
-        "text": "たい",
-        "romaji": "tai",
-        "particle": "",
-        "particle_color": "none",
-        "particle_name": "",
-        "particle_desc": "",
-        "underline_color": "green",
-        "underline_span": "full",
-        "kind": "predicate",
-        "inflection": true,
-        "src_seg": "見たいですね"
-      },
-      {
-        "id": "c8",
-        "text": "です",
-        "romaji": "desu",
+        "text": "みたいです",
+        "romaji": "mitai desu",
         "particle": "",
         "particle_color": "none",
         "particle_name": "",
@@ -172900,10 +172882,10 @@
         "underline_span": "full",
         "kind": "predicate",
         "inflection": false,
-        "src_seg": "見たいですね"
+        "src_seg": "果物みたいですね"
       },
       {
-        "id": "c9",
+        "id": "c7",
         "text": "ね",
         "romaji": "ne",
         "particle": "",
@@ -172913,7 +172895,7 @@
         "underline_color": "slate",
         "underline_span": "full",
         "kind": "final",
-        "src_seg": "見たいですね"
+        "src_seg": "果物みたいですね"
       }
     ]
   },

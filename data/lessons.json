@@ -818,7 +818,7 @@
         "word_clean": "どうもすみません",
         "word_ruby": "どうもすみません",
         "kana": "どうも",
-        "pitch": "1すみません",
+        "pitch": "1",
         "kanji": "",
         "pos": "熟语",
         "desc": "实在对不起",
@@ -1645,7 +1645,7 @@
         "word_clean": "ありがとうございます",
         "word_ruby": "ありがとうございます",
         "kana": "ありがとう",
-        "pitch": "2ございます",
+        "pitch": "2",
         "kanji": "",
         "pos": "熟语",
         "desc": "谢谢",
@@ -3268,9 +3268,9 @@
         "id": "bc_5_2",
         "group": "Ａ",
         "speaker": "乙",
-        "jp_raw": "!十一時三十分(じゅういちじさんじゅうぷん)に　!寝(ね)ます。",
+        "jp_raw": "!十一時三十分(じゅういちじさんじゅっぷん)に　!寝(ね)ます。",
         "jp_clean": "十一時三十分に　寝ます。",
-        "jp_ruby": "<ruby>十一時三十分<rt>じゅういちじさんじゅうぷん</rt></ruby>に　<ruby>寝<rt>ね</rt></ruby>ます。",
+        "jp_ruby": "<ruby>十一時三十分<rt>じゅういちじさんじゅっぷん</rt></ruby>に　<ruby>寝<rt>ね</rt></ruby>ます。",
         "romaji": "juuichi tokizou juubun ni   nema su .",
         "zh": "乙：11点30分睡。"
       },
@@ -3402,9 +3402,9 @@
         {
           "type": "dialogue",
           "speaker": "森(もり)",
-          "jp_raw": "!十時十五分(じゅうじじゅうごぷん)です。",
+          "jp_raw": "!十時十五分(じゅうじじゅうごふん)です。",
           "jp_clean": "十時十五分です。",
-          "jp_ruby": "<ruby>十時十五分<rt>じゅうじじゅうごぷん</rt></ruby>です。",
+          "jp_ruby": "<ruby>十時十五分<rt>じゅうじじゅうごふん</rt></ruby>です。",
           "romaji": "totoki juugo fun desu .",
           "zh": "10点15分。"
         },
@@ -3435,10 +3435,10 @@
         {
           "type": "dialogue",
           "speaker": "李(り)",
-          "jp_raw": "!森(もり)さんは　!毎朝(まいあさ)　!何時(なんじ)に　!起(お)きましか。",
-          "jp_clean": "森さんは　毎朝　何時に　起きましか。",
-          "jp_ruby": "<ruby>森<rt>もり</rt></ruby>さんは　<ruby>毎朝<rt>まいあさ</rt></ruby>　<ruby>何時<rt>なんじ</rt></ruby>に　<ruby>起<rt>お</rt></ruby>きましか。",
-          "romaji": "mori sanha   maiasa   nanji ni   oki mashika .",
+          "jp_raw": "!森(もり)さんは　!毎朝(まいあさ)　!何時(なんじ)に　!起(お)きますか。",
+          "jp_clean": "森さんは　毎朝　何時に　起きますか。",
+          "jp_ruby": "<ruby>森<rt>もり</rt></ruby>さんは　<ruby>毎朝<rt>まいあさ</rt></ruby>　<ruby>何時<rt>なんじ</rt></ruby>に　<ruby>起<rt>お</rt></ruby>きますか。",
+          "romaji": "mori san wa maiasa nanji ni oki masu ka .",
           "zh": "森先生，你每天早晨几点起床?"
         },
         {
@@ -4084,7 +4084,7 @@
       },
       {
         "id": "b4_6_2",
-        "jp_raw": "* !李(り)さんは　!先月(せんげつ)　!北京(ぺキン)から　!来(き)ました。",
+        "jp_raw": "* !李(り)さんは　!先月(せんげつ)　!北京(ペキン)から　!来(き)ました。",
         "jp_clean": "* 李さんは　先月　北京から　来ました。",
         "jp_ruby": "* <ruby>李<rt>り</rt></ruby>さんは　<ruby>先月<rt>せんげつ</rt></ruby>　<ruby>北京<rt>ぺキン</rt></ruby>から　<ruby>来<rt>き</rt></ruby>ました。",
         "romaji": "*  sumomo sanha   sengetsu   pekin kara   kima shita .",
@@ -4259,9 +4259,9 @@
         {
           "type": "dialogue",
           "speaker": "李(り)",
-          "jp_raw": "!何時(なんじ)に　!帰(かぇ)りましたか。",
+          "jp_raw": "!何時(なんじ)に　!帰(かえ)りましたか。",
           "jp_clean": "何時に　帰りましたか。",
-          "jp_ruby": "<ruby>何時<rt>なんじ</rt></ruby>に　<ruby>帰<rt>かぇ</rt></ruby>りましたか。",
+          "jp_ruby": "<ruby>何時<rt>なんじ</rt></ruby>に　<ruby>帰<rt>かえ</rt></ruby>りましたか。",
           "romaji": "nanji ni   kaeri mashitaka .",
           "zh": "几点到家的？"
         },
@@ -5892,9 +5892,9 @@
         {
           "type": "dialogue",
           "speaker": "小野(おの)",
-          "jp_raw": "!李(り)さん、たつた　!今(いま)　!長島(ながしま)さんに　メールを　もらいました。",
-          "jp_clean": "李さん、たつた　今　長島さんに　メールを　もらいました。",
-          "jp_ruby": "<ruby>李<rt>り</rt></ruby>さん、たつた　<ruby>今<rt>いま</rt></ruby>　<ruby>長島<rt>ながしま</rt></ruby>さんに　メールを　もらいました。",
+          "jp_raw": "!李(り)さん、たった　!今(いま)　!長島(ながしま)さんに　メールを　もらいました。",
+          "jp_clean": "李さん、たった　今　長島さんに　メールを　もらいました。",
+          "jp_ruby": "<ruby>李<rt>り</rt></ruby>さん、たった　<ruby>今<rt>いま</rt></ruby>　<ruby>長島<rt>ながしま</rt></ruby>さんに　メールを　もらいました。",
           "romaji": "sumomo san , tatsuta   ima   nagashima sanni   meeru wo   moraimashita .",
           "zh": "小李，我(这儿)收到了长岛先生的邮件。"
         },
@@ -7529,7 +7529,7 @@
         "word_clean": "万里の長城",
         "word_ruby": "<ruby>万里<rt>ばんり</rt></ruby>の<ruby>長城<rt>ちょうじょう</rt></ruby>",
         "kana": "ばんりの",
-        "pitch": "1ちょうじょう",
+        "pitch": "1",
         "kanji": "万里の長城",
         "pos": "专",
         "desc": "万里长城",
@@ -7539,7 +7539,7 @@
         "word_clean": "気持ちがいい",
         "word_ruby": "<ruby>気持<rt>きも</rt></ruby>ちがいい",
         "kana": "きもち",
-        "pitch": "0がいい",
+        "pitch": "0",
         "kanji": "気持ちがいい",
         "pos": "熟语",
         "desc": "感觉舒服，心情愉快",
@@ -7684,9 +7684,9 @@
         {
           "type": "dialogue",
           "speaker": "長島(ながしま)",
-          "jp_raw": "!昨日(きのう)　!京都(きょうと)へ　!行(ぃ)きました。",
+          "jp_raw": "!昨日(きのう)　!京都(きょうと)へ　!行(い)きました。",
           "jp_clean": "昨日　京都へ　行きました。",
-          "jp_ruby": "<ruby>昨日<rt>きのう</rt></ruby>　<ruby>京都<rt>きょうと</rt></ruby>へ　<ruby>行<rt>ぃ</rt></ruby>きました。",
+          "jp_ruby": "<ruby>昨日<rt>きのう</rt></ruby>　<ruby>京都<rt>きょうと</rt></ruby>へ　<ruby>行<rt>い</rt></ruby>きました。",
           "romaji": "kinou   kyouto he   iki mashita .",
           "zh": "昨天我去京都了。"
         },
@@ -7795,9 +7795,9 @@
         {
           "type": "dialogue",
           "speaker": "小野(おの)",
-          "jp_raw": "!世界上(せかいじょう)の　!有名(ゆうめい)な !作家(さっか)の　!彫刻(ちょうこく)です。",
-          "jp_clean": "世界上の　有名な 作家の　彫刻です。",
-          "jp_ruby": "<ruby>世界上<rt>せかいじょう</rt></ruby>の　<ruby>有名<rt>ゆうめい</rt></ruby>な <ruby>作家<rt>さっか</rt></ruby>の　<ruby>彫刻<rt>ちょうこく</rt></ruby>です。",
+          "jp_raw": "!世界中(せかいじゅう)の　!有名(ゆうめい)な !作家(さっか)の　!彫刻(ちょうこく)です。",
+          "jp_clean": "世界中の　有名な 作家の　彫刻です。",
+          "jp_ruby": "<ruby>世界中<rt>せかいじゅう</rt></ruby>の　<ruby>有名<rt>ゆうめい</rt></ruby>な <ruby>作家<rt>さっか</rt></ruby>の　<ruby>彫刻<rt>ちょうこく</rt></ruby>です。",
           "romaji": "sekai ueno   yuumei na   sakka no   choukoku desu .",
           "zh": "有世界著名艺术家的雕刻。"
         },
@@ -7821,7 +7821,7 @@
       },
       {
         "idx": "53",
-        "expression": "ても，～",
+        "expression": "でも，～",
         "shortexplain": "",
         "explanation": "でも：表示转折关系，“但是”。一般只用于口语。"
       },
@@ -8606,9 +8606,9 @@
         {
           "type": "dialogue",
           "speaker": "李(り)",
-          "jp_raw": "!箱根(はこね)の　お!土産(みやげ)は　!何(なに)が　いいですが。",
-          "jp_clean": "箱根の　お土産は　何が　いいですが。",
-          "jp_ruby": "<ruby>箱根<rt>はこね</rt></ruby>の　お<ruby>土産<rt>みやげ</rt></ruby>は　<ruby>何<rt>なに</rt></ruby>が　いいですが。",
+          "jp_raw": "!箱根(はこね)の　お!土産(みやげ)は　!何(なに)が　いいですか。",
+          "jp_clean": "箱根の　お土産は　何が　いいですか。",
+          "jp_ruby": "<ruby>箱根<rt>はこね</rt></ruby>の　お<ruby>土産<rt>みやげ</rt></ruby>は　<ruby>何<rt>なに</rt></ruby>が　いいですか。",
           "romaji": "hakone no   o miyage ha   nani ga   iidesuga .",
           "zh": "箱根的礼品什么好?"
         },
@@ -11847,7 +11847,7 @@
         "word_clean": "火気厳禁",
         "word_ruby": "<ruby>火気厳禁<rt>かきげんきん</rt></ruby>",
         "kana": "かき",
-        "pitch": "1げんきん",
+        "pitch": "1",
         "kanji": "火気厳禁",
         "pos": "名",
         "desc": "严禁烟火",
@@ -12107,7 +12107,7 @@
         "word_clean": "お風呂にはいります",
         "word_ruby": "お<ruby>風呂<rt>ふろ</rt></ruby>にはいります",
         "kana": "おふろ",
-        "pitch": "2に",
+        "pitch": "2",
         "kanji": "お風呂にはいります",
         "pos": "熟语",
         "desc": "洗澡",
@@ -13091,7 +13091,7 @@
         "word_clean": "頭がいい",
         "word_ruby": "<ruby>頭<rt>あたま</rt></ruby>がいい",
         "kana": "あたま",
-        "pitch": "3がいい",
+        "pitch": "3",
         "kanji": "頭がいい",
         "pos": "熟语",
         "desc": "脑子好，聪明",
@@ -13997,13 +13997,13 @@
         "idx": "23",
         "expression": "～くします",
         "shortexplain": "",
-        "explanation": "[一类形]します 词尾い变く。通过主语的意志行动使事物发生改变 “使～变得/变成～”"
+        "explanation": "[一类形]く＋します 词尾い变く。通过主语的意志行动使事物发生改变 “使～变得/变成～”"
       },
       {
         "idx": "24",
         "expression": "～くなります",
         "shortexplain": "",
-        "explanation": "[一类形]なります 词尾い变く。表示自发地性质或状态的变化，“～变得～”。"
+        "explanation": "[一类形]く＋なります 词尾い变く。表示性质或状态自发地变化，“～变得～”。"
       },
       {
         "idx": "78",
@@ -14588,9 +14588,9 @@
         {
           "type": "dialogue",
           "speaker": "李(り)",
-          "jp_raw": "!森(もり)さん，!小野(おの)さん，!待(ま)って　ください。!先(さき)に　!行(ぃ)かないで　ください。",
+          "jp_raw": "!森(もり)さん，!小野(おの)さん，!待(ま)って　ください。!先(さき)に　!行(い)かないで　ください。",
           "jp_clean": "森さん，小野さん，待って　ください。先に　行かないで　ください。",
-          "jp_ruby": "<ruby>森<rt>もり</rt></ruby>さん，<ruby>小野<rt>おの</rt></ruby>さん，<ruby>待<rt>ま</rt></ruby>って　ください。<ruby>先<rt>さき</rt></ruby>に　<ruby>行<rt>ぃ</rt></ruby>かないで　ください。",
+          "jp_ruby": "<ruby>森<rt>もり</rt></ruby>さん，<ruby>小野<rt>おの</rt></ruby>さん，<ruby>待<rt>ま</rt></ruby>って　ください。<ruby>先<rt>さき</rt></ruby>に　<ruby>行<rt>い</rt></ruby>かないで　ください。",
           "romaji": "mori san , ono san , matsu te   kudasai . sakini   ika naide   kudasai .",
           "zh": "森、小野，请等一等。别先走了啊。／别滑太快了。"
         },
@@ -14675,11 +14675,11 @@
         {
           "type": "dialogue",
           "speaker": "李(り)",
-          "jp_raw": "!大丈夫(だいじょうぶ)です。!心配(しんぱい)しないて　ください。",
-          "jp_clean": "大丈夫です。心配しないて　ください。",
-          "jp_ruby": "<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>です。<ruby>心配<rt>しんぱい</rt></ruby>しないて　ください。",
+          "jp_raw": "!大丈夫(だいじょうぶ)です。!心配(しんぱい)しないで　ください。",
+          "jp_clean": "大丈夫です。心配しないで　ください。",
+          "jp_ruby": "<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>です。<ruby>心配<rt>しんぱい</rt></ruby>しないで　ください。",
           "romaji": "daijoubu desu . shinpai shinaite   kudasai .",
-          "zh": "我保证不进去，请别担心。"
+          "zh": "没关系，请别担心。"
         }
       ]
     ],
@@ -15410,7 +15410,7 @@
       },
       {
         "idx": "122",
-        "expression": "基本型",
+        "expression": "基本形",
         "shortexplain": "",
         "explanation": "辞書形①动1:ます→う段 ②动2:ます → る ③动3:サ変:します→する カ変:来ます→来(く)る"
       },
@@ -15826,8 +15826,8 @@
   },
   {
     "number": 21,
-    "title_clean": "わたしは　すき焼きを　食べた　ことだ　あります",
-    "title_ruby": "わたしは　すき<ruby>焼<rt>や</rt></ruby>きを　<ruby>食<rt>た</rt></ruby>べた　ことだ　あります",
+    "title_clean": "わたしは　すき焼きを　食べた　ことが　あります",
+    "title_ruby": "わたしは　すき<ruby>焼<rt>や</rt></ruby>きを　<ruby>食<rt>た</rt></ruby>べた　ことが　あります",
     "title_romaji": "watashiha   suki yaki wo   tabeta   kotoda   arimasu",
     "basic4": [
       {
@@ -15929,7 +15929,7 @@
         "group": "Ｄ",
         "speaker": "甲",
         "jp_raw": "!何(なに)が　!食(た)べましょうか。",
-        "jp_clean": "何が　食べましょうか。",
+        "jp_clean": "何を　食べましょうか。",
         "jp_ruby": "<ruby>何<rt>なに</rt></ruby>が　<ruby>食<rt>た</rt></ruby>べましょうか。",
         "romaji": "nani ga   tabe mashouka .",
         "zh": "Ｄ　甲：吃点什么吗?"
@@ -15979,7 +15979,7 @@
         {
           "type": "dialogue",
           "speaker": "小野(おの)",
-          "jp_raw": "!仕事(しごと)の　!後(ご)で，!何度(なんど)か　!見(み)に　!行(い)った　ことが　あります。!終(お)わりは　!九(く)!時過(じす)ぎですね。!食事(しょくじ)は　どうしますか。",
+          "jp_raw": "!仕事(しごと)の　!後(あと)で，!何度(なんど)か　!見(み)に　!行(い)った　ことが　あります。!終(お)わりは　!九時過ぎ(くじすぎ)ですね。!食事(しょくじ)は　どうしますか。",
           "jp_clean": "仕事の　後で，何度か　見に　行った　ことが　あります。終わりは　九時過ぎですね。食事は　どうしますか。",
           "jp_ruby": "<ruby>仕事<rt>しごと</rt></ruby>の　<ruby>後<rt>ご</rt></ruby>で，<ruby>何度<rt>なんど</rt></ruby>か　<ruby>見<rt>み</rt></ruby>に　<ruby>行<rt>い</rt></ruby>った　ことが　あります。<ruby>終<rt>お</rt></ruby>わりは　<ruby>九<rt>く</rt></ruby><ruby>時過<rt>じす</rt></ruby>ぎですね。<ruby>食事<rt>しょくじ</rt></ruby>は　どうしますか。",
           "romaji": "shigoto no   atode , nando ka   mini   itta   kotoga   arimasu . owari ha   kuji sugi desune . shokuji ha   doushimasuka .",
@@ -16413,9 +16413,9 @@
         "id": "bc_22_1",
         "group": "Ａ",
         "speaker": "甲",
-        "jp_raw": "!明日(あした)　ボーリングに　!行(ぃ)かない？",
+        "jp_raw": "!明日(あした)　ボーリングに　!行(い)かない？",
         "jp_clean": "明日　ボーリングに　行かない？",
-        "jp_ruby": "<ruby>明日<rt>あした</rt></ruby>　ボーリングに　<ruby>行<rt>ぃ</rt></ruby>かない？",
+        "jp_ruby": "<ruby>明日<rt>あした</rt></ruby>　ボーリングに　<ruby>行<rt>い</rt></ruby>かない？",
         "romaji": "ashita   booringu ni   ika nai ？",
         "zh": "Ａ　甲：明天去打保龄球怎么样?"
       },
@@ -16933,7 +16933,7 @@
         "word_clean": "ううん∕いや",
         "word_ruby": "ううん∕いや",
         "kana": "う",
-        "pitch": "1うん",
+        "pitch": "1",
         "kanji": "",
         "pos": "叹",
         "desc": "不",
@@ -17739,9 +17739,9 @@
         {
           "type": "dialogue",
           "speaker": "森(もり)",
-          "jp_raw": "ぼくも　いつか　!北京(ペキン)へ　!行(い)きたいと　!思(おも)います。!李(り)さん，どうぞ　お!気(き)を　つけて。“再见！”",
-          "jp_clean": "ぼくも　いつか　北京へ　行きたいと　思います。李さん，どうぞ　お気を　つけて。“再见！”",
-          "jp_ruby": "ぼくも　いつか　<ruby>北京<rt>ペキン</rt></ruby>へ　<ruby>行<rt>い</rt></ruby>きたいと　<ruby>思<rt>おも</rt></ruby>います。<ruby>李<rt>り</rt></ruby>さん，どうぞ　お<ruby>気<rt>き</rt></ruby>を　つけて。“再见！”",
+          "jp_raw": "ぼくも　いつか　!北京(ペキン)へ　!行(い)きたいと　!思(おも)います。!李(り)さん，どうぞ　お!気(き)を　つけて。",
+          "jp_clean": "ぼくも　いつか　北京へ　行きたいと　思います。李さん，どうぞ　お気を　つけて。",
+          "jp_ruby": "ぼくも　いつか　<ruby>北京<rt>ペキン</rt></ruby>へ　<ruby>行<rt>い</rt></ruby>きたいと　<ruby>思<rt>おも</rt></ruby>います。<ruby>李<rt>り</rt></ruby>さん，どうぞ　お<ruby>気<rt>き</rt></ruby>を　つけて。",
           "romaji": "bokumo   itsuka   pekin he   iki taito   omoi masu . sumomo san , douzo   o kiwo   tsukete . “ sai ”",
           "zh": "我什么时候也要到北京去的。小李，路上小心。“再见!\""
         },
@@ -18013,7 +18013,7 @@
         "word_clean": "お世話になりました",
         "word_ruby": "お<ruby>世話<rt>せわ</rt></ruby>になりました",
         "kana": "おせわに",
-        "pitch": "2なりました",
+        "pitch": "2",
         "kanji": "お世話になりました",
         "pos": "熟语",
         "desc": "承蒙照顾",
@@ -18023,7 +18023,7 @@
         "word_clean": "よろしくお伝えください",
         "word_ruby": "よろしくお<ruby>伝<rt>つた</rt></ruby>えください",
         "kana": "よろしく",
-        "pitch": "4おつたえください",
+        "pitch": "4",
         "kanji": "～お伝えください",
         "pos": "熟语",
         "desc": "请代问好",
@@ -18073,7 +18073,7 @@
         "word_clean": "役に立ちます",
         "word_ruby": "<ruby>役<rt>やく</rt></ruby>に<ruby>立<rt>た</rt></ruby>ちます",
         "kana": "やくに",
-        "pitch": "2たちます",
+        "pitch": "2",
         "kanji": "役に立ちます",
         "pos": "熟语",
         "desc": "有用",
@@ -19501,7 +19501,7 @@
         "jp_clean": "* 李さん，明日　パーティーに行くでしょう？",
         "jp_ruby": "* <ruby>李<rt>り</rt></ruby>さん，<ruby>明日<rt>あした</rt></ruby>　パーティーに<ruby>行<rt>い</rt></ruby>くでしょう？",
         "romaji": "*  sumomo san , ashita   paateii ni iku deshou ？",
-        "zh": "* 小李，（你）明天参加联欢会吧。"
+        "zh": "* 小李，（你）明天会参加联欢会吧？。"
       }
     ],
     "basicc": [
@@ -19513,7 +19513,7 @@
         "jp_clean": "学生の時，何を勉強しましたか。",
         "jp_ruby": "<ruby>学生<rt>がくせい</rt></ruby>の<ruby>時<rt>とき</rt></ruby>，<ruby>何<rt>なに</rt></ruby>を<ruby>勉強<rt>べんきょう</rt></ruby>しましたか。",
         "romaji": "gakusei no toki , naniwo benkyou shimashitaka .",
-        "zh": "A 甲：学生时代（你）学生什么（专业）了？"
+        "zh": "A 甲：学生时代（你）学什么（专业）？"
       },
       {
         "id": "bc_27_2",
@@ -19682,7 +19682,7 @@
           "jp_clean": "そうですよ。でも，毎日利用する人は割引があるんです。",
           "jp_ruby": "そうですよ。でも，<ruby>毎日<rt>まいにち</rt></ruby><ruby>利用<rt>りよう</rt></ruby>する<ruby>人<rt>ひと</rt></ruby>は<ruby>割引<rt>わりびき</rt></ruby>があるんです。",
           "romaji": "soudesuyo . demo , mainichiriyou suru nin ha waribiki gaarundesu .",
-          "zh": "是啊。但是每天都去公园人的有优惠。"
+          "zh": "是啊。但是每天都去公园的人有优惠。"
         },
         {
           "type": "narration",
@@ -19691,9 +19691,9 @@
         {
           "type": "dialogue",
           "speaker": "戴(たい)",
-          "jp_raw": "そう!言(い)えば，!小(ちい)さい!時(とき)，よく!祖母(そぼ)といっしょに!公園(こうえん)ヘ!行(い)きました。",
+          "jp_raw": "そう!言(い)えば，!小(ちい)さい!時(とき)，よく!祖母(そぼ)といっしょに!公園(こうえん)へ!行(い)きました。",
           "jp_clean": "そう言えば，小さい時，よく祖母といっしょに公園ヘ行きました。",
-          "jp_ruby": "そう<ruby>言<rt>い</rt></ruby>えば，<ruby>小<rt>ちい</rt></ruby>さい<ruby>時<rt>とき</rt></ruby>，よく<ruby>祖母<rt>そぼ</rt></ruby>といっしょに<ruby>公園<rt>こうえん</rt></ruby>ヘ<ruby>行<rt>い</rt></ruby>きました。",
+          "jp_ruby": "そう<ruby>言<rt>い</rt></ruby>えば，<ruby>小<rt>ちい</rt></ruby>さい<ruby>時<rt>とき</rt></ruby>，よく<ruby>祖母<rt>そぼ</rt></ruby>といっしょに<ruby>公園<rt>こうえん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きました。",
           "romaji": "sou ie ba , chiisai toki , yoku sobo toisshoni kouen he iki mashita .",
           "zh": "说起来。我小时候常常和祖母去公园。"
         },
@@ -20928,7 +20928,7 @@
         "word_clean": "どういたしまして",
         "word_ruby": "どういたしまして",
         "kana": "どう",
-        "pitch": "1いたしまして",
+        "pitch": "1",
         "kanji": "",
         "pos": "熟语",
         "desc": "没关系",
@@ -22308,7 +22308,7 @@
         "word_clean": "それでは/それじゃ",
         "word_ruby": "それでは/それじゃ",
         "kana": "それでは",
-        "pitch": "3/それじゃ",
+        "pitch": "3",
         "kanji": "",
         "pos": "连",
         "desc": "那么",
@@ -27676,7 +27676,7 @@
         "word_clean": "北京北駅",
         "word_ruby": "<ruby>北京北駅<rt>ペキンきたえき</rt></ruby>",
         "kana": "ペキン",
-        "pitch": "1きたえき",
+        "pitch": "1",
         "kanji": "北京北駅",
         "pos": "专",
         "desc": "北京北站",
@@ -29112,7 +29112,7 @@
         "word_clean": "そうそう",
         "word_ruby": "そうそう",
         "kana": "そう",
-        "pitch": "1そう",
+        "pitch": "1",
         "kanji": "",
         "pos": "叹",
         "desc": "是的是的",
@@ -29756,9 +29756,9 @@
       },
       {
         "id": "b4_41_3",
-        "jp_raw": "* !陳(ちん)さんは!飼(か)っていた!小鳥(ことり)にげられました。",
-        "jp_clean": "* 陳さんは飼っていた小鳥にげられました。",
-        "jp_ruby": "* <ruby>陳<rt>ちん</rt></ruby>さんは<ruby>飼<rt>か</rt></ruby>っていた<ruby>小鳥<rt>ことり</rt></ruby>にげられました。",
+        "jp_raw": "* !陳(ちん)さんは　!飼(か)っていた　!小鳥(ことり)に　!逃(に)げられました。",
+        "jp_clean": "* 陳さんは　飼っていた　小鳥に　逃げられました。",
+        "jp_ruby": "* <ruby>陳<rt>ちん</rt></ruby>さんは　<ruby>飼<rt>か</rt></ruby>っていた　<ruby>小鳥<rt>ことり</rt></ruby>に　<ruby>逃<rt>に</rt></ruby>げられました。",
         "romaji": "*  chin sanha katsu teita kotori nigeraremashita .",
         "zh": "* 老陈养的小鸟飞走了。"
       },
@@ -29856,9 +29856,9 @@
         "id": "bc_41_9",
         "group": "Ｄ",
         "speaker": "乙",
-        "jp_raw": "ええ。!日本(にほん)の!有名(ゆうめい)なデザインナーによって!設計(せっけい)されました。",
-        "jp_clean": "ええ。日本の有名なデザインナーによって設計されました。",
-        "jp_ruby": "ええ。<ruby>日本<rt>にほん</rt></ruby>の<ruby>有名<rt>ゆうめい</rt></ruby>なデザインナーによって<ruby>設計<rt>せっけい</rt></ruby>されました。",
+        "jp_raw": "ええ。!日本(にほん)の!有名(ゆうめい)なデザイナーによって!設計(せっけい)されました。",
+        "jp_clean": "ええ。日本の有名なデザイナーによって設計されました。",
+        "jp_ruby": "ええ。<ruby>日本<rt>にほん</rt></ruby>の<ruby>有名<rt>ゆうめい</rt></ruby>なデザイナーによって<ruby>設計<rt>せっけい</rt></ruby>されました。",
         "romaji": "ee . nippon no yuumei na dezainnaa niyotte sekkei saremashita .",
         "zh": "乙：是的。是由日本著名设计师设计的。"
       }
@@ -29914,7 +29914,7 @@
         },
         {
           "type": "narration",
-          "zh": "（森被加藤经理叫去了。回来后效力问他）"
+          "zh": "（森被加藤经理叫去了。回来后小李问他）"
         },
         {
           "type": "dialogue",
@@ -30759,7 +30759,7 @@
         "word_clean": "万有引力の法則",
         "word_ruby": "<ruby>万有引力<rt>ばんゆういんりょく</rt></ruby>の<ruby>法則<rt>ほうそく</rt></ruby>",
         "kana": "ばんゆういんりょくの",
-        "pitch": "5ほうそく",
+        "pitch": "5",
         "kanji": "万有引力の法則",
         "pos": "熟语",
         "desc": "万有引力定律",
@@ -30895,7 +30895,7 @@
       [
         {
           "type": "narration",
-          "zh": "JC策划北京分公司，以森和小李为主，制定了CS公司委托的新商品宣传策划方案。在策划方案说明会之彰，为了征求意见，森把策划方案送到了CS公司。"
+          "zh": "JC策划北京分公司，以森和小李为主，制定了CS公司委托的新商品宣传策划方案。在策划方案说明会之前，为了征求意见，森把策划方案送到了CS公司。"
         },
         {
           "type": "narration",
@@ -31610,9 +31610,9 @@
         {
           "type": "dialogue",
           "speaker": "",
-          "jp_raw": "まず，ネーミンダですが，!理解(りかい)しやすくて!単純(たんじゅん)なものがいいと!考(かんが)えます。",
-          "jp_clean": "まず，ネーミンダですが，理解しやすくて単純なものがいいと考えます。",
-          "jp_ruby": "まず，ネーミンダですが，<ruby>理解<rt>りかい</rt></ruby>しやすくて<ruby>単純<rt>たんじゅん</rt></ruby>なものがいいと<ruby>考<rt>かんが</rt></ruby>えます。",
+          "jp_raw": "まず，ネーミングですが，!理解(りかい)しやすくて!単純(たんじゅん)なものがいいと!考(かんが)えます。",
+          "jp_clean": "まず，ネーミングですが，理解しやすくて単純なものがいいと考えます。",
+          "jp_ruby": "まず，ネーミングですが，<ruby>理解<rt>りかい</rt></ruby>しやすくて<ruby>単純<rt>たんじゅん</rt></ruby>なものがいいと<ruby>考<rt>かんが</rt></ruby>えます。",
           "romaji": "mazu , neeminda desuga , rikai shiyasukute tanjunna monogaiito kangae masu .",
           "zh": "首先是名称，我们觉得容易理解有简洁、单纯的名称比较好。"
         },
@@ -31673,9 +31673,9 @@
         {
           "type": "dialogue",
           "speaker": "森(もり)",
-          "jp_raw": "!次(つぎ)に，デザインですが，やはりインバクトのあるものが!必要(ひつよう)です。",
-          "jp_clean": "次に，デザインですが，やはりインバクトのあるものが必要です。",
-          "jp_ruby": "<ruby>次<rt>つぎ</rt></ruby>に，デザインですが，やはりインバクトのあるものが<ruby>必要<rt>ひつよう</rt></ruby>です。",
+          "jp_raw": "!次(つぎ)に，デザインですが，やはりインパクトのあるものが!必要(ひつよう)です。",
+          "jp_clean": "次に，デザインですが，やはりインパクトのあるものが必要です。",
+          "jp_ruby": "<ruby>次<rt>つぎ</rt></ruby>に，デザインですが，やはりインパクトのあるものが<ruby>必要<rt>ひつよう</rt></ruby>です。",
           "romaji": "tsugini , dezain desuga , yahari inbakuto noarumonoga hitsuyou desu .",
           "zh": "接着我们来看产品设计，还是需要有冲击力的设计。"
         },
@@ -31705,7 +31705,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "!定価(ていか)については，!少(すこ)し!高(たか)いほうがいいでと!考(かんが)えます。",
-          "jp_clean": "定価については，少し高いほうがいいでと考えます。",
+          "jp_clean": "定価については，少し高いほうがいいと考えます。",
           "jp_ruby": "<ruby>定価<rt>ていか</rt></ruby>については，<ruby>少<rt>すこ</rt></ruby>し<ruby>高<rt>たか</rt></ruby>いほうがいいでと<ruby>考<rt>かんが</rt></ruby>えます。",
           "romaji": "teika nitsuiteha , sukoshi takai hougaiideto kangae masu .",
           "zh": "关于定价，（我们觉得定得）稍微高一些比较好。"
@@ -32536,7 +32536,7 @@
       [
         {
           "type": "narration",
-          "zh": "CS公司拉品--运动饮料在北京和上海上市了，销售情况不错。但市场对该产品的命名和图案设计评价如何呢?负责市场调研的广告业务的JC策划北京分公司正在谈论此事。"
+          "zh": "CS公司产品--运动饮料在北京和上海上市了，销售情况不错。但市场对该产品的命名和图案设计评价如何呢?负责市场调研的广告业务的JC策划北京分公司正在谈论此事。"
         },
         {
           "type": "narration",
@@ -32554,9 +32554,9 @@
         {
           "type": "dialogue",
           "speaker": "森(もり)",
-          "jp_raw": "ええ，おかげさまで。とりあえず，!北京(ペキン)と!上海(シャンハイ)で!売り出(う　だ)したんですが，",
+          "jp_raw": "ええ，おかげさまで。とりあえず，!北京(ペキン)と!上海(シャンハイ)で!売り出(うりだ)したんですが，",
           "jp_clean": "ええ，おかげさまで。とりあえず，北京と上海で売り出したんですが，",
-          "jp_ruby": "ええ，おかげさまで。とりあえず，<ruby>北京<rt>ペキン</rt></ruby>と<ruby>上海<rt>シャンハイ</rt></ruby>で<ruby>売り出<rt>う　だ</rt></ruby>したんですが，",
+          "jp_ruby": "ええ，おかげさまで。とりあえず，<ruby>北京<rt>ペキン</rt></ruby>と<ruby>上海<rt>シャンハイ</rt></ruby>で<ruby>売り出<rt>うりだ</rt></ruby>したんですが，",
           "romaji": "ee , okagesamade . toriaezu , pekin to shanhai de uridashi tandesuga ,",
           "zh": "是啊，托大家的福。首先在北京和上海上市，"
         },
@@ -32630,18 +32630,18 @@
         {
           "type": "dialogue",
           "speaker": "森(もり)",
-          "jp_raw": "!評判(ひょうばん)がいいので，!今度(こんど)は，!中国(ちゅうごく)!全土(ぜんど)で!売り出(う　だ)すようです。",
+          "jp_raw": "!評判(ひょうばん)がいいので，!今度(こんど)は，!中国(ちゅうごく)!全土(ぜんど)で!売り出(うりだ)すようです。",
           "jp_clean": "評判がいいので，今度は，中国全土で売り出すようです。",
-          "jp_ruby": "<ruby>評判<rt>ひょうばん</rt></ruby>がいいので，<ruby>今度<rt>こんど</rt></ruby>は，<ruby>中国<rt>ちゅうごく</rt></ruby><ruby>全土<rt>ぜんど</rt></ruby>で<ruby>売り出<rt>う　だ</rt></ruby>すようです。",
+          "jp_ruby": "<ruby>評判<rt>ひょうばん</rt></ruby>がいいので，<ruby>今度<rt>こんど</rt></ruby>は，<ruby>中国<rt>ちゅうごく</rt></ruby><ruby>全土<rt>ぜんど</rt></ruby>で<ruby>売り出<rt>うりだ</rt></ruby>すようです。",
           "romaji": "hyouban gaiinode , kondo ha , chuugokuzendo de uridasu youdesu .",
           "zh": "因为反映还不错，所以今后好像准备在全国上市。"
         },
         {
           "type": "dialogue",
           "speaker": "戴(たい)",
-          "jp_raw": "!売れ行(う　ゆ)きがどうなるか，!楽(たの)しみですね。",
+          "jp_raw": "!売れ行(うれゆ)きがどうなるか，!楽(たの)しみですね。",
           "jp_clean": "売れ行きがどうなるか，楽しみですね。",
-          "jp_ruby": "<ruby>売れ行<rt>う　ゆ</rt></ruby>きがどうなるか，<ruby>楽<rt>たの</rt></ruby>しみですね。",
+          "jp_ruby": "<ruby>売れ行<rt>うれゆ</rt></ruby>きがどうなるか，<ruby>楽<rt>たの</rt></ruby>しみですね。",
           "romaji": "ureyuki gadounaruka , tanoshimi desune .",
           "zh": "销量究竟会怎么样，但愿成功。"
         },
@@ -33422,7 +33422,7 @@
         "jp_clean": "* この本は読めば読むほど面白いです。",
         "jp_ruby": "* この<ruby>本<rt>ほん</rt></ruby>は<ruby>読<rt>よ</rt></ruby>めば<ruby>読<rt>よ</rt></ruby>むほど<ruby>面白<rt>おもしろ</rt></ruby>いです。",
         "romaji": "*  kono hon ha yome ba yomu hodo omoshiroi desu .",
-        "zh": "* 这本书阅读越有意思。"
+        "zh": "* 这本书越读越有意思。"
       }
     ],
     "basicc": [
@@ -34181,21 +34181,21 @@
         "jp_clean": "* これは柔らかくて，まるで本物の毛皮のようです。",
         "jp_ruby": "* これは<ruby>柔<rt>やわ</rt></ruby>らかくて，まるで<ruby>本物<rt>ほんもの</rt></ruby>の<ruby>毛皮<rt>けがわ</rt></ruby>のようです。",
         "romaji": "*  koreha yawarakaku te , marude honmono no kegawa noyoudesu .",
-        "zh": "* 这个软乎乎的，好像真皮一样。"
+        "zh": "* 这个软乎乎的，好像真的毛皮一样。"
       },
       {
         "id": "b4_46_2",
-        "jp_raw": "* この!着物(きもの)はいかにも!日(にち)!本(ほん)らしい!柄(がら)ですね。",
+        "jp_raw": "* この!着物(きもの)はいかにも!日本(にほん)らしい!柄(がら)ですね。",
         "jp_clean": "* この着物はいかにも日本らしい柄ですね。",
-        "jp_ruby": "* この<ruby>着物<rt>きもの</rt></ruby>はいかにも<ruby>日<rt>にち</rt></ruby><ruby>本<rt>ほん</rt></ruby>らしい<ruby>柄<rt>がら</rt></ruby>ですね。",
+        "jp_ruby": "* この<ruby>着物<rt>きもの</rt></ruby>はいかにも<ruby>日本<rt>にほん</rt></ruby>らしい<ruby>柄<rt>がら</rt></ruby>ですね。",
         "romaji": "*  kono kimono haikanimo nippon rashii gara desune .",
         "zh": "* 这件和服的花纹呈典型的日本式。"
       },
       {
         "id": "b4_46_3",
-        "jp_raw": "* !明日(あした)の９!時(じ)までにこの!書類(しょるい)!完成(かんせい)させなければなりません。",
-        "jp_clean": "* 明日の９時までにこの書類完成させなければなりません。",
-        "jp_ruby": "* <ruby>明日<rt>あした</rt></ruby>の９<ruby>時<rt>じ</rt></ruby>までにこの<ruby>書類<rt>しょるい</rt></ruby><ruby>完成<rt>かんせい</rt></ruby>させなければなりません。",
+        "jp_raw": "* !明日(あした)の９!時(じ)までにこの!書類(しょるい)を!完成(かんせい)させなければなりません。",
+        "jp_clean": "* 明日の９時までにこの書類を完成させなければなりません。",
+        "jp_ruby": "* <ruby>明日<rt>あした</rt></ruby>の９<ruby>時<rt>じ</rt></ruby>までにこの<ruby>書類<rt>しょるい</rt></ruby>を<ruby>完成<rt>かんせい</rt></ruby>させなければなりません。",
         "romaji": "*  ashita no 9 toki madenikono shorui kanseisa senakerebanarimasen .",
         "zh": "* 明天9点之前必须完成这份文件。"
       },
@@ -34223,9 +34223,9 @@
         "id": "bc_46_2",
         "group": "Ａ",
         "speaker": "乙",
-        "jp_raw": "ええ，!本当(ほんとう)に。まるで!果物(くだもの)!見(み)たいですね。",
-        "jp_clean": "ええ，本当に。まるで果物見たいですね。",
-        "jp_ruby": "ええ，<ruby>本当<rt>ほんとう</rt></ruby>に。まるで<ruby>果物<rt>くだもの</rt></ruby><ruby>見<rt>み</rt></ruby>たいですね。",
+        "jp_raw": "ええ，!本当(ほんとう)に。まるで!果物(くだもの)みたいですね。",
+        "jp_clean": "ええ，本当に。まるで果物みたいですね。",
+        "jp_ruby": "ええ，<ruby>本当<rt>ほんとう</rt></ruby>に。まるで<ruby>果物<rt>くだもの</rt></ruby>みたいですね。",
         "romaji": "ee , hontou ni . marude kudamono mita idesune .",
         "zh": "乙：嗯。真的。好像水果一样。"
       },
@@ -34247,7 +34247,7 @@
         "jp_clean": "いかにも子供らしい夢ね。",
         "jp_ruby": "いかにも<ruby>子供<rt>こども</rt></ruby>らしい<ruby>夢<rt>ゆめ</rt></ruby>ね。",
         "romaji": "ikanimo kodomo rashii yume ne .",
-        "zh": "乙：真是名符其实的孩子的理想啊。"
+        "zh": "乙：真是名副其实的孩子的理想啊。"
       },
       {
         "id": "bc_46_5",
@@ -34267,7 +34267,7 @@
         "jp_clean": "そうですね。今月の末までに届くように出してください。",
         "jp_ruby": "そうですね。<ruby>今月<rt>こんげつ</rt></ruby>の<ruby>末<rt>すえ</rt></ruby>までに<ruby>届<rt>とど</rt></ruby>くように<ruby>出<rt>だ</rt></ruby>してください。",
         "romaji": "soudesune . kongetsu no matsu madeni todoku youni dashi tekudasai .",
-        "zh": "乙：是啊。这个月底以前能收到就可以了。"
+        "zh": "乙：是啊。请寄出，以便这个月底之前送到。。"
       },
       {
         "id": "bc_46_7",
@@ -35711,9 +35711,9 @@
         {
           "type": "dialogue",
           "speaker": "",
-          "jp_raw": "また，この!度(たび)は，!突然(とつぜん)お!手紙(てがみ)を!差し上(さ　あ)げ，!失礼(しつれい)いたしました。",
+          "jp_raw": "また，この!度(たび)は，!突然(とつぜん)お!手紙(てがみ)を!差し上(さしあ)げ，!失礼(しつれい)いたしました。",
           "jp_clean": "また，この度は，突然お手紙を差し上げ，失礼いたしました。",
-          "jp_ruby": "また，この<ruby>度<rt>たび</rt></ruby>は，<ruby>突然<rt>とつぜん</rt></ruby>お<ruby>手紙<rt>てがみ</rt></ruby>を<ruby>差し上<rt>さ　あ</rt></ruby>げ，<ruby>失礼<rt>しつれい</rt></ruby>いたしました。",
+          "jp_ruby": "また，この<ruby>度<rt>たび</rt></ruby>は，<ruby>突然<rt>とつぜん</rt></ruby>お<ruby>手紙<rt>てがみ</rt></ruby>を<ruby>差し上<rt>さしあ</rt></ruby>げ，<ruby>失礼<rt>しつれい</rt></ruby>いたしました。",
           "romaji": "mata , kono do ha , totsuzen o tegami wo sashiage , shitsurei itashimashita .",
           "zh": "这次（又）突然给您寄了通知，（冒昧之处，）请多原谅。"
         },

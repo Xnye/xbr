@@ -5748,3 +5748,263 @@ button.audio-playing svg {
     animation: none !important;
   }
 }
+
+/* ---------- 朗读后端状态：静态页面时的说明 ---------- */
+.tts-status {
+  flex-basis: 100%;
+  margin: 0.1rem 0 0 2.4rem;
+  color: var(--text-faint);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+}
+
+.voice-select-pill:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- 目录抽屉：按钮化条目与模态滚动锁 ---------- */
+body.drawer-open {
+  overflow: hidden;
+}
+
+.drawer-panel .drawer-list {
+  overscroll-behavior: contain;
+}
+
+.drawer-item {
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule-soft);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-main);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.drawer-item-main {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.drawer-item-title,
+.drawer-item-sub {
+  display: block;
+}
+
+.drawer-item-meta {
+  flex: 0 0 auto;
+  padding-top: 0.18rem;
+}
+
+.drawer-item-badge {
+  display: inline-block;
+  padding: 0.08rem 0.3rem;
+  border: 1px solid var(--rule-soft);
+  color: var(--text-faint);
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.drawer-item-badge.is-deep {
+  color: var(--accent-gold);
+  border-color: var(--accent-soft);
+}
+
+.drawer-empty {
+  padding: 2rem 0.6rem;
+  color: var(--text-muted);
+}
+
+.drawer-empty p {
+  margin-bottom: 0.8rem;
+}
+
+.drawer-empty .text-btn {
+  color: var(--accent-gold);
+}
+
+[data-kbd-click]:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* ---------- 触控尺寸与触摸设备上的工具可见性 ---------- */
+@media (pointer: coarse), (max-width: 720px) {
+  .route-step { min-height: 44px; padding: 0.5rem 0.2rem; }
+  .route-mode { min-height: 44px; padding: 0.4rem 0.6rem; }
+  .icon-btn { min-width: 44px; min-height: 44px; padding: 0.5rem; }
+  .text-btn { min-height: 44px; padding: 0.45rem 0.2rem; }
+  .lesson-selector-btn { min-height: 44px; }
+  .editorial-toggle-btn { min-height: 44px; }
+  .settings-panel .editorial-toggle-btn { min-height: 40px; }
+  .settings-panel .voice-select-pill { min-height: 40px; }
+  .drawer-close-btn { min-width: 44px; min-height: 44px; }
+  .drawer-search-input { min-height: 44px; }
+  .sentence-tools { opacity: 1; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sentence-tools { opacity: 0.55; }
+  .basic-sentence-item:hover .sentence-tools,
+  .sentence-tools:focus-within { opacity: 1; }
+}
+
+.drawer-item {
+  flex-direction: row;
+}
+
+.drawer-item-hit {
+  margin-left: 0.45rem;
+  color: var(--text-faint);
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+}
+
+/* 窄屏：动画层把 .route-num 重新设成 inline-block，会挤爆路线；
+   这里恢复隐藏，并允许路线在极窄宽度下换行。 */
+@media (max-width: 720px) {
+  .route-num { display: none; }
+  .lesson-route-row { flex-wrap: wrap; row-gap: 0.35rem; }
+  .lesson-route { flex-wrap: wrap; row-gap: 0.2rem; }
+}
+
+/* 工具区：触摸与窄屏保持可见；只在大屏精确指针上做悬停淡出。 */
+.sentence-tools { opacity: 1; }
+@media (hover: hover) and (pointer: fine) and (min-width: 721px) {
+  .sentence-tools { opacity: 0.55; }
+  .basic-sentence-item:hover .sentence-tools,
+  .sentence-tools:focus-within { opacity: 1; }
+}
+
+/* ---------- 课末：自测与已学 ---------- */
+.lesson-close-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.4rem;
+  margin-top: 1rem;
+}
+
+.lesson-close-actions .text-btn {
+  color: var(--text-muted);
+}
+
+.lesson-close-actions .text-btn:hover {
+  color: var(--accent-gold);
+}
+
+.lesson-done-btn.is-done {
+  color: var(--accent-gold);
+}
+
+.lesson-done-btn.is-done::before {
+  content: '✓';
+  margin-right: 0.35rem;
+}
+
+body.basic-selftest .basic-zh,
+body.basic-selftest .basic-xray-slot,
+body.basic-selftest .basic-xray-btn {
+  display: none !important;
+}
+
+.selftest-exit {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 180;
+  min-height: 40px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  background: var(--bg-paper);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  box-shadow: var(--shadow-panel);
+  cursor: pointer;
+}
+
+.selftest-exit:hover {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+.drawer-item-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.22rem;
+}
+
+.drawer-item-done {
+  color: var(--accent-gold);
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+}
+
+@media (pointer: coarse), (max-width: 720px) {
+  .selftest-exit { min-height: 44px; }
+}
+
+.selftest-exit {
+  left: 1.2rem;
+  right: auto;
+}
+
+.drawer-item-done {
+  color: var(--text-faint);
+}
+
+/* 窄屏：长课段备注不能把课段标题挤成两行 */
+@media (max-width: 720px) {
+  .lesson-step > .step-summary > span:nth-child(2) {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .lesson-step > .step-summary .sub-note {
+    min-width: 0;
+    white-space: normal;
+    text-align: right;
+  }
+}
+
+/* 长对白 + 拆开看按钮：让日文行可收缩换行，按钮不被挤出屏幕 */
+.dlg-jp-line {
+  min-width: 0;
+}
+
+.dlg-jp-line .dlg-jp {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.dlg-jp-line .sentence-tools {
+  flex: 0 0 auto;
+}
+
+/* 对白换行优先在空格/文节处断，实在放不下才拆词 */
+.dlg-jp-line .dlg-jp {
+  overflow-wrap: break-word;
+}

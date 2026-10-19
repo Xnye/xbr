@@ -5,7 +5,7 @@ build_grammar_deep.py — 生成 data/grammar_deep.json
 把 content/grammar_l*.py 里手写的深度讲义编译成前端可直接消费的数据：
   * 例句的 ! 标注明文 → clean / ruby / romaji 三种形态（罗马音从假名注音直转，
     不复用 lessons.json 里 pykakasi 生成的字段——那一版存在误读，如「李(り)」被转成 sumomo）
-  * 与 lessons.json 的语法条目做双向校验，确保 24 条教材语法点一条不漏、一条不多
+  * 与 lessons.json 的语法条目做双向校验，确保覆盖课程内教材语法点一条不漏、一条不多
   * 校验 related / xid 引用不悬空
 
 用法：python build_grammar_deep.py
@@ -15,22 +15,32 @@ import io
 import json
 import os
 import sys
+import importlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, 'content'))
 
 import morphology as M  # noqa: E402
-from grammar_l1 import ENTRIES as L1  # noqa: E402
-from grammar_l2 import ENTRIES as L2  # noqa: E402
-from grammar_l3 import ENTRIES as L3  # noqa: E402
-from grammar_l4 import ENTRIES as L4  # noqa: E402
 
 LESSONS_PATH = os.path.join(HERE, 'data', 'lessons.json')
 EXEMPLARS_PATH = os.path.join(HERE, 'data', 'exemplars.json')
 OUT_PATH = os.path.join(HERE, 'data', 'grammar_deep.json')
 
-# 本轮覆盖范围。扩课时把新模块加进来即可。
-SOURCES = [(1, L1), (2, L2), (3, L3), (4, L4)]
+# 自动发现 content/grammar_lN.py。扩课时只新增模块，不再手工维护 import/SOURCES。
+# --through N 只编译到第 N 课，便于分批验证，不影响默认全量构建。
+_through = 48
+if '--through' in sys.argv:
+    _through = int(sys.argv[sys.argv.index('--through') + 1])
+SOURCES = []
+for _n in range(1, _through + 1):
+    _name = 'grammar_l%d' % _n
+    try:
+        _mod = importlib.import_module(_name)
+    except ModuleNotFoundError as exc:
+        if exc.name == _name:
+            continue
+        raise
+    SOURCES.append((_n, _mod.ENTRIES))
 
 
 def compile_example(ex):
@@ -70,6 +80,22 @@ def main():
     for lesson_num, src in SOURCES:
         entries.extend(compile_entry(e) for e in src)
 
+    # ---------------- 校验 0：讲义结构完整 ----------------
+    for e in entries:
+        eid = e['id']
+        if e.get('concept'):
+            continue
+        assert e.get('essence'), '%s 缺 essence' % eid
+        assert e.get('formula', {}).get('template'), '%s 缺 formula.template' % eid
+        assert e.get('why'), '%s 缺 why' % eid
+        assert len(e.get('examples') or []) >= 2, '%s 例句少于 2 条' % eid
+        assert len(e.get('pitfalls') or []) >= 2, '%s 易错对照少于 2 条' % eid
+        assert len(e.get('self_check') or []) >= 2, '%s 自检少于 2 题' % eid
+        assert len(e.get('answers') or []) >= len(e.get('self_check') or []), '%s 答案少于自检题' % eid
+        assert '~' not in e.get('pattern', ''), '%s pattern 用了 ASCII ~' % eid
+        blob = json.dumps(e, ensure_ascii=False)
+        assert 'TODO' not in blob and '待补' not in blob, '%s 含占位文本' % eid
+
     # ---------------- 校验 1：id 唯一 ----------------
     ids = [e['id'] for e in entries]
     dup = {i for i in ids if ids.count(i) > 1}
@@ -103,9 +129,10 @@ def main():
     # 指向已覆盖课程（L1_～L4_）的引用必须真实存在，写错就是断链；
     # 指向后续课程的引用是"预告"，扩课后自动消解，只统计不报错。
     idset = set(ids)
+    covered_prefixes = tuple('L%d_' % n for n in dict(SOURCES))
     broken = [(e['id'], r) for e in entries
               for r in e.get('related', [])
-              if r.startswith(('L1_', 'L2_', 'L3_', 'L4_')) and r not in idset]
+              if r.startswith(covered_prefixes) and r not in idset]
     forward = [r for e in entries for r in e.get('related', []) if r not in idset]
     if broken:
         for eid, r in broken:

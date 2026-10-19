@@ -32,6 +32,9 @@ audit_exemplars.py — 透视图数据的常驻审计器
       build_romaji.SOURCE_PATCHES 修订的错字」，剩下的逐条列出供人工判读。
       这一项不写 problems、不影响 exit code——判读权在人，机器只把候选摆出来。
       （上一轮它只是 scratch 里的扫描脚本；入库当场又找出两处漏掉的错字。）
+
+  C18 单词音调字段（全 48 课）：pitch 必须是 0–20 的纯数字；
+      混入假名（1すみません）会让词表渲染成乱码，渲染层再映射成 ⓪①②…。
 用法：python audit_exemplars.py            # 只报问题
       python audit_exemplars.py --dump     # 额外打印全量逐句明细供人工复读
 """
@@ -583,6 +586,22 @@ def audit_romaji_layer(lessons):
                                   '请重新运行 python build_romaji.py' % key)
 
 
+def audit_word_pitch(lessons):
+    """C18：单词音调字段必须是 0–20 的纯数字。
+    渲染层会把数字映射成 ⓪①②…；字段混进假名（1すみません）会直接显示成乱码。"""
+    for les in lessons:
+        for w in les.get('words') or []:
+            p = w.get('pitch')
+            if p in (None, ''):
+                continue
+            if not re.fullmatch(r'\d+', str(p)):
+                flag('word_pitch', 'C18', '第%d课「%s」的 pitch「%s」不是纯数字'
+                     % (les.get('number'), w.get('word_clean'), p))
+            elif not 0 <= int(p) <= 20:
+                flag('word_pitch', 'C18', '第%d课「%s」的 pitch「%s」超出 0–20'
+                     % (les.get('number'), w.get('word_clean'), p))
+
+
 # ---- C15 教材内部注音一致性（只报不拦） ----
 # 同一注音片段（汉字串＋紧跟的送假名）在全书出现不同注音时，多数是合法多音
 # （中 ちゅう／なか、人 ひと／じん／にん、時 じ／とき、明日 あした／あす／みょうにち…），
@@ -792,6 +811,7 @@ def main():
         audit(e)
     audit_coverage(exemplars, lessons)
     audit_romaji_layer(lessons)
+    audit_word_pitch(lessons)
     # C15 只报不拦：候选摆出来给人判读，不进 problems、不影响 exit code
     reading_report = report_reading_consistency(lessons)
 
@@ -814,7 +834,7 @@ def main():
         raise SystemExit(1)
     for line in reading_report:
         print(line)
-    print('审计通过：C1～C14 全类别零问题（%d 条透视图 + 全 48 课罗马音数据层）；'
+    print('审计通过：C1～C14、C18 全类别零问题（%d 条透视图 + 全 48 课罗马音/音调数据层）；'
           'C15 为只读报告（见上）' % len(exemplars))
 
 

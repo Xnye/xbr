@@ -8,7 +8,7 @@
   let exemplarsData = [];
   let grammarDeep = null;      // data/grammar_deep.json（缺失时为 null，自动回退旧渲染）
   let grammarDeepIndex = {};   // id -> entry，供关联条目跳转
-  let lessonOpeners = {};      // data/lesson_openers.json：每课开场与收束（可缺省）
+  let lessonOpeners = {};      // data/lesson_openers.json：每课收束（可缺省）
   // data/romaji.json：全 48 课罗马音（由假名注音重新生成）。
   // lessons.json 自带的 romaji / title_romaji 是 pykakasi 产物，读起来是错的
   // （李→sumomo、は→ha、へ→he），只在取不到新数据时才回落。
@@ -20,6 +20,11 @@
   // 课段节奏：默认一次只展开一段；full 是给复习用的“看全课”出口。
   let paceMode = localStorage.getItem('xbr_pace_mode') === 'full' ? 'full' : 'paced';
   let activeStep = null;
+  let resumeSaveTimer = null;
+  let lastDrawerFocus = null;
+  const lessonSearchIndex = new Map();
+  const RESUME_KEY = 'xbr_resume';
+  const COMPLETED_KEY = 'xbr_completed';
 
   /** 极简 Markdown：**加粗** → <strong>。讲义正文里用来点睛。 */
   function md(str) {
@@ -62,6 +67,16 @@
     return hit || w.romaji || '';
   }
 
+  /** 音调类型数字 → 圈号（0→⓪，1→①，10→⑩）。 */
+  function formatPitch(pitch) {
+    const m = String(pitch == null ? '' : pitch).match(/^\d+/);
+    if (!m) return '';
+    const n = parseInt(m[0], 10);
+    if (n === 0) return '⓪';
+    if (n >= 1 && n <= 20) return String.fromCodePoint(0x2460 + n - 1);
+    return '';
+  }
+
   function romajiForLessonTitle(lesson) {
     if (!lesson) return '';
     const hit = romajiData && romajiData.titles && romajiData.titles[lesson.title_clean];
@@ -91,6 +106,8 @@
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'app_toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
       toast.style.cssText = `
         position: fixed;
         bottom: 24px;
@@ -120,9 +137,107 @@
     }, 1800);
   }
 
+  function readResume() {
+    try {
+      return JSON.parse(localStorage.getItem(RESUME_KEY) || 'null');
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveResume(overrides) {
+    const data = Object.assign({
+      lesson: currentLessonNum,
+      step: activeStep,
+      y: Math.round(window.scrollY),
+      ts: Date.now()
+    }, overrides || {});
+    try {
+      localStorage.setItem(RESUME_KEY, JSON.stringify(data));
+    } catch (e) { /* 隐私模式下 localStorage 可能不可写 */ }
+  }
+
+  function scheduleSaveResume() {
+    clearTimeout(resumeSaveTimer);
+    resumeSaveTimer = setTimeout(saveResume, 250);
+  }
+
+  function getCompletedLessons() {
+    try {
+      const arr = JSON.parse(localStorage.getItem(COMPLETED_KEY) || '[]');
+      return Array.isArray(arr) ? arr.map(Number).filter(n => n >= 1 && n <= 48) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function isLessonDone(n) {
+    return getCompletedLessons().includes(n);
+  }
+
+  function lessonNumberFromHash() {
+    const m = String(window.location.hash || '').match(/^#lesson-(\d+)$/);
+    if (!m) return null;
+    const n = parseInt(m[1], 10);
+    return n >= 1 && n <= 48 ? n : null;
+  }
+
+  function handleHashChange() {
+    const n = lessonNumberFromHash();
+    // 非法 hash 不改变当前页；空 hash 回到第 1 课（浏览器后退到初始状态）
+    if (!n && window.location.hash) return;
+    const target = n || 1;
+    if (target === currentLessonNum) return;
+    currentLessonNum = target;
+    renderLesson(target);
+    renderDrawerList();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    saveResume({ lesson: target, step: activeStep, y: 0 });
+  }
+
+  function normalizeSearchText(value) {
+    return String(value || '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/[\s　]+/g, '')
+      .toLowerCase();
+  }
+
+  function buildLessonSearchIndex() {
+    lessonSearchIndex.clear();
+    lessonsData.forEach(l => {
+      const parts = [l.title_clean, l.contitle, l.contitlet, `第${l.number}课`];
+      (l.basic4 || []).forEach(s => parts.push(s.jp_clean, s.zh));
+      (l.basicc || []).forEach(s => parts.push(s.speaker, s.jp_clean, s.zh));
+      (l.context_sections || []).forEach(sec => (sec || []).forEach(item => {
+        parts.push(item.speaker, item.jp_clean, item.zh);
+      }));
+      (l.words || []).forEach(w => parts.push(w.word_clean, w.desc));
+      (l.grammar || []).forEach(g => parts.push(g.expression, g.shortexplain, g.explanation));
+      if (grammarDeep && Array.isArray(grammarDeep.entries)) {
+        grammarDeep.entries.filter(e => e.lesson === l.number).forEach(e => {
+          parts.push(e.pattern, e.category, e.essence);
+          (e.why || []).forEach(p => parts.push(p));
+          (e.key_points || []).forEach(p => parts.push(p));
+        });
+      }
+      lessonSearchIndex.set(l.number, normalizeSearchText(parts.filter(Boolean).join(' ')));
+    });
+  }
+
+  function lessonHasDeep(n) {
+    return !!(grammarDeep && Array.isArray(grammarDeep.entries)
+      && grammarDeep.entries.some(e => e.lesson === n));
+  }
+
+  function scrollActiveDrawerItem() {
+    requestAnimationFrame(() => {
+      const active = document.querySelector('.drawer-item.active');
+      if (active) active.scrollIntoView({ block: 'center' });
+    });
+  }
+
   // 纸白版首发：旧用户如果还存着 dark，给一次迁移机会，之后仍尊重手动选择。
-  const UI_REV = '2026-10-17-paper';
-  if (localStorage.getItem('xbr_ui_rev') !== UI_REV) {
+  const UI_REV = '2026-10-17-paper';  if (localStorage.getItem('xbr_ui_rev') !== UI_REV) {
     localStorage.setItem('xbr_theme', 'paper');
     localStorage.setItem('xbr_ui_rev', UI_REV);
   }
@@ -136,8 +251,12 @@
   };
 
   async function init() {
+    history.scrollRestoration = 'manual';
     setupEventListeners();
     applyStateToDOM();
+    JapaneseTTS.probeBackend()
+      .then(applyTtsBackendState)
+      .catch(() => applyTtsBackendState(false));
 
     try {
       // Load datasets
@@ -185,20 +304,28 @@
         }
       }
 
-      // Populate Drawer
-      renderDrawerList();
+      // Populate Drawer & search index
+      buildLessonSearchIndex();
 
-      // Check URL hash for direct lesson jump e.g. #lesson-4 or #showcase
-      const hash = window.location.hash;
-      if (hash && hash.startsWith('#lesson-')) {
-        const num = parseInt(hash.replace('#lesson-', ''), 10);
-        if (num >= 1 && num <= 48) {
-          currentLessonNum = num;
-        }
+      // 优先 hash；没有 hash 时回到上次读到的课与段
+      const hashLesson = lessonNumberFromHash();
+      const resume = readResume();
+      if (hashLesson) {
+        currentLessonNum = hashLesson;
+      } else if (resume && resume.lesson >= 1 && resume.lesson <= 48) {
+        currentLessonNum = resume.lesson;
       }
 
-      // Render current lesson
+      renderDrawerList();
       renderLesson(currentLessonNum);
+
+      if (resume && resume.lesson === currentLessonNum) {
+        if (resume.step) openLessonStep(resume.step, false);
+        const y = Number(resume.y);
+        if (Number.isFinite(y) && y > 0) {
+          setTimeout(() => window.scrollTo({ top: y, behavior: 'auto' }), 120);
+        }
+      }
 
     } catch (err) {
       console.error('Failed to load lesson data:', err);
@@ -254,6 +381,16 @@
       const label = btn.querySelector('.btn-label');
       if (label) label.textContent = textOverride;
     }
+  }
+
+  /** 静态/线上环境没有 /api/tts：禁用七海/庆太，说明当前走系统语音。 */
+  function applyTtsBackendState(available) {
+    const select = document.getElementById('voice_select');
+    const status = document.getElementById('tts_status');
+    if (!select || !status) return;
+    select.disabled = !available;
+    status.hidden = !!available;
+    status.textContent = available ? '' : '当前使用系统语音';
   }
 
   function setupEventListeners() {
@@ -351,9 +488,15 @@
 
     // Search inside drawer
     document.getElementById('drawer_search_input')?.addEventListener('input', (e) => {
-      activeFilter = e.target.value.trim().toLowerCase();
+      activeFilter = normalizeSearchText(e.target.value);
       renderDrawerList();
+      const list = document.getElementById('drawer_list');
+      if (list) list.scrollTop = 0;
     });
+
+    window.addEventListener('scroll', scheduleSaveResume, { passive: true });
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('beforeunload', () => saveResume());
 
     // 课段开合：拦下 summary 的默认行为，统一交给控制器；
     // paced 模式下打开新一段会自动收起上一段。
@@ -390,9 +533,47 @@
     });
 
     // Keyboard shortcuts
-    window.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (e) => {
+      const backdrop = document.getElementById('drawer_backdrop');
+      const drawerOpen = !!backdrop && backdrop.classList.contains('open');
+      if (drawerOpen) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeDrawer();
+          return;
+        }
+        if (e.key !== 'Tab') return;
+        const panel = backdrop.querySelector('.drawer-panel');
+        if (!panel) return;
+        const focusables = Array.from(panel.querySelectorAll(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+        )).filter(el => el.offsetParent !== null);
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+        return;
+      }
+
       // Ctrl/⌘/Alt 组合键不是本站快捷键（否则 Ctrl+R 会被当成「罗马音」并被写进 localStorage）
       if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      // 用键盘激活点击型控件（单词卡、对白、语法卡头、自检题、品牌区）
+      if (e.target instanceof Element) {
+        const kbdTarget = e.target.closest('[data-kbd-click]');
+        if (kbdTarget && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          kbdTarget.click();
+          return;
+        }
+      }
+
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
       if (e.key === 'f' || e.key === 'F') {
         document.getElementById('furi_toggle')?.click();
@@ -410,12 +591,59 @@
 
   function openDrawer() {
     const backdrop = document.getElementById('drawer_backdrop');
-    if (backdrop) backdrop.classList.add('open');
+    if (!backdrop) return;
+    lastDrawerFocus = document.activeElement;
+    backdrop.classList.add('open');
+    document.body.classList.add('drawer-open');
+    const main = document.querySelector('main');
+    const header = document.querySelector('.site-header');
+    const selftestExit = document.getElementById('selftest_exit');
+    if (main) main.inert = true;
+    if (header) header.inert = true;
+    if (selftestExit) selftestExit.inert = true;
+    const openBtn = document.getElementById('open_drawer_btn');
+    if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
+    const closeBtn = document.getElementById('close_drawer_btn');
+    if (closeBtn) closeBtn.focus({ preventScroll: true });
+    scrollActiveDrawerItem();
   }
 
   function closeDrawer() {
     const backdrop = document.getElementById('drawer_backdrop');
-    if (backdrop) backdrop.classList.remove('open');
+    if (!backdrop) return;
+    const wasOpen = backdrop.classList.contains('open');
+    backdrop.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    const main = document.querySelector('main');
+    const header = document.querySelector('.site-header');
+    const selftestExit = document.getElementById('selftest_exit');
+    if (main) main.inert = false;
+    if (header) header.inert = false;
+    if (selftestExit) selftestExit.inert = false;
+    const openBtn = document.getElementById('open_drawer_btn');
+    if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+    if (!wasOpen) return;
+
+    const input = document.getElementById('drawer_search_input');
+    if (input) input.value = '';
+    activeFilter = '';
+    renderDrawerList();
+
+    const focusTarget = (lastDrawerFocus && lastDrawerFocus !== document.body)
+      ? lastDrawerFocus
+      : document.getElementById('open_drawer_btn');
+    lastDrawerFocus = null;
+    if (focusTarget && typeof focusTarget.focus === 'function') {
+      focusTarget.focus({ preventScroll: true });
+    }
+  }
+
+  function clearDrawerSearch() {
+    const input = document.getElementById('drawer_search_input');
+    if (input) input.value = '';
+    activeFilter = '';
+    renderDrawerList();
+    if (input) input.focus({ preventScroll: true });
   }
 
   function renderDrawerList() {
@@ -424,17 +652,50 @@
 
     const filtered = lessonsData.filter(l => {
       if (!activeFilter) return true;
-      const t = (l.title_clean + l.contitlet + `第${l.number}课`).toLowerCase();
-      return t.includes(activeFilter);
+      const haystack = lessonSearchIndex.get(l.number) || normalizeSearchText(
+        `${l.title_clean || ''} ${l.contitle || ''} ${l.contitlet || ''} 第${l.number}课`
+      );
+      return haystack.includes(activeFilter);
+    }).sort((a, b) => {
+      if (!activeFilter) return a.number - b.number;
+      const ta = normalizeSearchText(`${a.title_clean || ''} ${a.contitle || ''} ${a.contitlet || ''} 第${a.number}课`).includes(activeFilter);
+      const tb = normalizeSearchText(`${b.title_clean || ''} ${b.contitle || ''} ${b.contitlet || ''} 第${b.number}课`).includes(activeFilter);
+      if (ta !== tb) return ta ? -1 : 1;
+      return a.number - b.number;
     });
 
-    listEl.innerHTML = filtered.map(l => `
-      <div class="drawer-item ${l.number === currentLessonNum ? 'active' : ''}" 
-           onclick="App.selectLesson(${l.number})">
-        <div class="drawer-item-title">第${l.number}课：${l.title_clean}</div>
-        <div class="drawer-item-sub">${l.contitle || ''} ${l.contitlet ? `(${l.contitlet})` : ''}</div>
-      </div>
-    `).join('');
+    if (!filtered.length) {
+      listEl.innerHTML = `
+        <div class="drawer-empty">
+          <p>没有找到匹配的课文。</p>
+          <button type="button" class="text-btn" onclick="App.clearDrawerSearch()">清空搜索</button>
+        </div>`;
+      return;
+    }
+
+    const completed = new Set(getCompletedLessons());
+    listEl.innerHTML = filtered.map(l => {
+      const active = l.number === currentLessonNum;
+      const deep = lessonHasDeep(l.number);
+      const titleHay = normalizeSearchText(
+        `${l.title_clean || ''} ${l.contitle || ''} ${l.contitlet || ''} 第${l.number}课`
+      );
+      const bodyHit = activeFilter && !titleHay.includes(activeFilter);
+      return `
+        <button type="button" class="drawer-item ${active ? 'active' : ''}"
+                data-lesson="${l.number}" ${active ? 'aria-current="page"' : ''}
+                onclick="App.selectLesson(${l.number})">
+          <span class="drawer-item-main">
+            <span class="drawer-item-title">第${l.number}课：<span lang="ja">${esc(l.title_clean)}</span></span>
+            <span class="drawer-item-sub"><span lang="ja">${esc(l.contitle || '')}</span>${l.contitlet ? ` (${esc(l.contitlet)})` : ''}${bodyHit ? '<span class="drawer-item-hit">正文命中</span>' : ''}</span>
+          </span>
+          <span class="drawer-item-meta">
+            ${completed.has(l.number) ? '<span class="drawer-item-done">已学</span>' : ''}
+            <span class="drawer-item-badge ${deep ? 'is-deep' : 'is-legacy'}"
+                  title="${deep ? '有深度讲义' : '教材原注，尚无深度讲义'}">${deep ? '精讲' : '原注'}</span>
+          </span>
+        </button>`;
+    }).join('');
   }
 
   function selectLesson(num, opts) {
@@ -443,6 +704,7 @@
     closeDrawer();
     renderLesson(num);
     renderDrawerList();
+    saveResume({ lesson: num, step: activeStep, y: 0 });
     // 跨课跳语法条目时由 gotoGrammar 接管滚动，避免和这里的回顶动画打架。
     if (!opts || opts.scrollTop !== false) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -574,6 +836,10 @@
     const root = document.getElementById('lesson_content_root');
     if (!lesson || !root) return;
 
+    document.body.classList.remove('basic-selftest');
+    const selftestExit = document.getElementById('selftest_exit');
+    if (selftestExit) selftestExit.hidden = true;
+
     // 整页重渲染会销毁已挂载的透视图 DOM，
     // 懒渲染记录必须一并清空，否则回到同一课时槽位会一直是空的。
     renderedXraySlots.clear();
@@ -597,10 +863,9 @@
     const html = `
       <header class="chapter-header" data-lesson-num="${String(lesson.number).padStart(2, '0')}">
         <div class="chapter-number">标准日本语 · 第 ${lesson.number} 课</div>
-        <h1 class="chapter-title jp-text">${lesson.title_ruby || lesson.title_clean}</h1>
+        <h1 class="chapter-title jp-text" lang="ja">${lesson.title_ruby || lesson.title_clean}</h1>
         <div class="chapter-romaji">${romajiForLessonTitle(lesson)}</div>
       </header>
-      ${renderLessonIntro(num)}
       ${steps.length > 1 ? renderLessonRoute(steps) : ''}
       ${renderDiagramLegend()}
       ${steps.map(s => renderStep(s, openKeys.has(s.key))).join('')}
@@ -647,7 +912,7 @@
         numeral: '三、',
         title: '会话练习',
         short: '会话',
-        note: `${lesson.basicc.length} 句`,
+        note: `${lesson.basicc.length} 句 · 点句子听音`,
         body: `
           <div class="dialogue-exchanges-container">
             ${renderBasicDialogues(lesson.basicc, num)}
@@ -663,7 +928,7 @@
         numeral: '四、',
         title: '应用课文',
         short: '应用',
-        note: `${lesson.context_sections.length} 段${scene ? ` · ${esc(scene)}` : ''}`,
+        note: `${lesson.context_sections.length} 段 · 点句子听音${scene ? ` · ${esc(scene)}` : ''}`,
         body: `
           <div class="applied-story-container">
             ${renderAppliedStory(lesson.context_sections, num)}
@@ -727,33 +992,18 @@
     `;
   }
 
-  /** 课首开场：数据在 data/lesson_openers.json；第 1 课保留一份兜底文案。 */
-  function renderLessonIntro(num) {
-    const meta = lessonOpeners[String(num)];
-    if (meta && meta.lead) {
-      return `
-        <section class="lesson-intro">
-          <p class="lesson-intro-lead">${esc(meta.lead)}</p>
-          ${meta.hint ? `<p>${esc(meta.hint)}</p>` : ''}
-        </section>
-      `;
-    }
-    if (num !== 1) return '';
-    return `
-      <section class="lesson-intro">
-        <p class="lesson-intro-lead">这一课只做一件事：用「は」把话题提出来，用「です」下一个判断。</p>
-        <p>先把下面四句话读顺。哪一句想不通，就点句尾的「拆开看」。</p>
-      </section>
-    `;
-  }
-
   function renderLessonClose(num) {
-    const meta = lessonOpeners[String(num)];
-    if (!meta || !meta.takeaway) return '';
+    const meta = lessonOpeners[String(num)] || {};
+    const done = isLessonDone(num);
     return `
       <section class="lesson-intro lesson-close">
-        <p class="lesson-intro-lead">合上这一课，只要记住：${esc(meta.takeaway)}</p>
+        ${meta.takeaway ? `<p class="lesson-intro-lead">合上这一课，只要记住：${esc(meta.takeaway)}</p>` : ''}
         <p>四句能不看中文读下来，这一课就算过了。</p>
+        <div class="lesson-close-actions">
+          <button type="button" class="text-btn self-test-btn" onclick="App.startBasicSelfTest()">遮住中文，自测四句</button>
+          <button type="button" class="text-btn lesson-done-btn ${done ? 'is-done' : ''}"
+                  onclick="App.toggleLessonDone(${num}, this)">${done ? '已学' : '标记本课已学'}</button>
+        </div>
       </section>
     `;
   }
@@ -791,10 +1041,12 @@
           <h3 class="vocab-group-title">${group.label}<span>${list.length}</span></h3>
           <div class="words-editorial-grid">
             ${list.map(w => `
-              <div class="word-card-item" onclick="JapaneseTTS.speak('${escapeQuotes(w.word_clean)}')">
+              <div class="word-card-item" role="button" tabindex="0" data-kbd-click
+                   aria-label="朗读 ${esc(w.word_clean)}" title="点词听音"
+                   onclick="JapaneseTTS.speak('${escapeQuotes(w.word_clean)}', this)">
                 <div class="word-top-row">
-                  <span class="word-jp jp-text">${w.word_ruby || w.word_clean}</span>
-                  ${w.pitch ? `<span class="word-pitch" title="音调标记">⓪${w.pitch}</span>` : ''}
+                  <span class="word-jp jp-text" lang="ja">${w.word_ruby || w.word_clean}</span>
+                  ${formatPitch(w.pitch) ? `<span class="word-pitch" title="音调标记">${formatPitch(w.pitch)}</span>` : ''}
                 </div>
                 <div class="word-bottom-row">
                   <span class="word-zh">${w.desc}</span>
@@ -844,7 +1096,7 @@
         <div class="basic-main-row">
           <div class="basic-left">
             <span class="basic-index">${idx + 1}</span>
-            <span class="basic-jp jp-text">${jpDisplay}</span>
+            <span class="basic-jp jp-text" lang="ja">${jpDisplay}</span>
           </div>
           <div class="sentence-tools">
             <button class="icon-btn" title="朗读这句" aria-label="朗读这句"
@@ -938,7 +1190,9 @@
   /** 对白日文行：命中 simple 条目才在句尾挂一个折叠按钮，未命中就原样输出。 */
   function renderDialogueJp(line, simpleEx, slotId) {
     const jpLine = `
-      <div class="dlg-jp jp-text" onclick="JapaneseTTS.speak('${escapeQuotes(cleanForSentence(line))}', this)">
+      <div class="dlg-jp jp-text" lang="ja" role="button" tabindex="0" data-kbd-click
+           aria-label="朗读这句" title="点句子听音"
+           onclick="JapaneseTTS.speak('${escapeQuotes(cleanForSentence(line))}', this)">
         ${rubyForSentence(line)}
       </div>`;
 
@@ -985,7 +1239,7 @@
 
       html += `
         <div class="dialogue-bubble-row">
-          <div class="speaker-tag">${line.speaker || '•'}</div>
+          <div class="speaker-tag" lang="ja">${line.speaker || '•'}</div>
           <div class="dlg-content">
             ${renderDialogueJp(line, simpleEx, slotId)}
             <div class="dlg-romaji">${romajiForSentence(line)}</div>
@@ -1015,7 +1269,7 @@
 
         return `
           <div class="dialogue-bubble-row">
-            <div class="speaker-tag">${item.speaker || '•'}</div>
+            <div class="speaker-tag" lang="ja">${item.speaker || '•'}</div>
             <div class="dlg-content">
               ${renderDialogueJp(item, simpleEx, slotId)}
               <div class="dlg-romaji">${romajiForSentence(item)}</div>
@@ -1060,16 +1314,13 @@
         numeral: '二、',
         title: '语法笔记',
         short: '语法',
-        note: `${lesson.grammar.length} 条`,
+        note: `${lesson.grammar.length} 条 · 教材原注`,
         body: `
-          <div class="gd-fallback-note">
-            这一课的深度讲义还没写好，先看教材原注。后面的课会补上。
-          </div>
           <div class="grammar-notes-flow">
             ${lesson.grammar.map(gn => `
               <div class="grammar-note-item">
                 <div class="gn-header">
-                  <span class="gn-exp jp-text">${esc(gn.expression)}</span>
+                  <span class="gn-exp jp-text" lang="ja">${esc(gn.expression)}</span>
                   ${gn.shortexplain ? `<span class="gn-short">${esc(gn.shortexplain)}</span>` : ''}
                 </div>
                 <div class="gn-body">${formatGrammarExplanation(gn.explanation)}</div>
@@ -1085,7 +1336,7 @@
       numeral: '二、',
       title: '语法笔记',
       short: '语法',
-      note: `${deep.length} 条`,
+      note: `${deep.length} 条 · 精讲`,
       body: `
         <div class="gdeep-toolbar">
           <button class="lesson-selector-btn" type="button"
@@ -1103,12 +1354,13 @@
 
     return `
       <article class="gdeep-card" id="${cardId}" data-lesson="${lessonNum}">
-        <div class="gdeep-head" onclick="App.toggleGrammarCard('${e.id}')">
+        <div class="gdeep-head" role="button" tabindex="0" data-kbd-click
+             aria-expanded="false" onclick="App.toggleGrammarCard('${e.id}')">
           <div class="gdeep-pattern-row">
             ${e.category ? `<span class="gdeep-cat">${esc(e.category)}</span>` : ''}
-            <h3 class="gdeep-pattern jp-text">${esc(e.pattern)}</h3>
+            <h3 class="gdeep-pattern jp-text" lang="ja">${esc(e.pattern)}</h3>
           </div>
-          <button class="gdeep-chevron" tabindex="-1" aria-label="展开或收起">${chevDown()}</button>
+          <button class="gdeep-chevron" type="button" tabindex="-1" aria-hidden="true">${chevDown()}</button>
           <div class="gdeep-essence">${md(e.essence)}</div>
         </div>
 
@@ -1136,7 +1388,7 @@
     return `
       <div class="gd-sec">
         <div class="gd-sec-title">结构公式</div>
-        <div class="gd-formula jp-text">${esc(f.template)}</div>
+        <div class="gd-formula jp-text" lang="ja">${esc(f.template)}</div>
         ${f.slots && f.slots.length ? `
           <table class="gd-table">
             <thead><tr><th>成分</th><th>角色</th><th>说明</th></tr></thead>
@@ -1181,7 +1433,7 @@
           return `
             <div class="gd-example">
               <div class="gd-ex-top">
-                <span class="gd-ex-jp jp-text">${x.jp_ruby || esc(x.jp)}</span>
+                <span class="gd-ex-jp jp-text" lang="ja">${x.jp_ruby || esc(x.jp)}</span>
                 <button class="icon-btn" title="朗读这句" aria-label="朗读这句"
                         onclick="JapaneseTTS.speak('${escapeQuotes(x.jp)}', this)">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1217,8 +1469,8 @@
         <div class="gd-sec-title">中文母语者的坑</div>
         ${pitfalls.map(p => `
           <div class="gd-pitfall">
-            <span class="gd-wrong jp-text">${esc(p.wrong)}</span>
-            <span class="gd-right jp-text">${esc(p.right)}</span>
+            <span class="gd-wrong jp-text" lang="ja">${esc(p.wrong)}</span>
+            <span class="gd-right jp-text" lang="ja">${esc(p.right)}</span>
             ${p.why ? `<div class="gd-pit-why">${md(p.why)}</div>` : ''}
           </div>`).join('')}
       </div>
@@ -1268,7 +1520,8 @@
         <div class="gd-sec-title">自检<span class="gd-sec-hint">点题干看答案</span></div>
         ${qs.map((q, i) => `
           <div class="gd-quiz" id="${e.id}_q${i}">
-            <div class="gd-q" onclick="App.toggleQuiz('${e.id}_q${i}')">
+            <div class="gd-q" role="button" tabindex="0" data-kbd-click aria-expanded="false"
+                 onclick="App.toggleQuiz('${e.id}_q${i}')">
               <span class="gd-q-num">Q${i + 1}</span>
               <span>${md(q)}</span>
             </div>
@@ -1320,6 +1573,8 @@
     if (!card) return false;
     const open = (forceOpen === undefined) ? !card.classList.contains('open') : !!forceOpen;
     card.classList.toggle('open', open);
+    const head = card.querySelector('.gdeep-head');
+    if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
     // 展开后透视图槽位的几何位置会变，箭头需要重算
     if (open) setTimeout(() => GrammarDiagram.updateAllArrows(), 80);
     return open;
@@ -1348,13 +1603,14 @@
   }
 
   /** 打开指定段；不滚动、不抢焦点，供 gotoGrammar 等内部跳转使用。 */
-  function openLessonStep(step) {
+  function openLessonStep(step, persist) {
     const target = document.querySelector(`.lesson-step[data-step="${step}"]`);
     if (!target) return null;
     if (paceMode === 'paced') closeOtherLessonSteps(target);
     if (!target.open) target.open = true;
     activeStep = step;
     syncRoute();
+    if (persist !== false) scheduleSaveResume();
     requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
     return target;
   }
@@ -1371,6 +1627,7 @@
     }
     if (willOpen) activeStep = step;
     syncRoute();
+    scheduleSaveResume();
     if (willOpen) requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
   }
 
@@ -1414,12 +1671,58 @@
       modeBtn.setAttribute('aria-pressed', paceMode === 'full' ? 'true' : 'false');
     }
     syncRoute();
+    scheduleSaveResume();
     requestAnimationFrame(() => GrammarDiagram.updateAllArrows());
   }
 
   function toggleQuiz(qid) {
     const el = document.getElementById(qid);
-    if (el) el.classList.toggle('open');
+    if (!el) return;
+    el.classList.toggle('open');
+    const q = el.querySelector('.gd-q');
+    if (q) q.setAttribute('aria-expanded', el.classList.contains('open') ? 'true' : 'false');
+  }
+
+  function toggleLessonDone(num, btn) {
+    const set = new Set(getCompletedLessons());
+    const done = !set.has(num);
+    if (done) set.add(num);
+    else set.delete(num);
+    try {
+      localStorage.setItem(COMPLETED_KEY, JSON.stringify([...set].sort((a, b) => a - b)));
+    } catch (e) { /* 隐私模式 */ }
+    if (btn) {
+      btn.textContent = done ? '已学' : '标记本课已学';
+      btn.classList.toggle('is-done', done);
+    }
+    renderDrawerList();
+    showToast(done ? `第 ${num} 课已标记为已学` : `第 ${num} 课已取消已学`);
+  }
+
+  /** 遮住基本课文的中文与透视图，留四句做自测。 */
+  function startBasicSelfTest() {
+    const on = !document.body.classList.contains('basic-selftest');
+    document.body.classList.toggle('basic-selftest', on);
+    const exit = document.getElementById('selftest_exit');
+    if (exit) exit.hidden = !on;
+    const closeBtn = document.querySelector('.lesson-close .self-test-btn');
+    if (closeBtn) closeBtn.textContent = on ? '显示中文' : '遮住中文，自测四句';
+    if (!on) return;
+
+    openLessonStep('basic');
+    const basic = document.querySelector('.lesson-step[data-step="basic"]');
+    if (!basic) return;
+    const summary = basic.querySelector('summary.step-summary');
+    if (summary) summary.focus({ preventScroll: true });
+    basic.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function exitBasicSelfTest() {
+    document.body.classList.remove('basic-selftest');
+    const exit = document.getElementById('selftest_exit');
+    if (exit) exit.hidden = true;
+    const closeBtn = document.querySelector('.lesson-close .self-test-btn');
+    if (closeBtn) closeBtn.textContent = '遮住中文，自测四句';
   }
 
   /** 例句的透视图按需渲染：77 条例句若一次性铺满会拖慢首屏。 */
@@ -1520,6 +1823,7 @@
   // Public API
   window.App = {
     init: init,
+    showToast: showToast,
     selectLesson: selectLesson,
     toggleBasicXray: toggleBasicXray,
     toggleSimpleXray: toggleSimpleXray,
@@ -1528,6 +1832,10 @@
     toggleQuiz: toggleQuiz,
     toggleExampleXray: toggleExampleXray,
     toggleDiagramLegend: toggleDiagramLegend,
+    clearDrawerSearch: clearDrawerSearch,
+    toggleLessonDone: toggleLessonDone,
+    startBasicSelfTest: startBasicSelfTest,
+    exitBasicSelfTest: exitBasicSelfTest,
     goToLessonStep: goToLessonStep,
     togglePaceMode: togglePaceMode,
     gotoGrammar: gotoGrammar

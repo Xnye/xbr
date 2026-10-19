@@ -551,8 +551,8 @@
   "!毎日(まいにち)，!何時(なんじ)に　!寝(ね)ますか。": {
    "romaji": "mainichi, nanji ni nemasu ka."
   },
-  "!十一時三十分(じゅういちじさんじゅうぷん)に　!寝(ね)ます。": {
-   "romaji": "juuichijisanjuupun ni nemasu."
+  "!十一時三十分(じゅういちじさんじゅっぷん)に　!寝(ね)ます。": {
+   "romaji": "juuichijisanjuppun ni nemasu."
   },
   "!昨日(きのう)，!何時(なんじ)から　!何時(なんじ)まで　!働(はたら)きましたか。": {
    "romaji": "kinou, nanji kara nanji made hatarakimashita ka."
@@ -587,8 +587,8 @@
   "!森君(もりくん)，おはよう。!今(いま)　!何時(なんじ)ですか。": {
    "romaji": "mori kun, ohayou. ima nanji desu ka."
   },
-  "!十時十五分(じゅうじじゅうごぷん)です。": {
-   "romaji": "juujijuugopun desu."
+  "!十時十五分(じゅうじじゅうごふん)です。": {
+   "romaji": "juujijuugofun desu."
   },
   "!遅刻(ちこく)ですね。": {
    "romaji": "chikoku desu ne."
@@ -596,10 +596,8 @@
   "すみません，!課長(かちょう)。!今朝(けさ)　!九時(くじ)に　!起(お)きました。": {
    "romaji": "sumimasen, kachou. kesa kuji ni okimashita."
   },
-  "!森(もり)さんは　!毎朝(まいあさ)　!何時(なんじ)に　!起(お)きましか。": {
-   "romaji": "mori san wa maiasa nanji ni okimasu ka.",
-   "ruby": "<ruby>森<rt>もり</rt></ruby>さんは　<ruby>毎朝<rt>まいあさ</rt></ruby>　<ruby>何時<rt>なんじ</rt></ruby>に　<ruby>起<rt>お</rt></ruby>きますか。",
-   "clean": "森さんは　毎朝　何時に　起きますか。"
+  "!森(もり)さんは　!毎朝(まいあさ)　!何時(なんじ)に　!起(お)きますか。": {
+   "romaji": "mori san wa maiasa nanji ni okimasu ka."
   },
   "いつもは　!七時(しちじ)ごろです。!李(り)さんは？": {
    "romaji": "itsumo wa shichiji goro desu. ri san wa?"
@@ -624,10 +622,8 @@
   "* !吉田(よしだ)さんは　!来月(らいげつ)　!中国(ちゅうごく)へ　!行(い)きます。": {
    "romaji": "yoshida san wa raigetsu chuugoku e ikimasu."
   },
-  "* !李(り)さんは　!先月(せんげつ)　!北京(ぺキン)から　!来(き)ました。": {
-   "romaji": "ri san wa sengetsu pekin kara kimashita.",
-   "ruby": "* <ruby>李<rt>り</rt></ruby>さんは　<ruby>先月<rt>せんげつ</rt></ruby>　<ruby>北京<rt>ペキン</rt></ruby>から　<ruby>来<rt>き</rt></ruby>ました。",
-   "clean": "* 李さんは　先月　北京から　来ました。"
+  "* !李(り)さんは　!先月(せんげつ)　!北京(ペキン)から　!来(き)ました。": {
+   "romaji": "ri san wa sengetsu pekin kara kimashita."
   },
   "* !小野(おの)さんは　!友達(ともだち)と　!帰(かえ)りました。": {
    "romaji": "ono san wa tomodachi to kaerimashita."
@@ -681,10 +677,8 @@
    "ruby": "<ruby>私<rt>わたし</rt></ruby>も　<ruby>電車<rt>でんしゃ</rt></ruby>です。<ruby>駅<rt>えき</rt></ruby>からは　タクシーで　うちへ　<ruby>帰<rt>かえ</rt></ruby>りました。",
    "clean": "私も　電車です。駅からは　タクシーで　うちへ　帰りました。"
   },
-  "!何時(なんじ)に　!帰(かぇ)りましたか。": {
-   "romaji": "nanji ni kaerimashita ka.",
-   "ruby": "<ruby>何時<rt>なんじ</rt></ruby>に　<ruby>帰<rt>かえ</rt></ruby>りましたか。",
-   "clean": "何時に　帰りましたか。"
+  "!何時(なんじ)に　!帰(かえ)りましたか。": {
+   "romaji": "nanji ni kaerimashita ka."
   },
   "!十二時(じゅうにじ)ごろです。": {
    "romaji": "juuniji goro desu."
@@ -850,10 +844,8 @@
   "!分(わ)かりました。": {
    "romaji": "wakarimashita."
   },
-  "!李(り)さん、たつた　!今(いま)　!長島(ながしま)さんに　メールを　もらいました。": {
-   "romaji": "ri san, tatta ima nagashima san ni meeru o moraimashita.",
-   "ruby": "<ruby>李<rt>り</rt></ruby>さん、たった　<ruby>今<rt>いま</rt></ruby>　<ruby>長島<rt>ながしま</rt></ruby>さんに　メールを　もらいました。",
-   "clean": "李さん、たった　今　長島さんに　メールを　もらいました。"
+  "!李(り)さん、たった　!今(いま)　!長島(ながしま)さんに　メールを　もらいました。": {
+   "romaji": "ri san, tatta ima nagashima san ni meeru o moraimashita."
   },
   "ファックスは　!届(とど)きましたか。": {
    "romaji": "fakkusu wa todokimashita ka."
@@ -974,10 +966,8 @@
    "ruby": "<ruby>昨日<rt>きのう</rt></ruby>は　<ruby>晴<rt>は</rt></ruby>れでした。でも，おとといは　<ruby>雨<rt>あめ</rt></ruby>でした。",
    "clean": "昨日は　晴れでした。でも，おとといは　雨でした。"
   },
-  "!昨日(きのう)　!京都(きょうと)へ　!行(ぃ)きました。": {
-   "romaji": "kinou kyouto e ikimashita.",
-   "ruby": "<ruby>昨日<rt>きのう</rt></ruby>　<ruby>京都<rt>きょうと</rt></ruby>へ　<ruby>行<rt>い</rt></ruby>きました。",
-   "clean": "昨日　京都へ　行きました。"
+  "!昨日(きのう)　!京都(きょうと)へ　!行(い)きました。": {
+   "romaji": "kinou kyouto e ikimashita."
   },
   "!京都(きょうと)ですか。!京都(きょうと)の　!紅葉(もみじ)は　どうでしたか。": {
    "romaji": "kyouto desu ka. kyouto no momiji wa dou deshita ka."
@@ -1005,10 +995,10 @@
   "ところで，この　!美術館(びじゅつかん)には　どんな　!作品(さくひん)が　ありますか。": {
    "romaji": "tokorode, kono bijutsukan ni wa donna sakuhin ga arimasu ka."
   },
-  "!世界上(せかいじょう)の　!有名(ゆうめい)な !作家(さっか)の　!彫刻(ちょうこく)です。": {
-   "romaji": "sekaijou no yuumeina sakka no choukoku desu.",
-   "ruby": "<ruby>世界上<rt>せかいじょう</rt></ruby>の　<ruby>有名<rt>ゆうめい</rt></ruby>な　<ruby>作家<rt>さっか</rt></ruby>の　<ruby>彫刻<rt>ちょうこく</rt></ruby>です。",
-   "clean": "世界上の　有名な　作家の　彫刻です。"
+  "!世界中(せかいじゅう)の　!有名(ゆうめい)な !作家(さっか)の　!彫刻(ちょうこく)です。": {
+   "romaji": "sekaijuu no yuumeina sakka no choukoku desu.",
+   "ruby": "<ruby>世界中<rt>せかいじゅう</rt></ruby>の　<ruby>有名<rt>ゆうめい</rt></ruby>な　<ruby>作家<rt>さっか</rt></ruby>の　<ruby>彫刻<rt>ちょうこく</rt></ruby>です。",
+   "clean": "世界中の　有名な　作家の　彫刻です。"
   },
   "!美術館(びじゅつかん)の　!庭(にわ)にも　いろいろ　おもしろいのが　ありますよ。": {
    "romaji": "bijutsukan no niwa ni mo iroiro omoshiroi no ga arimasu yo."
@@ -1073,8 +1063,8 @@
   "この　!近(ちか)くの　ホテルで　!友達(ともだち)の　!写真展(しゃしんてん)が　ありますから。": {
    "romaji": "kono chikaku no hoteru de tomodachi no shashinten ga arimasu kara."
   },
-  "!箱根(はこね)の　お!土産(みやげ)は　!何(なに)が　いいですが。": {
-   "romaji": "hakone no omiyage wa nani ga ii desu ga."
+  "!箱根(はこね)の　お!土産(みやげ)は　!何(なに)が　いいですか。": {
+   "romaji": "hakone no omiyage wa nani ga ii desu ka."
   },
   "うーん，そうですね…，!迷(まよ)いますね。": {
    "romaji": "uun, sou desu ne..., mayoimasu ne."
@@ -1675,10 +1665,8 @@
   "!心配(しんぱい)しなくても　いいですよ。ここは　!初心者(しょしんしゃ)コースですから。": {
    "romaji": "shinpaishinakute mo ii desu yo. koko wa shoshinshakoosu desu kara."
   },
-  "!森(もり)さん，!小野(おの)さん，!待(ま)って　ください。!先(さき)に　!行(ぃ)かないで　ください。": {
-   "romaji": "mori san, ono san, matte kudasai. saki ni ikanaide kudasai.",
-   "ruby": "<ruby>森<rt>もり</rt></ruby>さん，<ruby>小野<rt>おの</rt></ruby>さん，<ruby>待<rt>ま</rt></ruby>って　ください。<ruby>先<rt>さき</rt></ruby>に　<ruby>行<rt>い</rt></ruby>かないで　ください。",
-   "clean": "森さん，小野さん，待って　ください。先に　行かないで　ください。"
+  "!森(もり)さん，!小野(おの)さん，!待(ま)って　ください。!先(さき)に　!行(い)かないで　ください。": {
+   "romaji": "mori san, ono san, matte kudasai. saki ni ikanaide kudasai."
   },
   "!急(いそ)がなくても　いいですよ。わたしたちも　ゆっくり　!滑(すべ)りますから。": {
    "romaji": "iso ga nakutemo ii desu yo. watashi tachi mo yukkuri suberimasu kara."
@@ -1704,8 +1692,8 @@
   "いいですよ。でも，!上級者(じょうきゅうしゃ)の　コースには　!入(はい)らないで　ください。": {
    "romaji": "ii desu yo. demo, joukyuusha no koosu ni wa hairanaide kudasai."
   },
-  "!大丈夫(だいじょうぶ)です。!心配(しんぱい)しないて　ください。": {
-   "romaji": "daijoubu desu. shinpaishinaite kudasai."
+  "!大丈夫(だいじょうぶ)です。!心配(しんぱい)しないで　ください。": {
+   "romaji": "daijoubu desu. shinpaishinai de kudasai."
   },
   "* スミスさんは　ピアノを　!弾(ひ)く　ことが　できます。": {
    "romaji": "sumisu san wa piano o hiku koto ga dekimasu."
@@ -1828,10 +1816,8 @@
   "そうしましょう。ところで，!小野(おの)さんは　よく　!歌舞伎(かぶき)を　!見(み)ますか。": {
    "romaji": "soushimashou. tokorode, ono san wa yoku kabuki o mimasu ka."
   },
-  "!仕事(しごと)の　!後(ご)で，!何度(なんど)か　!見(み)に　!行(い)った　ことが　あります。!終(お)わりは　!九(く)!時過(じす)ぎですね。!食事(しょくじ)は　どうしますか。": {
-   "romaji": "shigoto no ato de, nando ka mi ni itta koto ga arimasu. owari wa ku jisugi desu ne. shokuji wa doushimasu ka.",
-   "ruby": "<ruby>仕事<rt>しごと</rt></ruby>の　<ruby>後<rt>あと</rt></ruby>で，<ruby>何度<rt>なんど</rt></ruby>か　<ruby>見<rt>み</rt></ruby>に　<ruby>行<rt>い</rt></ruby>った　ことが　あります。<ruby>終<rt>お</rt></ruby>わりは　<ruby>九<rt>く</rt></ruby><ruby>時過<rt>じす</rt></ruby>ぎですね。<ruby>食事<rt>しょくじ</rt></ruby>は　どうしますか。",
-   "clean": "仕事の　後で，何度か　見に　行った　ことが　あります。終わりは　九時過ぎですね。食事は　どうしますか。"
+  "!仕事(しごと)の　!後(あと)で，!何度(なんど)か　!見(み)に　!行(い)った　ことが　あります。!終(お)わりは　!九時過ぎ(くじすぎ)ですね。!食事(しょくじ)は　どうしますか。": {
+   "romaji": "shigoto no ato de, nando ka mi ni itta koto ga arimasu. owari wa kujisugi desu ne. shokuji wa doushimasu ka."
   },
   "!歌舞伎(かぶき)を　!見(み)た　!後(あと)で，!食(た)べますか。それとも，!見(み)る　!前(まえ)に　!何(なに)か　!食(た)べますか。": {
    "romaji": "kabuki o mita ato de, tabemasu ka. sore tomo, miru mae ni nani ka tabemasu ka."
@@ -1874,10 +1860,8 @@
   "* !今日(きょう)は　!曇(くも)りだ。": {
    "romaji": "kyou wa kumorida."
   },
-  "!明日(あした)　ボーリングに　!行(ぃ)かない？": {
-   "romaji": "ashita booringu ni ikanai?",
-   "ruby": "<ruby>明日<rt>あした</rt></ruby>　ボーリングに　<ruby>行<rt>い</rt></ruby>かない？",
-   "clean": "明日　ボーリングに　行かない？"
+  "!明日(あした)　ボーリングに　!行(い)かない？": {
+   "romaji": "ashita booringu ni ikanai?"
   },
   "ごめん。　!明日(あした)は　!仕事(しごと)が　あるから…": {
    "romaji": "gomen. ashita wa shigoto ga arukara..."
@@ -2097,8 +2081,8 @@
   "ええ，!必(かなら)ず　!行(い)きます。!今度(こんど)は　!京劇(きょうげき)を　!見(み)ましょう。!李(り)さん，お!元気(げんき)で。": {
    "romaji": "ee, kanarazu ikimasu. kondo wa kyougeki o mimashou. ri san, ogenki de."
   },
-  "ぼくも　いつか　!北京(ペキン)へ　!行(い)きたいと　!思(おも)います。!李(り)さん，どうぞ　お!気(き)を　つけて。“再见！”": {
-   "romaji": "boku mo itsu ka pekin e ikitai to omoimasu. ri san, douzo oki o tsukete. !"
+  "ぼくも　いつか　!北京(ペキン)へ　!行(い)きたいと　!思(おも)います。!李(り)さん，どうぞ　お!気(き)を　つけて。": {
+   "romaji": "boku mo itsu ka pekin e ikitai to omoimasu. ri san, douzo oki o tsukete."
   },
   "さようなら。!今度(こんど)は　!北京(ペキン)で　!会(あ)いましょう。": {
    "romaji": "sayounara. kondo wa pekin de aimashou."
@@ -2312,7 +2296,7 @@
   "そうですよ。でも，!毎日(まいにち)!利用(りよう)する!人(ひと)は!割引(わりびき)があるんです。": {
    "romaji": "sou desu yo. demo, mainichi riyousuruhito wa waribiki ga aru n desu."
   },
-  "そう!言(い)えば，!小(ちい)さい!時(とき)，よく!祖母(そぼ)といっしょに!公園(こうえん)ヘ!行(い)きました。": {
+  "そう!言(い)えば，!小(ちい)さい!時(とき)，よく!祖母(そぼ)といっしょに!公園(こうえん)へ!行(い)きました。": {
    "romaji": "sou ieba, chiisai toki, yoku sobo to isshoni kouen e ikimashita."
   },
   "へえ，いっしょに!運動(うんどう)をしたんですか。": {
@@ -3353,10 +3337,8 @@
   "* !馬(ば)さんは!森(もり)さんにカメラを!壊(こわ)されました。": {
    "romaji": "ba san wa mori san ni kamera o kowasaremashita."
   },
-  "* !陳(ちん)さんは!飼(か)っていた!小鳥(ことり)にげられました。": {
-   "romaji": "chin san wa katte ita kotori ni nigeraremashita.",
-   "ruby": "* <ruby>陳<rt>ちん</rt></ruby>さんは　<ruby>飼<rt>か</rt></ruby>っていた　<ruby>小鳥<rt>ことり</rt></ruby>に　にげられました。",
-   "clean": "* 陳さんは　飼っていた　小鳥に　にげられました。"
+  "* !陳(ちん)さんは　!飼(か)っていた　!小鳥(ことり)に　!逃(に)げられました。": {
+   "romaji": "chin san wa katte ita kotori ni nigeraremashita."
   },
   "* !２０１０(にせんじゅう)!年(ねん)に!上海(シャンハイ)で!万博(ばんぱく)が!開(ひら)かれます。": {
    "romaji": "nisenjuunen ni shanhai de banpaku ga hirakaremasu.",
@@ -3387,8 +3369,8 @@
   "この!車(くるま)のデザインはとてもいいですね。": {
    "romaji": "kono kuruma no dezain wa totemoii desu ne."
   },
-  "ええ。!日本(にほん)の!有名(ゆうめい)なデザインナーによって!設計(せっけい)されました。": {
-   "romaji": "ee. nihon no yuumeina dezainnaaniyotte sekkeisaremashita."
+  "ええ。!日本(にほん)の!有名(ゆうめい)なデザイナーによって!設計(せっけい)されました。": {
+   "romaji": "ee. nihon no yuumeina dezainaa ni yotte sekkeisaremashita."
   },
   "あっ，!森(もり)さん，お!疲(つか)れ!様(さま)でした。!遅(おそ)かったですね。": {
    "romaji": "at, mori san, otsukare sama deshita. osokatta desu ne."
@@ -3565,8 +3547,8 @@
   "ネーミングとデザインもとても!大切(たいせつ)です。": {
    "romaji": "neemingu to dezain mo totemo taisetsu desu."
   },
-  "まず，ネーミンダですが，!理解(りかい)しやすくて!単純(たんじゅん)なものがいいと!考(かんが)えます。": {
-   "romaji": "mazu, neeminda desu ga, rikaishiyasukute tanjunna mono ga ii to kangaemasu."
+  "まず，ネーミングですが，!理解(りかい)しやすくて!単純(たんじゅん)なものがいいと!考(かんが)えます。": {
+   "romaji": "mazu, neemingu desu ga, rikaishiyasukute tanjunna mono ga ii to kangaemasu."
   },
   "しかも，!多(おお)くの!人(ひと)に!親近(しんきん)!感(かん)を!感(かん)じさせるものが!理想(りそう)!的(てき)です。": {
    "romaji": "shikamo, ooku no hito ni shinkin kan o kanjisaseru mono ga risou teki desu."
@@ -3586,8 +3568,8 @@
   "!英語(えいご)が!分(わ)からない!人(ひと)には!商品(しょうひん)のイメージが!浮(う)かびにくいと!思(おも)います。……": {
    "romaji": "eigo ga wa kara naihitoni wa shouhin no imeeji ga ukabinikuito omoimasu......."
   },
-  "!次(つぎ)に，デザインですが，やはりインバクトのあるものが!必要(ひつよう)です。": {
-   "romaji": "tsugi ni, dezain desu ga, yahariinbakutonoaru mono ga hitsuyou desu."
+  "!次(つぎ)に，デザインですが，やはりインパクトのあるものが!必要(ひつよう)です。": {
+   "romaji": "tsugi ni, dezain desu ga, yahariinpakutonoaru mono ga hitsuyou desu."
   },
   "そこで，!今回(こんかい)，!赤(あか)と!黄色(きいろ)を!使(つか)った!斬新(ざんしん)なデザインを!考(かんが)えてみました。": {
    "romaji": "sokode, konkai, aka to kiiro o tsukatta zanshinna dezain o kangaetemimashita."
@@ -3642,7 +3624,7 @@
   "!森(もり)さん，「!动力(トンリー)」，!売(う)れ!行(ゆ)きが!好調(こうちょう)のようですね。": {
    "romaji": "mori san, tonrii, ure yuki ga kouchou no you desu ne."
   },
-  "ええ，おかげさまで。とりあえず，!北京(ペキン)と!上海(シャンハイ)で!売り出(う　だ)したんですが，": {
+  "ええ，おかげさまで。とりあえず，!北京(ペキン)と!上海(シャンハイ)で!売り出(うりだ)したんですが，": {
    "romaji": "ee, okage samade. toriaezu, pekin to shanhai de uridashitan desu ga,"
   },
   "けっこう!評判(ひょうばん)がいいみたいなんですよ。": {
@@ -3666,10 +3648,10 @@
   "ええ。ネーミングとデザインの!重要(じゅうよう)さを!実感(じっかん)しましたね。": {
    "romaji": "ee. neemingu to dezain no juuyousa o jikkanshimashita ne."
   },
-  "!評判(ひょうばん)がいいので，!今度(こんど)は，!中国(ちゅうごく)!全土(ぜんど)で!売り出(う　だ)すようです。": {
+  "!評判(ひょうばん)がいいので，!今度(こんど)は，!中国(ちゅうごく)!全土(ぜんど)で!売り出(うりだ)すようです。": {
    "romaji": "hyouban ga ii no de, kondo wa, chuugoku zendo de uridasu you desu."
   },
-  "!売れ行(う　ゆ)きがどうなるか，!楽(たの)しみですね。": {
+  "!売れ行(うれゆ)きがどうなるか，!楽(たの)しみですね。": {
    "romaji": "ureyuki ga dounaruka, tanoshimi desu ne."
   },
   "!売(う)れ!過(す)ぎて，!笑(わら)いが!止(と)まらなくなるかもしれませんよ。": {
@@ -3779,15 +3761,11 @@
   "* これは!柔(やわ)らかくて，まるで!本物(ほんもの)の!毛皮(けがわ)のようです。": {
    "romaji": "kore wa yawarakakute, marude honmono no kegawa no you desu."
   },
-  "* この!着物(きもの)はいかにも!日(にち)!本(ほん)らしい!柄(がら)ですね。": {
-   "romaji": "kono kimono wa ikanimo nihonrashii gara desu ne.",
-   "ruby": "* この<ruby>着物<rt>きもの</rt></ruby>はいかにも<ruby>日本<rt>にほん</rt></ruby>らしい<ruby>柄<rt>がら</rt></ruby>ですね。",
-   "clean": "* この着物はいかにも日本らしい柄ですね。"
+  "* この!着物(きもの)はいかにも!日本(にほん)らしい!柄(がら)ですね。": {
+   "romaji": "kono kimono wa ikanimo nihonrashii gara desu ne."
   },
-  "* !明日(あした)の９!時(じ)までにこの!書類(しょるい)!完成(かんせい)させなければなりません。": {
-   "romaji": "ashita no 9 ji made ni kono shorui o kanseisasenakerebanarimasen.",
-   "ruby": "* <ruby>明日<rt>あした</rt></ruby>の９<ruby>時<rt>じ</rt></ruby>までにこの<ruby>書類<rt>しょるい</rt></ruby>を<ruby>完成<rt>かんせい</rt></ruby>させなければなりません。",
-   "clean": "* 明日の９時までにこの書類を完成させなければなりません。"
+  "* !明日(あした)の９!時(じ)までにこの!書類(しょるい)を!完成(かんせい)させなければなりません。": {
+   "romaji": "ashita no 9 ji made ni kono shorui o kanseisasenakerebanarimasen."
   },
   "* !私(わたし)が!留学(りゅうがく)している!間(あいだ)に，!家(いえ)の!周(まわ)りもずいぶん!変(か)わりました。": {
    "romaji": "watashi ga ryuugakushite iru aida ni, ie no mawari mo zuibun kawarimashita."
@@ -3795,7 +3773,7 @@
   "この!野菜(やさい)，レモンのような!味(あじ)がしますね。": {
    "romaji": "kono yasai, remonnoyouna aji ga shimasu ne."
   },
-  "ええ，!本当(ほんとう)に。まるで!果物(くだもの)!見(み)たいですね。": {
+  "ええ，!本当(ほんとう)に。まるで!果物(くだもの)みたいですね。": {
    "romaji": "ee, hontou ni. marude kudamono mitai desu ne."
   },
   "うちの!子供(こども)は!将来(しょうらい)，!宇宙(うちゅう)!飛行(ひこう)!士(し)になりたいんだって。": {
@@ -4011,7 +3989,7 @@
   "いつもお!世話(せわ)になっております。": {
    "romaji": "itsumo o sewa ni natteorimasu."
   },
-  "また，この!度(たび)は，!突然(とつぜん)お!手紙(てがみ)を!差し上(さ　あ)げ，!失礼(しつれい)いたしました。": {
+  "また，この!度(たび)は，!突然(とつぜん)お!手紙(てがみ)を!差し上(さしあ)げ，!失礼(しつれい)いたしました。": {
    "romaji": "mata, kono tabi wa, totsuzen o tegami o sashiage, shitsureiitashimashita."
   },
   "いえ。!実(じつ)は，!私(わたくし)どもでは，これから!新(しん)!商品(しょうひん)の!開発(かいはつ)を!進(すす)めていく!予定(よてい)なんです。": {
@@ -6176,7 +6154,7 @@
   "携帯電話は　とても　小さく　なりました": "keitaidenwa wa totemo chiisaku narimashita",
   "部屋の　かぎを　忘れないで　ください": "heya no kagi o wasurenaide kudasai",
   "スミスさんは　ピアノを　弾くことが　できます": "sumisu san wa piano o hiku koto ga dekimasu",
-  "わたしは　すき焼きを　食べた　ことだ　あります": "watashi wa yaki o tabeta kotoda arimasu",
+  "わたしは　すき焼きを　食べた　ことが　あります": "watashi wa yaki o tabeta koto ga arimasu",
   "森さんは　毎晩　テレビを　見る": "mori san wa maiban terebi o miru",
   "休みの　日，散歩したり　買い物に　行ったり　します。": "yasumi no hi, sanposhitari kamono ni ittari shimasu.",
   "李さんは　もう　すぐ　来ると　思います": "ri san wa mou sugu kuruto omoimasu",
