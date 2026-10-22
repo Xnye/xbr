@@ -17,10 +17,40 @@ PORT = 8080
 AUDIO_DIR = os.path.join(os.path.dirname(__file__), 'assets', 'audio')
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
-async def generate_tts(text, voice, out_path):
-    # rate slightly relaxed (-4%) for educational clarity
-    comm = edge_tts.Communicate(text, voice, rate='-4%')
-    await comm.save(out_path)
+# Edge 神经语音的语速下限实测为 -50%（再低不会更慢，只是重复同一段音频），
+# 上限远高于 100%。超出范围的请求钳到这里，避免生成一堆一模一样的缓存文件。
+RATE_MIN = -50
+RATE_MAX = 100
+
+
+def clamp_rate(value):
+    """把前端传的百分比语速钳到 Edge 实际支持的区间；非法值回到 -4%。"""
+    try:
+        r = int(round(float(value)))
+    except (TypeError, ValueError):
+        return -4
+    return max(RATE_MIN, min(RATE_MAX, r))
+
+
+async def generate_tts(text, voice, out_path, rate=-4):
+    # 语速交给神经语音合成（原生放慢/加快，音高与频谱都保得住）。
+    # 前端再叠 playbackRate 只会把频谱涂糊：实测 0.5x 时谱质心从 1619Hz
+    # 掉到 1240Hz，声音发闷。所以慢速必须在这里做。
+    #
+    # SSML 的 rate 必须带符号：'+50%' 合法，裸的 '50%' 会被服务端拒绝
+    # （Invalid rate '50%'），负号本来就有，这里补上正号。
+    r = clamp_rate(rate)
+    spec = ('+%d%%' % r) if r >= 0 else ('%d%%' % r)
+    # 微软接口偶发 503（限流/抖动），重试几次比直接把 500 抛给前台好
+    last = None
+    for attempt in range(3):
+        try:
+            await edge_tts.Communicate(text, voice, rate=spec).save(out_path)
+            return
+        except Exception as e:      # noqa: BLE001 - 统一重试，失败再上抛
+            last = e
+            await asyncio.sleep(0.6 * (attempt + 1))
+    raise last
 
 class EducationalHTTPHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -46,6 +76,8 @@ class EducationalHTTPHandler(http.server.SimpleHTTPRequestHandler):
             params = urllib.parse.parse_qs(parsed.query)
             text = params.get('text', [''])[0].strip()
             voice = params.get('voice', ['ja-JP-NanamiNeural'])[0].strip()
+            # 语速百分比，缺省 -4%（与原行为一致，老缓存继续命中）
+            rate = clamp_rate(params.get('rate', ['-4'])[0])
 
             if not text:
                 self.send_response(400)
@@ -65,14 +97,14 @@ class EducationalHTTPHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(b'Empty text after cleaning')
                 return
 
-            # Check cache
-            key = f"{voice}_{text_clean}"
+            # 缓存键必须带语速：不同 speed 的音频波形完全不同
+            key = f"{voice}_{rate}_{text_clean}"
             h = hashlib.md5(key.encode('utf-8')).hexdigest()
             cache_file = os.path.join(AUDIO_DIR, f"{h}.mp3")
 
             if not os.path.exists(cache_file) or os.path.getsize(cache_file) == 0:
                 try:
-                    asyncio.run(generate_tts(text_clean, voice, cache_file))
+                    asyncio.run(generate_tts(text_clean, voice, cache_file, rate))
                 except Exception as e:
                     print(f"TTS generation error for '{text_clean}': {e}", file=sys.stderr)
                     self.send_response(500)

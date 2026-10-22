@@ -18,6 +18,7 @@ const JapaneseTTS = (function () {
   let systemVoiceNoticeShown = false;
   let fallbackNoticeShown = false;
   let errorNoticeShown = false;
+  let systemVoicesPending = false;   // 是否已在等 voiceschanged 补全声线列表
   const memoryAudioCache = new Map();
 
   function notify(msg) {
@@ -27,6 +28,8 @@ const JapaneseTTS = (function () {
   }
 
   function probeBackend(force) {
+    // force 时必须真的重发请求：旧实现把 resolved 的 Promise 直接返回，
+    // 重试探测永远是上一次的结果（后端起起来后 UI 一直停在降级态）。
     if (probePromise && !force) return probePromise;
     probePromise = fetch(HEALTH_API, { cache: 'no-store' })
       .then(r => {
@@ -62,21 +65,53 @@ const JapaneseTTS = (function () {
     return activeVoice;
   }
 
-  function applyPlaybackRate(audio, rate) {
-    if (!audio) return;
-    try {
-      audio.defaultPlaybackRate = rate;
-      audio.playbackRate = rate;
-    } catch (e) {
-      console.warn('Playback rate error:', e);
-    }
+  /**
+   * 语速档位。value 是播放倍率；rate 是送给神经语音的合成语速百分比。
+   *
+   * 为什么不直接用 playbackRate：浏览器变速是时间拉伸，会把频谱涂糊。
+   * 实测同一句 0.5x：服务端原生合成谱质心 1513Hz，客户端拉伸只剩 1240Hz，
+   * 而且发闷、辅音粘连。所以慢速必须交给服务端做，playbackRate 只留 1.0。
+   *
+   * Edge 的语速下限实测是 -50%（再低不生效），故最慢档就是 -50%。
+   */
+  const RATE_STEPS = [
+    { value: 0.5,  rate: -50, label: '0.5x', note: '极慢' },
+    { value: 0.6,  rate: -40, label: '0.6x', note: '很慢' },
+    { value: 0.75, rate: -25, label: '0.75x', note: '慢速' },
+    { value: 0.85, rate: -15, label: '0.85x', note: '稍慢' },
+    { value: 1.0,  rate: -4,  label: '1.0x', note: '常速' },
+    { value: 1.2,  rate: 20,  label: '1.2x', note: '较快' },
+    { value: 1.5,  rate: 50,  label: '1.5x', note: '高速' }
+  ];
+
+  /** 顶栏下拉里用短标签（窄屏放得下），提示和 toast 用长描述。 */
+  function labelOf(step, withNote) {
+    if (!step) return '';
+    return withNote ? `${step.label} ${step.note}` : step.label;
+  }
+
+  function rateForSpeed(value) {
+    const v = parseFloat(value);
+    const hit = RATE_STEPS.find(s => Math.abs(s.value - v) < 0.01);
+    if (hit) return hit.rate;
+    // 非预设档位（例如旧存档里的 1.25）按倍率线性折算
+    return Math.round((v - 1) * 100);
+  }
+
+  function getRateSteps() {
+    return RATE_STEPS.slice();
   }
 
   function setRate(r) {
-    speechRate = Math.max(0.5, Math.min(2.0, parseFloat(r)));
+    const v = parseFloat(r);
+    speechRate = Math.max(0.5, Math.min(2.0, isFinite(v) ? v : 1.0));
     localStorage.setItem('xbr_rate', speechRate);
+    // 语速变了，已缓存的 Audio 元素就是旧速率的产物，必须失效
+    memoryAudioCache.clear();
     if (currentAudio) {
-      applyPlaybackRate(currentAudio, speechRate);
+      currentAudio.pause();
+      currentAudio = null;
+      resetActiveBtn();
     }
   }
 
@@ -110,8 +145,11 @@ const JapaneseTTS = (function () {
       return;
     }
 
-    const cacheKey = `${activeVoice}_${cleanText}`;
-    const audioUrl = `${TTS_API}?text=${encodeURIComponent(cleanText)}&voice=${encodeURIComponent(activeVoice)}`;
+    // 语速由服务端合成，缓存键要带上它，否则换档会播到上一档的音频
+    const synthRate = rateForSpeed(speechRate);
+    const cacheKey = `${activeVoice}_${synthRate}_${cleanText}`;
+    const audioUrl = `${TTS_API}?text=${encodeURIComponent(cleanText)}`
+      + `&voice=${encodeURIComponent(activeVoice)}&rate=${synthRate}`;
 
     let audio = memoryAudioCache.get(cacheKey);
     if (!audio) {
@@ -136,10 +174,11 @@ const JapaneseTTS = (function () {
     };
 
     currentAudio = audio;
-    applyPlaybackRate(audio, speechRate);
+    // 音频已经是目标语速，播放保持 1.0，不再二次变速
+    audio.playbackRate = 1.0;
 
     const onPlayHandler = function () {
-      applyPlaybackRate(audio, speechRate);
+      audio.playbackRate = 1.0;
       if (currentPlayingBtn) {
         currentPlayingBtn.classList.remove('audio-loading');
         currentPlayingBtn.classList.add('audio-playing');
@@ -164,8 +203,6 @@ const JapaneseTTS = (function () {
     };
 
     audio.addEventListener('play', onPlayHandler);
-    audio.addEventListener('canplay', () => applyPlaybackRate(audio, speechRate));
-    audio.addEventListener('loadedmetadata', () => applyPlaybackRate(audio, speechRate));
     audio.addEventListener('ended', onEndedHandler);
     audio.addEventListener('error', onErrorHandler);
 
@@ -196,6 +233,27 @@ const JapaneseTTS = (function () {
   }
 
   /**
+   * 暴露系统日语声线的真实名字，供 UI 如实显示「当前听到的到底是谁」。
+   * 浏览器首次 getVoices() 常为空、随后靠 voiceschanged 补齐，所以这里
+   * 顺手注册一次刷新回调，让已经渲染出来的「系统语音」文案能变成真名。
+   */
+  function getSystemVoiceNames() {
+    const names = getJapaneseVoices().map(v => v.name);
+    if (!names.length && 'speechSynthesis' in window && !systemVoicesPending) {
+      systemVoicesPending = true;
+      const onChange = () => {
+        if (!getJapaneseVoices().length) return;
+        window.speechSynthesis.removeEventListener('voiceschanged', onChange);
+        document.dispatchEvent(new CustomEvent('xbr:tts-status', {
+          detail: { available: backendAvailable }
+        }));
+      };
+      window.speechSynthesis.addEventListener('voiceschanged', onChange);
+    }
+    return names;
+  }
+
+  /**
    * Web Speech 回退。浏览器首次 getVoices() 可能为空，要等 voiceschanged。
    * 没有日语声线时不假装播放，明确告诉用户。
    */
@@ -220,6 +278,9 @@ const JapaneseTTS = (function () {
       utter.lang = 'ja-JP';
       utter.rate = speechRate;
       utter.voice = pickJapaneseVoice(voices);
+      // 系统语音没有服务端可调，只能靠 SpeechSynthesisUtterance.rate；
+      // 它本身是原生韵律放慢，不像 media playbackRate 那样涂抹频谱。
+      utter.pitch = 1;
 
       if (btnElement) {
         currentPlayingBtn = btnElement;
@@ -303,8 +364,10 @@ const JapaneseTTS = (function () {
     getVoice: getVoice,
     setRate: setRate,
     getRate: getRate,
+    getRateSteps: getRateSteps,
     probeBackend: probeBackend,
-    isBackendAvailable: isBackendAvailable
+    isBackendAvailable: isBackendAvailable,
+    getSystemVoiceNames: getSystemVoiceNames
   };
 })();
 

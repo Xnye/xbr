@@ -9,6 +9,8 @@
   let grammarDeep = null;      // data/grammar_deep.json（缺失时为 null，自动回退旧渲染）
   let grammarDeepIndex = {};   // id -> entry，供关联条目跳转
   let lessonOpeners = {};      // data/lesson_openers.json：每课收束（可缺省）
+  // data/translation_drills.json：中翻日练习（缺失时该课段整个不出现）
+  let translationDrills = null;
   // data/romaji.json：全 48 课罗马音（由假名注音重新生成）。
   // lessons.json 自带的 romaji / title_romaji 是 pykakasi 产物，读起来是错的
   // （李→sumomo、は→ha、へ→he），只在取不到新数据时才回落。
@@ -88,6 +90,27 @@
     if (!s) return '';
     const entry = romajiData && romajiData.sentences && romajiData.sentences[s.jp_raw];
     return ((entry && entry.clean) || s.jp_clean || '').replace(/^\*\s*/, '');
+  }
+
+  /**
+   * 词卡朗读文本。
+   *
+   * 为什么不能直接读 word_clean：孤立单个汉字没有语境，Edge TTS 只能自己猜音读/训读。
+   * 实测（MFCC+DTW 比对候选读音）「下」被读成 げ、「町」被读成 ちょう，
+   * 正确读音分别排到候选第 23 / 第 26 位；168 个单字词条里约三分之一读错。
+   * 词条的 kana 字段覆盖 2132/2132 且不含汉字，直接读假名即可锁定读音。
+   * 多字词实测 29/30 与假名朗读一致（汉字本身能定音），保留汉字可让
+   * 「中国人」「撮ります」等词的韵律更自然，故仅单字改走假名。
+   */
+  function speechForWord(w) {
+    const word = String((w && w.word_clean) || '');
+    const kana = String((w && w.kana) || '').trim();
+    if (!kana) return word;
+    // 单字汉字且假名不含汉字：用假名，避免多音字被 TTS 猜错
+    if (word.length === 1 && /[\u4e00-\u9fff々]/.test(word) && !/[\u4e00-\u9fff々]/.test(kana)) {
+      return kana;
+    }
+    return word;
   }
 
   /** 教材里的前导星号是抓取标记，不进入阅读面。 */
@@ -220,6 +243,8 @@
           (e.key_points || []).forEach(p => parts.push(p));
         });
       }
+      // 练习句不另加索引：题干与答案都取自上面已进索引的课文原句，
+      // 重复塞进来只会让「正文命中」的判定虚高。
       lessonSearchIndex.set(l.number, normalizeSearchText(parts.filter(Boolean).join(' ')));
     });
   }
@@ -257,18 +282,25 @@
     JapaneseTTS.probeBackend()
       .then(applyTtsBackendState)
       .catch(() => applyTtsBackendState(false));
+    // probeBackend 每次（含 force 重试）都会派发这个事件；只听首次结果的话，
+    // 服务重启后用 force 重新探测，界面会一直停在旧的降级状态。
+    document.addEventListener('xbr:tts-status', (e) => {
+      applyTtsBackendState(!!(e.detail && e.detail.available));
+    });
 
     try {
       // Load datasets
-      // grammar_deep.json 是可选的：没跑构建脚本或课程未覆盖时回退到教材原始笔记
-      // 两个会随构建变化的数据文件用 no-store，避免开发期读到旧缓存；
+      // grammar_deep.json / translation_drills.json 都是可选的：没跑构建脚本或
+      // 课程未覆盖时，分别回退到教材原始笔记、以及整段不出现。
+      // 会随构建变化的数据文件用 no-store，避免开发期读到旧缓存；
       // lessons.json 体积大且极少变动，沿用浏览器缓存。
-      const [resLessons, resExemplars, resGrammar, resRomaji, resOpeners] = await Promise.all([
+      const [resLessons, resExemplars, resGrammar, resRomaji, resOpeners, resDrills] = await Promise.all([
         fetch('data/lessons.json'),
         fetch('data/exemplars.json', { cache: 'no-store' }),
         fetch('data/grammar_deep.json', { cache: 'no-store' }).catch(() => null),
         fetch('data/romaji.json', { cache: 'no-store' }).catch(() => null),
-        fetch('data/lesson_openers.json', { cache: 'no-store' }).catch(() => null)
+        fetch('data/lesson_openers.json', { cache: 'no-store' }).catch(() => null),
+        fetch('data/translation_drills.json', { cache: 'no-store' }).catch(() => null)
       ]);
 
       lessonsData = await resLessons.json();
@@ -301,6 +333,15 @@
         } catch (e) {
           console.warn('lesson_openers.json 解析失败，跳过课首开场', e);
           lessonOpeners = {};
+        }
+      }
+
+      if (resDrills && resDrills.ok) {
+        try {
+          translationDrills = await resDrills.json();
+        } catch (e) {
+          console.warn('translation_drills.json 解析失败，跳过中翻日练习', e);
+          translationDrills = null;
         }
       }
 
@@ -339,13 +380,9 @@
   }
 
   function applyStateToDOM() {
-    // Theme
-    if (STATE.theme === 'paper') {
-      document.body.classList.add('theme-paper');
-    } else {
-      document.body.classList.remove('theme-paper');
-    }
-    updateToggleBtn('theme_toggle', STATE.theme === 'paper', STATE.theme === 'paper' ? '纸白' : '黑板');
+    // Theme：纸白/黑板是二选一，同步分段控件的选中态而不是开关
+    document.body.classList.toggle('theme-paper', STATE.theme === 'paper');
+    updateThemeSegments();
 
     // Furigana
     document.body.classList.toggle('hide-furigana', !STATE.furigana);
@@ -363,34 +400,69 @@
     document.body.classList.toggle('hide-xray', !STATE.xray);
     updateToggleBtn('xray_toggle', STATE.xray);
 
-    // 「设置」入口提示：面板里只要有一项不是默认值，就在按钮上加一条下划线。
-    // 否则 F/R/T/M 快捷键改到隐藏在面板里的开关时，顶栏完全没有反馈。
+    // 「设置」入口：面板里有任意一项不是默认值就点亮，否则快捷键
+    // 改到藏在面板里的开关时，顶栏完全没有反馈。
     const settingsBtn = document.getElementById('settings_btn');
     if (settingsBtn) {
       const modified = !STATE.furigana || STATE.romaji || !STATE.translation
         || STATE.theme !== 'paper' || !STATE.xray;
-      settingsBtn.classList.toggle('active', modified);
+      settingsBtn.classList.toggle('is-modified', modified);
     }
   }
 
-  function updateToggleBtn(id, isActive, textOverride) {
+  /** 同步纸白/黑板分段控件的 aria-checked 与视觉选中态。 */
+  function updateThemeSegments() {
+    const segs = document.querySelectorAll('.seg-btn[data-theme]');
+    segs.forEach(btn => {
+      const selected = btn.dataset.theme === STATE.theme;
+      btn.classList.toggle('selected', selected);
+      btn.setAttribute('aria-checked', selected ? 'true' : 'false');
+      // 分段控件是单选组，只有选中项进 Tab 序列
+      btn.tabIndex = selected ? 0 : -1;
+    });
+  }
+
+  function updateToggleBtn(id, isActive) {
     const btn = document.getElementById(id);
     if (!btn) return;
     btn.classList.toggle('active', isActive);
-    if (textOverride) {
-      const label = btn.querySelector('.btn-label');
-      if (label) label.textContent = textOverride;
-    }
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   }
 
-  /** 静态/线上环境没有 /api/tts：禁用七海/庆太，说明当前走系统语音。 */
+  /**
+   * 后端可用性决定「朗读」控件该说什么实话。
+   *
+   * 之前只有一句「当前使用系统语音」，用户看到下拉框里写着「七海（女声）」
+   * 以为在用神经语音，实际听到的是 Windows 自带的 Microsoft Haruka Desktop
+   * （SAPI5 老语音，沙哑、句读机械）——这正是「听起来怪」的主因。
+   * 现在把选项文案也换成系统语音的真名，避免误判。
+   */
+  // 神经语音的原生选项文案；降级后要能原样还原，不能把「系统语音」留在框里
+  const NEURAL_VOICE_LABELS = {
+    'ja-JP-NanamiNeural': '七海（女声）',
+    'ja-JP-KeitaNeural': '庆太（男声）'
+  };
+
   function applyTtsBackendState(available) {
     const select = document.getElementById('voice_select');
     const status = document.getElementById('tts_status');
     if (!select || !status) return;
     select.disabled = !available;
     status.hidden = !!available;
-    status.textContent = available ? '' : '当前使用系统语音';
+    status.textContent = available ? '' : '未连接语音后端，正在用系统语音朗读（音质较差）';
+    const names = available ? [] : JapaneseTTS.getSystemVoiceNames();
+    for (const opt of select.options) {
+      const neural = NEURAL_VOICE_LABELS[opt.value] || opt.value;
+      if (available) {
+        opt.textContent = neural;
+      } else {
+        // 系统语音下「七海/庆太」根本不会被使用，换成真实来源
+        const isMale = opt.value.includes('Keita');
+        opt.textContent = names.length
+          ? `系统语音：${names[isMale ? Math.min(1, names.length - 1) : 0]}`
+          : '系统语音';
+      }
+    }
   }
 
   function setupEventListeners() {
@@ -422,11 +494,16 @@
       }
     });
 
-    document.getElementById('theme_toggle')?.addEventListener('click', () => {
-      STATE.theme = STATE.theme === 'dark' ? 'paper' : 'dark';
-      localStorage.setItem('xbr_theme', STATE.theme);
-      applyStateToDOM();
-      setTimeout(() => GrammarDiagram.updateAllArrows(), 100);
+    // 版面：分段控件直接指定目标主题，不再靠「取反」猜测用户意图
+    document.querySelectorAll('.seg-btn[data-theme]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const next = btn.dataset.theme;
+        if (next === STATE.theme) return;
+        STATE.theme = next;
+        localStorage.setItem('xbr_theme', STATE.theme);
+        applyStateToDOM();
+        setTimeout(() => GrammarDiagram.updateAllArrows(), 100);
+      });
     });
 
     // 「设置」面板：把 假名／罗马音／中文翻译／版面／朗读 收在一层里，
@@ -462,20 +539,48 @@
       }
       voiceSelect.addEventListener('change', (e) => {
         JapaneseTTS.setVoice(e.target.value);
-        showToast(e.target.value.includes('Keita') ? '已切换为庆太（男声）' : '已切换为七海（女声）');
+        const who = e.target.value.includes('Keita') ? '庆太（男声）' : '七海（女声）';
+        // 没有后端时下拉框已被换成系统语音，再报「已切换为七海」就是假话
+        showToast(JapaneseTTS.isBackendAvailable()
+          ? `已切换为${who}`
+          : `系统语音没有男女声可选，已记为${who}（接入神经语音后生效）`);
       });
     }
 
     const speedSelect = document.getElementById('speed_select');
     if (speedSelect) {
+      // 档位以 tts.js 的 RATE_STEPS 为唯一来源，避免 HTML 与逻辑两处维护
       const curRate = JapaneseTTS.getRate();
-      for (let opt of speedSelect.options) {
-        if (Math.abs(parseFloat(opt.value) - curRate) < 0.05) opt.selected = true;
+      const steps = JapaneseTTS.getRateSteps();
+      speedSelect.innerHTML = '';
+      steps.forEach(step => {
+        const opt = document.createElement('option');
+        opt.value = String(step.value);
+        // 下拉里只显示倍数，具体含义放 title，窄屏也放得下
+        opt.textContent = step.label;
+        opt.title = `${step.label} ${step.note}`;
+        if (Math.abs(step.value - curRate) < 0.01) opt.selected = true;
+        speedSelect.appendChild(opt);
+      });
+      // 旧存档可能存着已删除的档位（如 1.25），补一个临时项免得显示成第一档
+      if (![...speedSelect.options].some(o => Math.abs(parseFloat(o.value) - curRate) < 0.01)) {
+        const opt = document.createElement('option');
+        opt.value = String(curRate);
+        opt.textContent = `${curRate}x`;
+        opt.title = `${curRate}x 自定义`;
+        opt.selected = true;
+        speedSelect.appendChild(opt);
       }
+      const describe = (v) => {
+        const s = steps.find(x => Math.abs(x.value - v) < 0.01);
+        return s ? `${s.label} ${s.note}` : `${v}x`;
+      };
       speedSelect.addEventListener('change', (e) => {
         const rate = parseFloat(e.target.value);
         JapaneseTTS.setRate(rate);
-        showToast(`语速 ${rate}x`);
+        // 慢速是神经语音原生合成，首次换档要等服务端合成
+        showToast(`语速 ${describe(rate)}`
+          + (JapaneseTTS.isBackendAvailable() ? '，首次切换需合成' : ''));
       });
     }
 
@@ -584,7 +689,9 @@
       } else if (e.key === 'x' || e.key === 'X') {
         document.getElementById('xray_toggle')?.click();
       } else if (e.key === 'm' || e.key === 'M') {
-        document.getElementById('theme_toggle')?.click();
+        // 快捷键仍是二态切换：点另一个分段即可
+        const other = document.querySelector(`.seg-btn[data-theme]:not(.selected)`);
+        other?.click();
       }
     });
   }
@@ -887,6 +994,143 @@
     }
   }
 
+  /* ====================================================================
+     中翻日练习
+     数据来自 data/translation_drills.json（build_translation_drills.py 生成）：
+     每课的「考点 → 课文原句」打包成练习卡，句数随考点数变化
+     （第 25 课 2 个考点 6 句，第 5 课 6 个考点 30 句），课内按句子体量
+     分成 热身／进阶／挑战 三档，所以永远是从简到难。
+
+     交互刻意选「复习」而不是「考试」：题干给中文，点开就是答案，
+     不判分、不扣分、不限时。学习者要的是"我能不能想起这句"，
+     而不是再做一套选择题；答案旁边直接挂着考点名，翻不出来时
+     知道该回头补哪一条讲义。
+     ==================================================================== */
+
+  function drillDataFor(lessonNum) {
+    if (!translationDrills || !translationDrills.lessons) return null;
+    const les = translationDrills.lessons[String(lessonNum)];
+    return les && les.items && les.items.length ? les : null;
+  }
+
+  function drillTierMeta(tier) {
+    const meta = translationDrills && translationDrills.meta;
+    const list = (meta && meta.tiers) || [];
+    const hit = list.find(t => t.tier === tier);
+    return hit || { tier: tier, label: '第 ' + tier + ' 档', sub: '' };
+  }
+
+  /** 句长：与构建脚本同一口径（数据里的 chars 字段），标注档位字数区间用。 */
+  function drillCharLen(item) {
+    if (typeof item.chars === 'number') return item.chars;
+    return String(item.jp || '').replace(/[。！？、，　\s]/g, '').length;
+  }
+
+  /** 有透视图的句子才能挂「拆开看」；数据里删了条目就该自动不出现按钮。 */
+  function exemplarsArrayHas(id) {
+    return Array.isArray(exemplarsData) && exemplarsData.some(e => e.id === id);
+  }
+
+  function renderDrillCard(item, lessonNum, idx) {
+    const cardId = `drill_${lessonNum}_${item.id}`;
+    const answerId = `${cardId}_a`;
+    const slotId = `drill_slot_${lessonNum}_${idx}`;
+    const hasXray = !!item.xid && exemplarsArrayHas(item.xid);
+    return `
+      <article class="tdrill-card" id="${cardId}" data-chars="${drillCharLen(item)}">
+        <div class="tdrill-q-row">
+          <span class="tdrill-idx" aria-hidden="true">${String(idx).padStart(2, '0')}</span>
+          <div class="tdrill-zh">${esc(item.zh)}</div>
+        </div>
+        <div class="tdrill-actions">
+          <button class="text-btn tdrill-reveal-btn" type="button"
+                  aria-expanded="false" aria-controls="${answerId}"
+                  onclick="App.toggleDrillAnswer('${cardId}', this)">
+            <span class="text-btn-label">看答案</span>
+            <span class="text-btn-chev" aria-hidden="true">${chevRight()}</span>
+          </button>
+        </div>
+        <div class="tdrill-answer" id="${answerId}">
+          <div class="tdrill-jp-row">
+            <span class="tdrill-jp jp-text" lang="ja" role="button" tabindex="0" data-kbd-click
+                  aria-label="朗读这句" title="点句子听音"
+                  onclick="JapaneseTTS.speak('${escapeQuotes(item.jp)}', this)">${item.jp_ruby}</span>
+            <div class="tdrill-jp-tools">
+              <button class="icon-btn" type="button" title="朗读这句" aria-label="朗读这句"
+                      onclick="JapaneseTTS.speak('${escapeQuotes(item.jp)}', this)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+              </button>
+              ${hasXray ? `
+                <button class="text-btn tdrill-xray-btn" type="button" id="${slotId}_btn"
+                        aria-expanded="false" aria-controls="${slotId}"
+                        title="拆开看这句的词块与助词"
+                        onclick="App.toggleSimpleXray('${slotId}', '${esc(item.xid)}', this)">
+                  <span class="text-btn-label">拆开看</span>
+                  <span class="text-btn-chev simple-xray-arrow" aria-hidden="true">${chevRight()}</span>
+                </button>` : ''}
+            </div>
+          </div>
+          <div class="tdrill-romaji">${esc(item.romaji)}</div>
+          <div class="tdrill-meta">
+            <span class="tdrill-point">${esc(item.point)}</span>
+            ${item.src ? `<span class="tdrill-src">${esc(item.src)}</span>` : ''}
+          </div>
+          ${hasXray ? `<div class="xray-embed-slot simple-xray-slot" id="${slotId}"></div>` : ''}
+        </div>
+      </article>
+    `;
+  }
+
+  function renderTranslationDrills(les, lessonNum) {
+    // 三档各自成组：同一档内句子体量接近，跨档就是一次明确的台阶。
+    // 副标题用本课该档真实的字数区间，而不是写死的形容词——第 25 课只有
+    // 6 句，再照搬「长句、多分句」就成了假话。
+    const tiers = [1, 2, 3].map(tier => {
+      const items = les.items.filter(it => it.tier === tier);
+      if (!items.length) return '';
+      const meta = drillTierMeta(tier);
+      const lens = items.map(it => drillCharLen(it));
+      const span = Math.min.apply(null, lens) + '–' + Math.max.apply(null, lens) + ' 字';
+      const cards = items.map(it => renderDrillCard(it, lessonNum, les.items.indexOf(it) + 1)).join('');
+      return `
+        <section class="tdrill-tier" data-tier="${tier}">
+          <header class="tdrill-tier-head">
+            <span class="tdrill-tier-label">${esc(meta.label)}</span>
+            <span class="tdrill-tier-sub">${esc(meta.sub || '')}</span>
+            <span class="tdrill-tier-count">${span} · ${items.length} 句</span>
+          </header>
+          <div class="tdrill-list">${cards}</div>
+        </section>
+      `;
+    }).join('');
+
+    // 考点清单：把这一课要考的句型先摆出来，练习时心里有靶子。
+    const points = (les.points || []).map(p => `
+      <li class="tdrill-point-item">
+        <span class="tdrill-point-name jp-text" lang="ja">${esc(p.pattern)}</span>
+        ${p.category ? `<span class="tdrill-point-cat">${esc(p.category)}</span>` : ''}
+      </li>`).join('');
+
+    return `
+      <div class="tdrill" id="tdrill_${lessonNum}">
+        <p class="tdrill-lead">看中文，先在脑子里（或纸上）说出日语，再点开对答案。这一课 ${les.item_count} 句，按 ${les.point_count} 个考点出题，由短到长。答案就是教材原句，可以顺势点句子听音。</p>
+        <div class="tdrill-points">
+          <div class="tdrill-points-title">本课考点</div>
+          <ul class="tdrill-points-list">${points}</ul>
+        </div>
+        <div class="tdrill-toolbar">
+          <span class="tdrill-done-count" aria-live="polite">0 / ${les.item_count} 已对答案</span>
+          <button class="lesson-selector-btn" type="button"
+                  onclick="App.toggleAllDrillAnswers(${lessonNum}, this)">展开全部答案</button>
+        </div>
+        ${tiers}
+      </div>
+    `;
+  }
+
   function buildLessonSteps(lesson, num) {
     const steps = [];
 
@@ -937,16 +1181,33 @@
       });
     }
 
+    const drills = drillDataFor(num);
+    if (drills) {
+      steps.push({
+        key: 'drill',
+        numeral: '五、',
+        title: '中翻日练习',
+        short: '中译日',
+        note: `${drills.item_count} 句 · ${drills.point_count} 个考点 · 由简到难`,
+        body: renderTranslationDrills(drills, num)
+      });
+    }
+
     if (lesson.words && lesson.words.length > 0) {
       steps.push({
         key: 'vocab',
-        numeral: '五、',
+        numeral: '六、',
         title: '单词表',
         short: '单词',
         note: `${lesson.words.length} 词 · 点词听音`,
         body: renderWordList(lesson.words)
       });
     }
+
+    // 序号按实际出现的课段重排：练习数据缺失时，单词表要自动从「六」退回「五」，
+    // 不能留下一个跳号的目录。
+    const NUMERALS = ['一、', '二、', '三、', '四、', '五、', '六、', '七、'];
+    steps.forEach((step, i) => { step.numeral = NUMERALS[i] || `${i + 1}、`; });
 
     return steps;
   }
@@ -1043,7 +1304,7 @@
             ${list.map(w => `
               <div class="word-card-item" role="button" tabindex="0" data-kbd-click
                    aria-label="朗读 ${esc(w.word_clean)}" title="点词听音"
-                   onclick="JapaneseTTS.speak('${escapeQuotes(w.word_clean)}', this)">
+                   onclick="JapaneseTTS.speak('${escapeQuotes(speechForWord(w))}', this)">
                 <div class="word-top-row">
                   <span class="word-jp jp-text" lang="ja">${w.word_ruby || w.word_clean}</span>
                   ${formatPitch(w.pitch) ? `<span class="word-pitch" title="音调标记">${formatPitch(w.pitch)}</span>` : ''}
@@ -1683,6 +1944,61 @@
     if (q) q.setAttribute('aria-expanded', el.classList.contains('open') ? 'true' : 'false');
   }
 
+  /* ---------------- 中翻日练习 ---------------- */
+
+  /**
+   * 单句答案开合。
+   * 答案区用 .open 控制显隐（CSS 默认折叠），首句作答时透视图槽位是空的，
+   * 展开后才由 toggleSimpleXray 懒挂。这里只切显隐，不预渲染。
+   */
+  function toggleDrillAnswer(cardId, btn) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const open = !card.classList.contains('open');
+    card.classList.toggle('open', open);
+    syncDrillRevealBtn(card, open);
+    syncDrillProgress(card.closest('.tdrill'));
+  }
+
+  /** 答案按钮的文案与 aria 只在这一处改，点单句和点「全部」才不会各说一套。 */
+  function syncDrillRevealBtn(card, open) {
+    const button = card.querySelector('.tdrill-reveal-btn');
+    if (!button) return;
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const label = button.querySelector('.text-btn-label');
+    if (label) label.textContent = open ? '收起' : '看答案';
+  }
+
+  /**
+   * 已对答案计数：给学习者一个"这一课还剩几句"的进度感，不做判分。
+   * 「全部展开」按钮的文案也在这里跟状态走——单句点开后明明全开了，
+   * 按钮却还写着「展开全部答案」，就成了假话。
+   */
+  function syncDrillProgress(root) {
+    if (!root) return;
+    const cards = Array.prototype.slice.call(root.querySelectorAll('.tdrill-card'));
+    const done = cards.filter(c => c.classList.contains('open')).length;
+    const counter = root.querySelector('.tdrill-done-count');
+    if (counter) counter.textContent = `${done} / ${cards.length} 已对答案`;
+    const allBtn = root.querySelector('.tdrill-toolbar button');
+    if (allBtn && cards.length) {
+      allBtn.textContent = done === cards.length ? '收起全部答案' : '展开全部答案';
+    }
+  }
+
+  /** 整课一次性开/合：复习到最后想核对全部答案时的出口。 */
+  function toggleAllDrillAnswers(lessonNum, btn) {
+    const root = document.getElementById(`tdrill_${lessonNum}`);
+    if (!root) return;
+    const cards = Array.prototype.slice.call(root.querySelectorAll('.tdrill-card'));
+    const allOpen = cards.length && cards.every(c => c.classList.contains('open'));
+    cards.forEach(card => {
+      card.classList.toggle('open', !allOpen);
+      syncDrillRevealBtn(card, !allOpen);
+    });
+    syncDrillProgress(root);
+  }
+
   function toggleLessonDone(num, btn) {
     const set = new Set(getCompletedLessons());
     const done = !set.has(num);
@@ -1838,7 +2154,9 @@
     exitBasicSelfTest: exitBasicSelfTest,
     goToLessonStep: goToLessonStep,
     togglePaceMode: togglePaceMode,
-    gotoGrammar: gotoGrammar
+    gotoGrammar: gotoGrammar,
+    toggleDrillAnswer: toggleDrillAnswer,
+    toggleAllDrillAnswers: toggleAllDrillAnswers
   };
 
   // Launch on DOM ready

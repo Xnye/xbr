@@ -17008,9 +17008,9 @@
           "note": "「が」把“那个人”作为新信息推出来，回答“谁是吉田”。"
         },
         {
-          "jp": "吉田課長は　いますか",
-          "jp_ruby": "<ruby>吉田課長<rt>よしだかちょう</rt></ruby>は　いますか",
-          "romaji": "yoshidakachou wa imasu ka",
+          "jp": "吉田課長は　いますか？",
+          "jp_ruby": "<ruby>吉田課長<rt>よしだかちょう</rt></ruby>は　いますか？",
+          "romaji": "yoshidakachou wa imasu ka?",
           "zh": "吉田科长在吗？",
           "lit": "吉田科长 · 话题 · 在 · 吗",
           "src": "第19课 会话 D",
@@ -22252,9 +22252,9 @@
       ],
       "examples": [
         {
-          "jp": "わたしが明日乗る飛行機は中国航空です",
-          "jp_ruby": "わたしが<ruby>明日<rt>あした</rt></ruby><ruby>乗<rt>の</rt></ruby>る<ruby>飛行機<rt>ひこうき</rt></ruby>は<ruby>中国<rt>ちゅうごく</rt></ruby><ruby>航空<rt>こうくう</rt></ruby>です",
-          "romaji": "watashi ga ashita noru hikouki wa chuugoku koukuu desu",
+          "jp": "わたしが明日乗る飛行機は中国航空です。",
+          "jp_ruby": "わたしが<ruby>明日<rt>あした</rt></ruby><ruby>乗<rt>の</rt></ruby>る<ruby>飛行機<rt>ひこうき</rt></ruby>は<ruby>中国<rt>ちゅうごく</rt></ruby><ruby>航空<rt>こうくう</rt></ruby>です。",
+          "romaji": "watashi ga ashita noru hikouki wa chuugoku koukuu desu.",
           "zh": "我明天乘坐的飞机是中国航空公司的。",
           "lit": "我 · 明天 · 乘坐 · 飞机 · 话题 · 中国 · 航空 · 是",
           "src": "第25课 基本课文 2",
@@ -22398,9 +22398,9 @@
       ],
       "examples": [
         {
-          "jp": "これは明日会議で使う資料です",
-          "jp_ruby": "これは<ruby>明日<rt>あした</rt></ruby><ruby>会議<rt>かいぎ</rt></ruby>で<ruby>使<rt>つか</rt></ruby>う<ruby>資料<rt>しりょう</rt></ruby>です",
-          "romaji": "kore wa ashita kaigi de tsukau shiryou desu",
+          "jp": "これは明日会議で使う資料です。",
+          "jp_ruby": "これは<ruby>明日<rt>あした</rt></ruby><ruby>会議<rt>かいぎ</rt></ruby>で<ruby>使<rt>つか</rt></ruby>う<ruby>資料<rt>しりょう</rt></ruby>です。",
+          "romaji": "kore wa ashita kaigi de tsukau shiryou desu.",
           "zh": "这是明天会议要用的资料。",
           "lit": "这 · 话题 · 明天 · 会议 · 在 · 使用 · 资料 · 是",
           "src": "第25课 基本课文 1",
@@ -22408,9 +22408,9 @@
           "note": "使う 是动词简体形，表示“明天要用”；不能换成 使います。"
         },
         {
-          "jp": "操作が簡単なパソコンが欲しいです",
-          "jp_ruby": "<ruby>操作<rt>そうさ</rt></ruby>が<ruby>簡単<rt>かんたん</rt></ruby>なパソコンが<ruby>欲<rt>ほ</rt></ruby>しいです",
-          "romaji": "sousa ga kantanna pasokon ga hoshii desu",
+          "jp": "操作が簡単なパソコンが欲しいです。",
+          "jp_ruby": "<ruby>操作<rt>そうさ</rt></ruby>が<ruby>簡単<rt>かんたん</rt></ruby>なパソコンが<ruby>欲<rt>ほ</rt></ruby>しいです。",
+          "romaji": "sousa ga kantanna pasokon ga hoshii desu.",
           "zh": "（我）想要操作简单的个人电脑。",
           "lit": "操作 · 主语 · 简单 · 的 · 电脑 · 主语 · 想要 · 是",
           "src": "第25课 基本课文 4",
@@ -22418,9 +22418,9 @@
           "note": "簡単 是二类形容词，修饰 パソコン 要用 な；操作が 是小句内的主语。"
         },
         {
-          "jp": "中国で買ったＣＤを友達に貸しました",
-          "jp_ruby": "<ruby>中国<rt>ちゅうごく</rt></ruby>で<ruby>買<rt>か</rt></ruby>ったＣＤを<ruby>友達<rt>ともだち</rt></ruby>に<ruby>貸<rt>か</rt></ruby>しました",
-          "romaji": "chuugoku de kattaCD o tomodachi ni kashimashita",
+          "jp": "中国で買ったＣＤを友達に貸しました。",
+          "jp_ruby": "<ruby>中国<rt>ちゅうごく</rt></ruby>で<ruby>買<rt>か</rt></ruby>ったＣＤを<ruby>友達<rt>ともだち</rt></ruby>に<ruby>貸<rt>か</rt></ruby>しました。",
+          "romaji": "chuugoku de kattaCD o tomodachi ni kashimashita.",
           "zh": "（我）把在中国买的ＣＤ借给朋友了。",
           "lit": "中国 · 在 · 买了 · ＣＤ · 宾语 · 朋友 · 给 · 借出 · 了",
           "src": "第25课 基本课文 3",
@@ -29523,9 +29523,9 @@
       ],
       "examples": [
         {
-          "jp": "壁にカレンダーが掛けてあります",
-          "jp_ruby": "<ruby>壁<rt>かべ</rt></ruby>にカレンダーが<ruby>掛<rt>か</rt></ruby>けてあります",
-          "romaji": "kabe ni karendaa ga kaketearimasu",
+          "jp": "壁にカレンダーが掛けてあります。",
+          "jp_ruby": "<ruby>壁<rt>かべ</rt></ruby>にカレンダーが<ruby>掛<rt>か</rt></ruby>けてあります。",
+          "romaji": "kabe ni karendaa ga kaketearimasu.",
           "zh": "墙上挂着挂历。",
           "lit": "墙 · 在 · 挂历 · 主语 · 挂着 · 是",
           "src": "第34课 基本课文 1",
@@ -29533,9 +29533,9 @@
           "note": "掛ける 是他动词；对象 カレンダー 用 が，场所 壁 用 に。"
         },
         {
-          "jp": "公園の前に止めてあります",
-          "jp_ruby": "<ruby>公園<rt>こうえん</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>止<rt>と</rt></ruby>めてあります",
-          "romaji": "kouen no mae ni tometearimasu",
+          "jp": "公園の前に止めてあります。",
+          "jp_ruby": "<ruby>公園<rt>こうえん</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>止<rt>と</rt></ruby>めてあります。",
+          "romaji": "kouen no mae ni tometearimasu.",
           "zh": "停在公园前面了。",
           "lit": "公园 · 的 · 前面 · 在 · 停着 · 是",
           "src": "第34课 会话 B",
@@ -29839,9 +29839,9 @@
           "note": "用汉语写信是一次尝试；てみました 是过去形。"
         },
         {
-          "jp": "カレーライスを作ってみました。食べてみてください",
-          "jp_ruby": "カレーライスを<ruby>作<rt>つく</rt></ruby>ってみました。<ruby>食<rt>た</rt></ruby>べてみてください",
-          "romaji": "kareeraisu o tsukuttemimashita. tabetemite kudasai",
+          "jp": "カレーライスを作ってみました。食べてみてください。",
+          "jp_ruby": "カレーライスを<ruby>作<rt>つく</rt></ruby>ってみました。<ruby>食<rt>た</rt></ruby>べてみてください。",
+          "romaji": "kareeraisu o tsukuttemimashita. tabetemite kudasai.",
           "zh": "我做了咖喱饭，请你尝尝。",
           "lit": "咖喱饭 · 宾语 · 做 · 试着 · 过去 · 吃 · 试着 · 请",
           "src": "第34课 会话 C",
@@ -30881,9 +30881,9 @@
           "note": "大人是极端例子；でも 提示“连大人都能坐”。"
         },
         {
-          "jp": "小さな子供でも上手ですよ",
-          "jp_ruby": "<ruby>小<rt>ちい</rt></ruby>さな<ruby>子供<rt>こども</rt></ruby>でも<ruby>上手<rt>じょうず</rt></ruby>ですよ",
-          "romaji": "chiisana kodomo de mo jouzu desu yo",
+          "jp": "小さな子供でも上手ですよ。",
+          "jp_ruby": "<ruby>小<rt>ちい</rt></ruby>さな<ruby>子供<rt>こども</rt></ruby>でも<ruby>上手<rt>じょうず</rt></ruby>ですよ。",
+          "romaji": "chiisana kodomo de mo jouzu desu yo.",
           "zh": "就是小孩也做得很好。",
           "lit": "小 · 孩子 · 就连 · 擅长 · 是 · 哟",
           "src": "第35课 应用课文",
@@ -34419,9 +34419,9 @@
       ],
       "examples": [
         {
-          "jp": "これから友達と食事に行くところです",
-          "jp_ruby": "これから<ruby>友達<rt>ともだち</rt></ruby>と<ruby>食事<rt>しょくじ</rt></ruby>に<ruby>行<rt>い</rt></ruby>くところです",
-          "romaji": "korekara tomodachi to shokuji ni iku tokoro desu",
+          "jp": "これから友達と食事に行くところです。",
+          "jp_ruby": "これから<ruby>友達<rt>ともだち</rt></ruby>と<ruby>食事<rt>しょくじ</rt></ruby>に<ruby>行<rt>い</rt></ruby>くところです。",
+          "romaji": "korekara tomodachi to shokuji ni iku tokoro desu.",
           "zh": "（我）正要和朋友一起去吃饭。",
           "lit": "这之后 · 朋友 · 和 · 吃饭 · 去 · 正要",
           "src": "第40课 基本课文 1",
@@ -34557,9 +34557,9 @@
       ],
       "examples": [
         {
-          "jp": "森さんは会議の資料をそろえているところです",
-          "jp_ruby": "<ruby>森<rt>もり</rt></ruby>さんは<ruby>会議<rt>かいぎ</rt></ruby>の<ruby>資料<rt>しりょう</rt></ruby>をそろえているところです",
-          "romaji": "mori san wa kaigi no shiryou o soroete iru tokoro desu",
+          "jp": "森さんは会議の資料をそろえているところです。",
+          "jp_ruby": "<ruby>森<rt>もり</rt></ruby>さんは<ruby>会議<rt>かいぎ</rt></ruby>の<ruby>資料<rt>しりょう</rt></ruby>をそろえているところです。",
+          "romaji": "mori san wa kaigi no shiryou o soroete iru tokoro desu.",
           "zh": "森先生正在整理会议资料。",
           "lit": "森先生 · 会议 的 · 资料 · 宾语 · 整理 · 正在",
           "src": "第40课 基本课文 2",
@@ -34695,9 +34695,9 @@
       ],
       "examples": [
         {
-          "jp": "馬さんは，今，空港に着いたところです",
-          "jp_ruby": "<ruby>馬<rt>ば</rt></ruby>さんは，<ruby>今<rt>いま</rt></ruby>，<ruby>空港<rt>くうこう</rt></ruby>に<ruby>着<rt>つ</rt></ruby>いたところです",
-          "romaji": "ba san wa, ima, kuukou ni tsuita tokoro desu",
+          "jp": "馬さんは，今，空港に着いたところです。",
+          "jp_ruby": "<ruby>馬<rt>ば</rt></ruby>さんは，<ruby>今<rt>いま</rt></ruby>，<ruby>空港<rt>くうこう</rt></ruby>に<ruby>着<rt>つ</rt></ruby>いたところです。",
+          "romaji": "ba san wa, ima, kuukou ni tsuita tokoro desu.",
           "zh": "小马现在刚刚到达机场。",
           "lit": "小马 · 现在 · 机场 · 到达 · 刚刚",
           "src": "第40课 基本课文 3",
@@ -34838,9 +34838,9 @@
       ],
       "examples": [
         {
-          "jp": "このモノレールは去年開通したばかりです",
-          "jp_ruby": "このモノレールは<ruby>去年<rt>きょねん</rt></ruby><ruby>開通<rt>かいつう</rt></ruby>したばかりです",
-          "romaji": "kono monoreeru wa kyonen kaitsuushita bakari desu",
+          "jp": "このモノレールは去年開通したばかりです。",
+          "jp_ruby": "このモノレールは<ruby>去年<rt>きょねん</rt></ruby><ruby>開通<rt>かいつう</rt></ruby>したばかりです。",
+          "romaji": "kono monoreeru wa kyonen kaitsuushita bakari desu.",
           "zh": "这条单轨铁路是去年刚开通的。",
           "lit": "这 · 单轨铁路 · 是 · 去年 · 开通 · 刚刚",
           "src": "第40课 基本课文 4",

@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    新标日 · 语法透视读本 (Standard Japanese Cognitive Reader)
    - 减少AI味：纯粹书卷质感、几乎无冗余边框、呼吸感排版
    - 全面衬线字体 (Serif / 明朝体 / 宋体)
@@ -212,6 +212,80 @@ button, input, select, textarea {
   position: relative;
 }
 
+/* 语速选择器与「设置」平级，摆在顶栏一层。
+   select 负责撑开宽度和接收点击；图标、箭头绝对定位到它内部两端，
+   并设 pointer-events:none 让点击穿透。这样点到内边距、图标或箭头
+   （不只是文字）都能展开下拉——之前用 <label> 包着，点外圈只会
+   让 select 拿到焦点，不会弹出菜单。 */
+.speed-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  min-height: 2.75rem;
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.speed-wrap:hover {
+  color: var(--text-main);
+  background: var(--bg-subtle);
+}
+
+.speed-wrap:focus-within {
+  color: var(--text-main);
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* 图标与箭头只是装饰，绝对定位在 select 内部两端，点击穿透给 select */
+.speed-icon,
+.speed-chev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.speed-icon {
+  left: 0.5rem;
+  opacity: 0.7;
+}
+
+.speed-chev {
+  right: 0.5rem;
+  opacity: 0.75;
+}
+
+/* select 参与正常布局撑开宽度，并铺满 wrapper 的高度；
+   左右各留 padding 让出图标/箭头位置，图标和箭头本身
+   pointer-events:none 且绝对定位，点击一律落到 select 上。
+   这样点到内边距、图标、箭头（不只是文字）都能展开下拉。 */
+.speed-select {
+  appearance: none;
+  -webkit-appearance: none;
+  align-self: stretch;          /* 占满 wrapper 高度，四角也能命中 */
+  margin: 0;                    /* 不用负边距，避免溢出压到相邻按钮 */
+  padding: 0 1.5rem 0 1.45rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--fs-ui);
+  line-height: 1.5;
+  text-align: left;
+  text-align-last: left;
+  cursor: pointer;
+}
+
+.speed-select option {
+  background: var(--bg-paper);
+  color: var(--text-main);
+}
+
 .settings-panel {
   position: absolute;
   top: calc(100% + 0.5rem);
@@ -251,8 +325,47 @@ button, input, select, textarea {
   letter-spacing: 0.12em;
 }
 
+/* 设置面板里的开关要能一眼看出开/关。
+   原来只有一条 2px 金色内阴影，在纸白主题下几乎看不见，
+   关掉和没关掉长得一样。这里用伪元素画一个真正的状态点：
+   开启=金色实心圆，关闭=空心圆圈且文字转灰。 */
 .settings-panel .editorial-toggle-btn {
-  padding: 0.2rem 0.4rem;
+  position: relative;
+  padding: 0.2rem 0.4rem 0.2rem 1.35rem;
+  border-radius: 2px;
+}
+
+.settings-panel .editorial-toggle-btn::before {
+  content: '';
+  position: absolute;
+  left: 0.4rem;
+  top: 50%;
+  width: 0.62rem;
+  height: 0.62rem;
+  margin-top: -0.31rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-faint);
+  background: transparent;
+  box-sizing: border-box;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.settings-panel .editorial-toggle-btn.active::before {
+  border-color: var(--accent-gold);
+  background: var(--accent-gold);
+}
+
+.settings-panel .editorial-toggle-btn:not(.active) {
+  color: var(--text-faint);
+  font-weight: 400;
+  box-shadow: none;
+}
+
+.settings-panel .editorial-toggle-btn.active {
+  color: var(--text-main);
+  font-weight: 600;
+  /* 设置面板内不用底线表示状态，交给上面的圆点，避免两种信号打架 */
+  box-shadow: none;
 }
 
 .settings-panel .voice-select-pill {
@@ -2244,6 +2357,16 @@ body {
   gap: 0.15rem;
 }
 
+/* 顶栏一层三件套：语速・设置・目录。语速控件跟「设置」共用同一套
+   字色/内距，视觉上并列；这里只把圆角压成纸白主题的直角风格。 */
+.speed-wrap {
+  border-radius: 2px;
+}
+
+.speed-select {
+  font-size: 0.86rem;
+}
+
 .editorial-toggle-btn {
   border-radius: 2px;
   padding: 0.3rem 0.55rem;
@@ -2280,7 +2403,8 @@ body {
 }
 
 .settings-group .editorial-toggle-btn {
-  padding: 0.18rem 0.35rem;
+  /* 左侧留出状态点的位置，否则圆点会压到文字上 */
+  padding: 0.18rem 0.35rem 0.18rem 1.25rem;
 }
 
 .voice-select-pill {
@@ -3122,6 +3246,17 @@ select:focus-visible {
     padding: 0.3rem 0.4rem;
   }
 
+  /* 顶栏现在有语速・设置・目录三件：窄屏下压缩语速控件的内距，
+     但保留图标——只靠裸数字看不出这是"朗读语速"。 */
+  .speed-wrap {
+    border-radius: 2px;
+  }
+
+  .speed-select {
+    font-size: 0.8rem;
+    padding: 0 1.5rem 0 1.35rem;
+  }
+
   .lesson-selector-btn {
     padding: 0.3rem 0.55rem;
   }
@@ -3675,6 +3810,21 @@ h1, h2, h3 {
 
 .nav-actions {
   gap: 0.3rem;
+}
+
+/* 语速控件跟随纸白主题的 hover 底色，与「设置」按钮保持一致 */
+.speed-wrap {
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+  /* 与 .editorial-toggle-btn 同高：「设置」由字号+内距撑到 ~44px，
+     这里显式对齐，否则顶栏三件套中线会错开。 */
+  min-height: 2.75rem;
+  box-sizing: border-box;
+}
+
+.speed-wrap:hover {
+  background: var(--accent-soft);
+  color: var(--text-main);
 }
 
 .editorial-toggle-btn {
@@ -5851,6 +6001,9 @@ body.drawer-open {
   .text-btn { min-height: 44px; padding: 0.45rem 0.2rem; }
   .lesson-selector-btn { min-height: 44px; }
   .editorial-toggle-btn { min-height: 44px; }
+  /* 语速控件与「设置」平级，触摸/窄屏下也要撑到同样高度，
+     否则两个控件中线错位，顶栏看起来是歪的。 */
+  .speed-wrap { min-height: 44px; }
   .settings-panel .editorial-toggle-btn { min-height: 40px; }
   .settings-panel .voice-select-pill { min-height: 40px; }
   .drawer-close-btn { min-width: 44px; min-height: 44px; }
@@ -6007,4 +6160,707 @@ body.basic-selftest .basic-xray-btn {
 /* 对白换行优先在空格/文节处断，实在放不下才拆词 */
 .dlg-jp-line .dlg-jp {
   overflow-wrap: break-word;
+}
+
+/* ==========================================================================
+   顶栏统一控件层（最后加载，优先级高于前面各历史区块）
+
+   由来：语速、设置、目录原本是三条互不相干的样式线——
+     语速：无边框、hover 只变底色
+     设置：无边框 + 2px 内阴影下划线
+     目录：1px 实心边框
+   三者高度、圆角、hover 反馈、按下动画全不一样，并排放在一起就是撕裂感。
+   这一层把它们统一成同一套几何（同高、同圆角、同内距）、同一套状态
+   （hover 浮底、active 才描边、focus 走统一 ring）和同一套动效曲线。
+   ========================================================================== */
+
+/* ---------- 1. 顶栏三件套的公共外观 ---------- */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: nowrap;
+}
+
+.nav-actions .nav-btn {
+  /* 几何：三者完全一致，靠这里对齐而不是各自打补丁 */
+  box-sizing: border-box;
+  position: relative;          /* ::after 的定位基准（改动提示点靠它） */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 2.25rem;
+  padding: 0 0.6rem;
+  margin: 0;
+
+  /* 外观：默认无框，只有一层极淡的底，避免三块白板排队 */
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--text-muted);
+
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  /* 动效：与全站墨标共用同一套缓动与时长 */
+  transition:
+    color 160ms var(--xbr-ease-ink, ease),
+    background-color 160ms var(--xbr-ease-ink, ease),
+    border-color 160ms var(--xbr-ease-ink, ease),
+    transform var(--xbr-t-tap, 70ms) var(--xbr-ease-ink, ease);
+}
+
+.nav-actions .nav-btn:hover {
+  color: var(--text-main);
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+
+/* 按下：三者同步缩小一点点，释放时回弹，不再只有个别控件有反馈 */
+.nav-actions .nav-btn:active {
+  transform: scale(0.97);
+}
+
+.nav-actions .nav-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.nav-actions .nav-btn svg {
+  flex: 0 0 auto;
+  opacity: 0.8;
+}
+
+.nav-actions .nav-btn .chev {
+  transition: transform var(--xbr-t-icon, 320ms) var(--xbr-ease-knock, ease);
+  transform-origin: 50% 50%;
+}
+
+.nav-actions .nav-btn[aria-expanded="true"] .chev {
+  transform: rotate(180deg);
+}
+
+/* 面板里有非默认项时：只把文字与箭头染成强调色，不再加角标圆点。
+   圆点悬在按钮角上像一个残留杂质，也和面板内的状态点混淆。 */
+.nav-actions .nav-btn.is-modified {
+  color: var(--accent-gold);
+}
+
+.nav-actions .nav-btn.is-modified .chev {
+  opacity: 1;
+}
+
+.nav-actions .nav-btn.is-modified:hover {
+  color: var(--accent-gold);
+}
+
+.nav-actions .settings-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* ---------- 2. 语速控件：让 select 铺满整块 ---------- */
+
+.nav-actions .speed-wrap {
+  position: relative;
+  padding: 0;
+}
+
+.nav-actions .speed-wrap .speed-select {
+  appearance: none;
+  -webkit-appearance: none;
+  align-self: stretch;
+  min-width: 4.9rem;
+  margin: 0;
+  padding: 0 1.35rem 0 1.4rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  text-align-last: left;
+  cursor: pointer;
+}
+
+.nav-actions .speed-wrap .speed-select option {
+  background: var(--bg-paper);
+  color: var(--text-main);
+}
+
+.nav-actions .speed-wrap .speed-icon,
+.nav-actions .speed-wrap .speed-chev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.nav-actions .speed-wrap .speed-icon {
+  left: 0.5rem;
+  opacity: 0.8;
+}
+
+.nav-actions .speed-wrap .speed-chev {
+  right: 0.45rem;
+  opacity: 0.7;
+}
+
+/* ---------- 3. 设置面板 ---------- */
+
+.nav-actions .settings-panel {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  min-width: min(19rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  padding: 0.75rem 0.85rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background: var(--bg-paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  box-shadow: var(--shadow-panel, 0 18px 44px rgba(0, 0, 0, 0.3));
+  z-index: 120;
+}
+
+.nav-actions .settings-panel[hidden] {
+  display: none;
+}
+
+.nav-actions .settings-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.nav-actions .settings-group + .settings-group {
+  border-top: 1px solid var(--rule-soft);
+  padding-top: 0.7rem;
+}
+
+.nav-actions .settings-label {
+  flex: 0 0 2.4rem;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  color: var(--text-faint);
+  letter-spacing: 0.1em;
+}
+
+/* 「显示」有 4 个开关，挤在一行会折成 2+2 且左缘参差。
+   标签独占一行，开关排成等宽两列，读起来是一个整齐的清单。 */
+.nav-actions .settings-group:first-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  column-gap: 0.2rem;
+  row-gap: 0.15rem;
+}
+
+.nav-actions .settings-group:first-child .settings-label {
+  grid-column: 1 / -1;
+  margin-bottom: 0.1rem;
+}
+
+/* 两列网格里按钮拉伸填满格子，左缘自然对齐 */
+.nav-actions .settings-group:first-child .opt-btn {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* 其余两组也把标签提到独立一行，保证整个面板「标签在上、控件在下」一致 */
+.nav-actions .settings-group:not(:first-child) {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0.2rem;
+}
+
+.nav-actions .settings-group:not(:first-child) .settings-label {
+  flex: none;
+}
+
+/* 控件不要撑满整行：撑满后每个都像一条横杠，面板显得笨重 */
+.nav-actions .settings-group:not(:first-child) > *:not(.settings-label) {
+  justify-self: start;
+}
+
+/* ---------- 4. 面板内开关：实心点＝开，空心圈＝关 ---------- */
+
+.nav-actions .opt-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  margin: 0;
+  padding: 0.2rem 0.5rem 0.2rem 1.3rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: var(--text-faint);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 160ms var(--xbr-ease-ink, ease),
+    background-color 160ms var(--xbr-ease-ink, ease);
+}
+
+.nav-actions .opt-btn::before {
+  content: '';
+  position: absolute;
+  left: 0.45rem;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: -0.275rem;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  background: transparent;
+  box-sizing: border-box;
+  transition:
+    background-color 160ms var(--xbr-ease-ink, ease),
+    border-color 160ms var(--xbr-ease-ink, ease),
+    transform 160ms var(--xbr-ease-seal, ease);
+}
+
+.nav-actions .opt-btn:hover {
+  background: var(--accent-soft);
+  color: var(--text-main);
+}
+
+.nav-actions .opt-btn.active {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.nav-actions .opt-btn.active::before {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  /* 开启时轻微落印，和全站墨标动效同源 */
+  transform: scale(1.15);
+}
+
+.nav-actions .opt-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* 版面：纸白/黑板是二选一。用两个独立按钮各带边框，
+   不共用一个大外框——共用外框会读成「一个按钮被切开」。 */
+.nav-actions .seg {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.nav-actions .seg-btn {
+  margin: 0;
+  padding: 0.32rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  color: var(--text-faint);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 160ms var(--xbr-ease-ink, ease),
+    background-color 160ms var(--xbr-ease-ink, ease),
+    border-color 160ms var(--xbr-ease-ink, ease);
+}
+
+.nav-actions .seg-btn:hover {
+  color: var(--text-main);
+  border-color: var(--accent-gold);
+}
+
+/* 选中：只描边 + 变色，不做实心填充。
+   实心色块在纸白主题里比旁边所有控件都重，会把版面重心带偏。 */
+.nav-actions .seg-btn.selected {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  background: transparent;
+  font-weight: 600;
+}
+
+.nav-actions .seg-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* ---------- 6. 朗读下拉与状态提示 ---------- */
+
+.nav-actions .settings-panel .voice-select-pill {
+  flex: none;
+  width: 11rem;
+  max-width: 100%;
+  min-height: 1.9rem;
+  padding: 0.2rem 0.45rem;
+  background: transparent;
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  cursor: pointer;
+}
+
+.nav-actions .settings-panel .voice-select-pill:hover {
+  border-color: var(--accent-gold);
+}
+
+.nav-actions .settings-panel .voice-select-pill:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.nav-actions .settings-panel .tts-status {
+  flex-basis: 100%;
+  margin: 0.15rem 0 0 2.6rem;
+  color: var(--text-faint);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 7. 触摸与窄屏 ---------- */
+
+@media (pointer: coarse), (max-width: 720px) {
+  .nav-actions .nav-btn { min-height: 44px; }
+  .nav-actions .opt-btn { min-height: 40px; }
+  .nav-actions .seg-btn { min-height: 40px; }
+  .nav-actions .settings-panel .voice-select-pill { min-height: 40px; }
+}
+
+@media (max-width: 720px) {
+  .nav-actions { gap: 0.2rem; }
+
+  .nav-actions .nav-btn {
+    padding: 0 0.45rem;
+    font-size: 0.8rem;
+  }
+
+  .nav-actions .speed-wrap .speed-select {
+    min-width: 4.1rem;
+    padding: 0 1.2rem 0 1.25rem;
+  }
+
+  .nav-actions .settings-panel {
+    min-width: min(17rem, calc(100vw - 1.5rem));
+    padding: 0.65rem 0.7rem 0.75rem;
+  }
+
+  .nav-actions .settings-label {
+    flex: 0 0 2.2rem;
+  }
+}
+
+/* 尊重「减少动态效果」系统设置 */
+@media (prefers-reduced-motion: reduce) {
+  .nav-actions .nav-btn,
+  .nav-actions .nav-btn .chev,
+  .nav-actions .opt-btn,
+  .nav-actions .opt-btn::before,
+  .nav-actions .seg-btn {
+    transition: none;
+  }
+  .nav-actions .nav-btn:active { transform: none; }
+  .nav-actions .opt-btn.active::before { transform: none; }
+}
+
+/* ==========================================================================
+   中翻日练习（tbdrill）
+   设计口径与全站一致：纸面、细线、无卡片投影。题干（中文）是主角，
+   答案默认折叠；答案区里日文在前、罗马音和出处退到次级灰度。
+   三档之间只用一条短规矩和标签区分，不做色块，免得练习页变成仪表盘。
+   ========================================================================== */
+
+.tdrill-lead {
+  max-width: 44rem;
+  margin: 0 0 1.6rem;
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: 1.9;
+}
+
+/* ---------- 考点清单 ---------- */
+.tdrill-points {
+  margin: 0 0 1.4rem;
+  padding: 0.9rem 0 1rem;
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.tdrill-points-title {
+  margin-bottom: 0.55rem;
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  letter-spacing: 0.14em;
+  color: var(--accent-gold);
+}
+
+.tdrill-points-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tdrill-point-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.tdrill-point-name {
+  font-size: var(--fs-lead);
+  line-height: 1.4;
+}
+
+.tdrill-point-cat {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.tdrill-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
+/* 计数只报"已经对过几句"，不做正确率——这不是判分的练习。 */
+.tdrill-done-count {
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui-sm);
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 分档 ---------- */
+.tdrill-tier {
+  margin-top: 2.2rem;
+}
+
+.tdrill-tier-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.tdrill-tier-label {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--accent-gold);
+}
+
+.tdrill-tier-sub {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-meta);
+  color: var(--text-faint);
+}
+
+.tdrill-tier-count {
+  flex: none;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 单题 ---------- */
+.tdrill-list {
+  counter-reset: none;
+}
+
+.tdrill-card {
+  padding: 1.05rem 0;
+  border-bottom: 1px dashed var(--border-hairline);
+}
+
+.tdrill-card:last-child {
+  border-bottom: 0;
+}
+
+.tdrill-q-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+}
+
+.tdrill-idx {
+  flex: none;
+  width: 1.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.tdrill-zh {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-sub);
+  line-height: 1.65;
+  color: var(--text-main);
+}
+
+.tdrill-actions {
+  margin: 0.35rem 0 0 2.35rem;
+}
+
+.tdrill-reveal-btn {
+  color: var(--text-faint);
+}
+
+.tdrill-card.open .tdrill-reveal-btn {
+  color: var(--text-muted);
+}
+
+/* ---------- 答案 ---------- */
+.tdrill-answer {
+  display: none;
+  margin: 0.7rem 0 0 2.35rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--accent-soft);
+}
+
+.tdrill-card.open .tdrill-answer {
+  display: block;
+  animation: tdrill-answer-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tdrill-answer-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 日文句子独占一行，朗读与「拆开看」退到右侧的一句工具条里。
+   曾经把按钮与句子放进同一个 flex 行，窄屏上按钮会插进句子中间，
+   把「あります」劈成「あ / ります」——所以句子必须整行，按钮另起一行。 */
+.tdrill-jp-row {
+  display: block;
+}
+
+.tdrill-jp {
+  display: block;
+  font-size: var(--fs-lead);
+  line-height: 1.8;
+  cursor: pointer;
+}
+
+.tdrill-jp:hover {
+  color: var(--accent-gold);
+}
+
+.tdrill-jp-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+}
+
+.tdrill-jp-tools .icon-btn,
+.tdrill-jp-tools .text-btn {
+  flex: none;
+}
+
+.tdrill-romaji {
+  margin-top: 0.3rem;
+  font-family: var(--font-ui);
+  font-size: var(--fs-meta);
+  font-style: italic;
+  color: var(--text-faint);
+  line-height: 1.6;
+}
+
+.tdrill-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.45rem;
+}
+
+.tdrill-point {
+  font-family: var(--font-ui);
+  font-size: 0.71rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-gold);
+  padding: 0.06rem 0.42rem;
+  border: 1px solid var(--accent-soft);
+  border-radius: 2px;
+}
+
+.tdrill-src {
+  font-family: var(--font-ui);
+  font-size: 0.71rem;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+
+.tdrill-answer .simple-xray-slot {
+  margin-top: 0.7rem;
+}
+
+/* 罗马音开关与全站一致；答案里的日文句子要能被 hide-furigana 一并关掉 */
+body.hide-romaji .tdrill-romaji {
+  display: none !important;
+}
+
+/* ---------- 窄屏 ---------- */
+@media (max-width: 720px) {
+  .tdrill-point-name { font-size: var(--fs-sub); }
+
+  .tdrill-answer,
+  .tdrill-actions {
+    margin-left: 0;
+  }
+
+  .tdrill-idx {
+    width: 1.2rem;
+  }
+
+  .tdrill-tier-sub {
+    display: none;
+  }
+}
+
+@media print {
+  /* 打印时答案全部摊开：纸上没有「点开」这个动作 */
+  .tdrill-answer { display: block !important; }
+  .tdrill-actions,
+  .tdrill-toolbar,
+  .tdrill-actions,
+  .tdrill-toolbar,
+  .tdrill-jp-tools { display: none !important; }
 }

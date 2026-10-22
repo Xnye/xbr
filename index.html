@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
   </noscript>
 
-  <link rel="stylesheet" href="css/main.css?v=20261019i">
+  <link rel="stylesheet" href="css/main.css?v=20261021t">
 </head>
 <body class="theme-paper">
 
@@ -28,8 +28,21 @@
       </div>
 
       <div class="nav-actions">
+        <div class="speed-wrap nav-btn" title="朗读语速（慢速由神经语音原生合成，不靠变速播放）">
+          <svg class="speed-icon" width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M12 3v18"></path>
+            <circle cx="12" cy="12" r="9"></circle>
+          </svg>
+          <select class="speed-select" id="speed_select" aria-label="朗读语速"></select>
+          <svg class="speed-chev" width="10" height="10" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+
         <div class="settings-wrap">
-          <button class="editorial-toggle-btn" id="settings_btn" type="button"
+          <button class="nav-btn" id="settings_btn" type="button"
                   aria-expanded="false" aria-controls="settings_panel" title="显示和朗读设置">
             <span>设置</span>
             <svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none"
@@ -41,21 +54,28 @@
           <div class="settings-panel" id="settings_panel" hidden>
             <div class="settings-group">
               <span class="settings-label">显示</span>
-              <button class="editorial-toggle-btn active" id="xray_toggle" title="快捷键 X：显示或隐藏语法拆解">
+              <button class="opt-btn active" id="xray_toggle" type="button" title="快捷键 X：显示或隐藏语法拆解">
                 <span>语法透视</span>
               </button>
-              <button class="editorial-toggle-btn active" id="furi_toggle" title="快捷键 F：显示或隐藏汉字注音">
+              <button class="opt-btn active" id="furi_toggle" type="button" title="快捷键 F：显示或隐藏汉字注音">
                 <span>假名</span>
               </button>
-              <button class="editorial-toggle-btn" id="romaji_toggle" title="快捷键 R：显示或隐藏罗马音">
+              <button class="opt-btn" id="romaji_toggle" type="button" title="快捷键 R：显示或隐藏罗马音">
                 <span>罗马音</span>
               </button>
-              <button class="editorial-toggle-btn active" id="trans_toggle" title="快捷键 T：显示或隐藏中文翻译">
+              <button class="opt-btn active" id="trans_toggle" type="button" title="快捷键 T：显示或隐藏中文翻译">
                 <span>中文翻译</span>
               </button>
-              <button class="editorial-toggle-btn active" id="theme_toggle" title="快捷键 M：切换纸白 / 黑板">
-                <span class="btn-label">纸白</span>
-              </button>
+            </div>
+            <div class="settings-group">
+              <span class="settings-label">版面</span>
+              <!-- 纸白 / 黑板是二选一，不是开与关，所以用分段选择而不是开关 -->
+              <div class="seg" role="radiogroup" aria-label="版面">
+                <button class="seg-btn" id="theme_paper" type="button" role="radio"
+                        data-theme="paper" aria-checked="true" title="快捷键 M：切换版面">纸白</button>
+                <button class="seg-btn" id="theme_dark" type="button" role="radio"
+                        data-theme="dark" aria-checked="false" title="快捷键 M：切换版面">黑板</button>
+              </div>
             </div>
             <div class="settings-group">
               <span class="settings-label">朗读</span>
@@ -63,18 +83,12 @@
                 <option value="ja-JP-NanamiNeural">七海（女声）</option>
                 <option value="ja-JP-KeitaNeural">庆太（男声）</option>
               </select>
-              <select class="voice-select-pill" id="speed_select" title="语速">
-                <option value="0.75">0.75x 慢速</option>
-                <option value="1.0" selected>1.0x 常速</option>
-                <option value="1.25">1.25x 较快</option>
-                <option value="1.5">1.5x 高速</option>
-              </select>
               <p class="tts-status" id="tts_status" hidden></p>
             </div>
           </div>
         </div>
 
-        <button class="lesson-selector-btn" id="open_drawer_btn" title="打开课文目录"
+        <button class="nav-btn" id="open_drawer_btn" title="打开课文目录"
                 aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer_panel">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -111,8 +125,8 @@
   </div>
 
   <script src="js/romaji.js?v=20261018j"></script>
-  <script src="js/tts.js?v=20261019c"></script>
+  <script src="js/tts.js?v=20261020m"></script>
   <script src="js/diagram.js?v=20261019k"></script>
-  <script src="js/app.js?v=20261019h"></script>
+  <script src="js/app.js?v=20261021t"></script>
 </body>
 </html>

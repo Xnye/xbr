@@ -2494,7 +2494,7 @@
         "group": "Ｃ",
         "speaker": "甲",
         "jp_raw": "!小野(おの)さんの　!家(いえ)は　どこに　ありますか",
-        "jp_clean": "小野さんの　家は　どこに　ありますか",
+        "jp_clean": "小野さんの　家は　どこに　ありますか？",
         "jp_ruby": "<ruby>小野<rt>おの</rt></ruby>さんの　<ruby>家<rt>いえ</rt></ruby>は　どこに　ありますか",
         "romaji": "ono sanno   ie ha   dokoni   arimasuka",
         "zh": "Ｃ　甲：小野女士的家在哪儿?"
@@ -11464,7 +11464,7 @@
         "group": "Ｃ",
         "speaker": "乙",
         "jp_raw": "ええ，どうぞ",
-        "jp_clean": "ええ，どうぞ",
+        "jp_clean": "ええ，どうぞ。",
         "jp_ruby": "ええ，どうぞ",
         "romaji": "ee , douzo",
         "zh": "乙：可以。请坐。"
@@ -14532,7 +14532,7 @@
         "group": "Ｄ",
         "speaker": "甲",
         "jp_raw": "!吉田課長(よしだかちょう)は　いますか",
-        "jp_clean": "吉田課長は　いますか",
+        "jp_clean": "吉田課長は　いますか？",
         "jp_ruby": "<ruby>吉田課長<rt>よしだかちょう</rt></ruby>は　いますか",
         "romaji": "yoshida kachou ha   imasuka",
         "zh": "Ｄ　甲：吉田科长在吗?"
@@ -18100,7 +18100,7 @@
       {
         "id": "b4_25_1",
         "jp_raw": "* これは!明日(あした)!会議(かいぎ)で!使(つか)う!資料(しりょう)です",
-        "jp_clean": "* これは明日会議で使う資料です",
+        "jp_clean": "* これは明日会議で使う資料です。",
         "jp_ruby": "* これは<ruby>明日<rt>あした</rt></ruby><ruby>会議<rt>かいぎ</rt></ruby>で<ruby>使<rt>つか</rt></ruby>う<ruby>資料<rt>しりょう</rt></ruby>です",
         "romaji": "*  koreha ashita kaigi de tsukau shiryou desu",
         "zh": "* 这是明天会议要用的资料。"
@@ -18108,7 +18108,7 @@
       {
         "id": "b4_25_2",
         "jp_raw": "* わたしが!明日(あした)!乗(の)る!飛行機(ひこうき)は!中国(ちゅうごく)!航空(こうくう)です",
-        "jp_clean": "* わたしが明日乗る飛行機は中国航空です",
+        "jp_clean": "* わたしが明日乗る飛行機は中国航空です。",
         "jp_ruby": "* わたしが<ruby>明日<rt>あした</rt></ruby><ruby>乗<rt>の</rt></ruby>る<ruby>飛行機<rt>ひこうき</rt></ruby>は<ruby>中国<rt>ちゅうごく</rt></ruby><ruby>航空<rt>こうくう</rt></ruby>です",
         "romaji": "*  watashiga ashita noru hikouki ha chuugoku koukuu desu",
         "zh": "* 我明天乘坐的飞机是中国航空公司（的）"
@@ -18116,7 +18116,7 @@
       {
         "id": "b4_25_3",
         "jp_raw": "* !中国(ちゅうごく)で!買(か)ったＣＤを!友達(ともだち)に!貸(か)しました",
-        "jp_clean": "* 中国で買ったＣＤを友達に貸しました",
+        "jp_clean": "* 中国で買ったＣＤを友達に貸しました。",
         "jp_ruby": "* <ruby>中国<rt>ちゅうごく</rt></ruby>で<ruby>買<rt>か</rt></ruby>ったＣＤを<ruby>友達<rt>ともだち</rt></ruby>に<ruby>貸<rt>か</rt></ruby>しました",
         "romaji": "*  chuugoku de katsu ta C D wo tomodachi ni kashi mashita",
         "zh": "* （我）把在中国买的CD借给朋友了。"
@@ -18124,7 +18124,7 @@
       {
         "id": "b4_25_4",
         "jp_raw": "* !操作(そうさ)が!簡単(かんたん)なパソコンが!欲(ほ)しいです",
-        "jp_clean": "* 操作が簡単なパソコンが欲しいです",
+        "jp_clean": "* 操作が簡単なパソコンが欲しいです。",
         "jp_ruby": "* <ruby>操作<rt>そうさ</rt></ruby>が<ruby>簡単<rt>かんたん</rt></ruby>なパソコンが<ruby>欲<rt>ほ</rt></ruby>しいです",
         "romaji": "*  sousa ga kantan na pasokon ga hoshii desu",
         "zh": "* （我）想要操作简单的个人电脑。"
@@ -18864,7 +18864,7 @@
           "type": "dialogue",
           "speaker": "楊(よう)",
           "jp_raw": "!初(はじ)めまして，!楊(よう)です",
-          "jp_clean": "初めまして，楊です",
+          "jp_clean": "初めまして，楊です。",
           "jp_ruby": "<ruby>初<rt>はじ</rt></ruby>めまして，<ruby>楊<rt>よう</rt></ruby>です",
           "romaji": "hajime mashite , you desu",
           "zh": "初次见面，我姓杨。(说着，伸出了手)"
@@ -18886,7 +18886,7 @@
           "type": "dialogue",
           "speaker": "陳(ちん)",
           "jp_raw": "!日本(にほん)には!握手(あくしゅ)の!習慣(しゅうかん)がないんですね",
-          "jp_clean": "日本には握手の習慣がないんですね",
+          "jp_clean": "日本には握手の習慣がないんですね。",
           "jp_ruby": "<ruby>日本<rt>にほん</rt></ruby>には<ruby>握手<rt>あくしゅ</rt></ruby>の<ruby>習慣<rt>しゅうかん</rt></ruby>がないんですね",
           "romaji": "nippon niha akushu no shuukan ganaindesune",
           "zh": "日本没有握手的习惯吧。"
@@ -18895,7 +18895,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "ええ，そうなんです，それで，つい!握手(あくしゅ)するのを!忘(わす)れます",
-          "jp_clean": "ええ，そうなんです，それで，つい握手するのを忘れます",
+          "jp_clean": "ええ，そうなんです，それで，つい握手するのを忘れます。",
           "jp_ruby": "ええ，そうなんです，それで，つい<ruby>握手<rt>あくしゅ</rt></ruby>するのを<ruby>忘<rt>わす</rt></ruby>れます",
           "romaji": "ee , sounandesu , sorede , tsui akushu surunowo wasure masu",
           "zh": "是的。因此，一不注意就忘记握手了。"
@@ -18926,7 +18926,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "そうですね…。!手(て)を!挙(あ)げたり，!握手(あくしゅ)したりする!人(ひと)もいますが，ほとんどお!辞儀(じぎ)ですね",
-          "jp_clean": "そうですね…。手を挙げたり，握手したりする人もいますが，ほとんどお辞儀ですね",
+          "jp_clean": "そうですね…。手を挙げたり，握手したりする人もいますが，ほとんどお辞儀ですね。",
           "jp_ruby": "そうですね…。<ruby>手<rt>て</rt></ruby>を<ruby>挙<rt>あ</rt></ruby>げたり，<ruby>握手<rt>あくしゅ</rt></ruby>したりする<ruby>人<rt>ひと</rt></ruby>もいますが，ほとんどお<ruby>辞儀<rt>じぎ</rt></ruby>ですね",
           "romaji": "soudesune … . te wo age tari , akushu shitarisuru nin moimasuga , hotondoo jigi desune",
           "zh": "怎么说啦？……也有挥手啦，握手什么的，但大部分人还是鞠躬。"
@@ -18948,7 +18948,7 @@
           "type": "dialogue",
           "speaker": "陳(ちん)",
           "jp_raw": "ええ，!今(いま)１!時半(じはん)ですから，これから４!社(しゃ)ぐらい!回(まわ)ることができるでしょう",
-          "jp_clean": "ええ，今１時半ですから，これから４社ぐらい回ることができるでしょう",
+          "jp_clean": "ええ，今１時半ですから，これから４社ぐらい回ることができるでしょう。",
           "jp_ruby": "ええ，<ruby>今<rt>いま</rt></ruby>１<ruby>時半<rt>じはん</rt></ruby>ですから，これから４<ruby>社<rt>しゃ</rt></ruby>ぐらい<ruby>回<rt>まわ</rt></ruby>ることができるでしょう",
           "romaji": "ee , ima 1 jihan desukara , korekara 4 sha gurai mawaru kotogadekirudeshou",
           "zh": "是的。现在是1点半，从现在起能转四家公司吧？"
@@ -19580,7 +19580,7 @@
         "group": "Ｄ",
         "speaker": "乙",
         "jp_raw": "はい。!仕事(しごと)で，!楊(よう)さんと!会(あ)っていたんです",
-        "jp_clean": "はい。仕事で，楊さんと会っていたんです",
+        "jp_clean": "はい。仕事で，楊さんと会っていたんです。",
         "jp_ruby": "はい。<ruby>仕事<rt>しごと</rt></ruby>で，<ruby>楊<rt>よう</rt></ruby>さんと<ruby>会<rt>あ</rt></ruby>っていたんです",
         "romaji": "hai . shigoto de , you santo atsu teitandesu",
         "zh": "乙：是的。因工作我和杨先生（在那儿）见面来着。"
@@ -20449,7 +20449,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "いいえ，まだなんです。さっき，!陳(ちん)さんに!不動産(ふどうさん)!屋(や)さんを!紹介(しょうかい)してもらいました。それに，!李(り)さんや!馬(ば)さんもいろいろと!探(さが)してくれています",
-          "jp_clean": "いいえ，まだなんです。さっき，陳さんに不動産屋さんを紹介してもらいました。それに，李さんや馬さんもいろいろと探してくれています",
+          "jp_clean": "いいえ，まだなんです。さっき，陳さんに不動産屋さんを紹介してもらいました。それに，李さんや馬さんもいろいろと探してくれています。",
           "jp_ruby": "いいえ，まだなんです。さっき，<ruby>陳<rt>ちん</rt></ruby>さんに<ruby>不動産<rt>ふどうさん</rt></ruby><ruby>屋<rt>や</rt></ruby>さんを<ruby>紹介<rt>しょうかい</rt></ruby>してもらいました。それに，<ruby>李<rt>り</rt></ruby>さんや<ruby>馬<rt>ば</rt></ruby>さんもいろいろと<ruby>探<rt>さが</rt></ruby>してくれています",
           "romaji": "iie , madanandesu . sakki , chin sanni fudousanya sanwo shoukai shitemoraimashita . soreni , sumomo sanya uma sanmoiroiroto sagashi tekureteimasu",
           "zh": "还没有，刚才老陈给我介绍了一家房地产公司。而且，小李、小马也都在帮忙找呢。"
@@ -21889,7 +21889,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "いいですね，どこへ!行(い)くんですか",
-          "jp_clean": "いいですね，どこへ行くんですか",
+          "jp_clean": "いいですね，どこへ行くんですか？",
           "jp_ruby": "いいですね，どこへ<ruby>行<rt>い</rt></ruby>くんですか",
           "romaji": "iidesune , dokohe iku ndesuka",
           "zh": "好啊去哪儿啊"
@@ -21898,7 +21898,7 @@
           "type": "dialogue",
           "speaker": "李(り)",
           "jp_raw": "!香山(こうざん)へ!行(い)こうと!思(おも)います",
-          "jp_clean": "香山へ行こうと思います",
+          "jp_clean": "香山へ行こうと思います。",
           "jp_ruby": "<ruby>香山<rt>こうざん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>こうと<ruby>思<rt>おも</rt></ruby>います",
           "romaji": "kayama he iko uto omoi masu",
           "zh": "想去香山"
@@ -21911,7 +21911,7 @@
           "type": "dialogue",
           "speaker": "加藤(かとう)",
           "jp_raw": "!森(もり)!君(くん)，!遅(おそ)いよ",
-          "jp_clean": "森君，遅いよ",
+          "jp_clean": "森君，遅いよ。",
           "jp_ruby": "<ruby>森<rt>もり</rt></ruby><ruby>君<rt>くん</rt></ruby>，<ruby>遅<rt>おそ</rt></ruby>いよ",
           "romaji": "mori kun , osoi yo",
           "zh": "森，你来晚了"
@@ -21920,7 +21920,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "すみません，!出か(で　)けようとした!時(とき)に，!電話(でんわ)があったんです",
-          "jp_clean": "すみません，出かけようとした時に，電話があったんです",
+          "jp_clean": "すみません，出かけようとした時に，電話があったんです。",
           "jp_ruby": "すみません，<ruby>出か<rt>で　</rt></ruby>けようとした<ruby>時<rt>とき</rt></ruby>に，<ruby>電話<rt>でんわ</rt></ruby>があったんです",
           "romaji": "sumimasen , deka keyoutoshita tokini , denwa gaattandesu",
           "zh": "对不起，正要出门的时候，来电话了"
@@ -23240,7 +23240,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "!天気(てんき)は!大丈夫(だいじょうぶ)でしょうか",
-          "jp_clean": "天気は大丈夫でしょうか",
+          "jp_clean": "天気は大丈夫でしょうか？",
           "jp_ruby": "<ruby>天気<rt>てんき</rt></ruby>は<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>でしょうか",
           "romaji": "tenki ha daijoubu deshouka",
           "zh": "天气没问题吧。"
@@ -23935,7 +23935,7 @@
           "type": "dialogue",
           "speaker": "小野(おの)",
           "jp_raw": "ちょっと!早(はや)く!着(つ)いてしまったけど，!森(もり)さんたちはもう!来(き)ているかしら。それにしても，!大勢(おおぜい)!並(なら)んでいるわね",
-          "jp_clean": "ちょっと早く着いてしまったけど，森さんたちはもう来ているかしら。それにしても，大勢並んでいるわね",
+          "jp_clean": "ちょっと早く着いてしまったけど，森さんたちはもう来ているかしら。それにしても，大勢並んでいるわね。",
           "jp_ruby": "ちょっと<ruby>早<rt>はや</rt></ruby>く<ruby>着<rt>つ</rt></ruby>いてしまったけど，<ruby>森<rt>もり</rt></ruby>さんたちはもう<ruby>来<rt>き</rt></ruby>ているかしら。それにしても，<ruby>大勢<rt>おおぜい</rt></ruby><ruby>並<rt>なら</rt></ruby>んでいるわね",
           "romaji": "chotto hayaku tsui teshimattakedo , mori santachihamou kite irukashira . sorenishitemo , oozei naran deiruwane",
           "zh": "我到早了，不知森他们到了没有？(看看长队)要说，这排队的人可真多啊。"
@@ -23997,7 +23997,7 @@
           "type": "dialogue",
           "speaker": "小野(おの)",
           "jp_raw": "!相変(あいか)わらずですね，!森(もり)さん，でも，お!元気(げんき)そうで，!何(なに)よりです",
-          "jp_clean": "相変わらずですね，森さん，でも，お元気そうで，何よりです",
+          "jp_clean": "相変わらずですね，森さん，でも，お元気そうで，何よりです。",
           "jp_ruby": "<ruby>相変<rt>あいか</rt></ruby>わらずですね，<ruby>森<rt>もり</rt></ruby>さん，でも，お<ruby>元気<rt>げんき</rt></ruby>そうで，<ruby>何<rt>なに</rt></ruby>よりです",
           "romaji": "aikawarazu desune , mori san , demo , o genki soude , nani yoridesu",
           "zh": "真是江山易改，本性难移啊。森，不过你看上去挺精神的，这比什么都强。"
@@ -24019,7 +24019,7 @@
           "type": "dialogue",
           "speaker": "小野(おの)",
           "jp_raw": "そうですか？!服(ふく)や!小物(こもの)が!入(はい)っていますが，!中(なか)はほとんど!空(から)ですよ。!北京(ペキン)は!初(はじ)めてなので，お!土産(みやげ)をたくさん!買(か)って，!入(い)れようと!思(おも)っているんです",
-          "jp_clean": "そうですか？服や小物が入っていますが，中はほとんど空ですよ。北京は初めてなので，お土産をたくさん買って，入れようと思っているんです",
+          "jp_clean": "そうですか？服や小物が入っていますが，中はほとんど空ですよ。北京は初めてなので，お土産をたくさん買って，入れようと思っているんです。",
           "jp_ruby": "そうですか？<ruby>服<rt>ふく</rt></ruby>や<ruby>小物<rt>こもの</rt></ruby>が<ruby>入<rt>はい</rt></ruby>っていますが，<ruby>中<rt>なか</rt></ruby>はほとんど<ruby>空<rt>から</rt></ruby>ですよ。<ruby>北京<rt>ペキン</rt></ruby>は<ruby>初<rt>はじ</rt></ruby>めてなので，お<ruby>土産<rt>みやげ</rt></ruby>をたくさん<ruby>買<rt>か</rt></ruby>って，<ruby>入<rt>い</rt></ruby>れようと<ruby>思<rt>おも</rt></ruby>っているんです",
           "romaji": "soudesuka ？ fuku ya komono ga itsutsu teimasuga , naka hahotondo sora desuyo . pekin ha hajimete nanode , o miyage wotakusan katsu te , ire youto omotte irundesu",
           "zh": "是吗？装了一些衣服和小东西。里面大半都是空的。我这是第一次来北京，所以想买很多礼品带回去。"
@@ -24562,7 +24562,7 @@
       {
         "id": "b4_34_1",
         "jp_raw": "* !壁(かべ)にカレンダーが!掛(か)けてあります",
-        "jp_clean": "* 壁にカレンダーが掛けてあります",
+        "jp_clean": "* 壁にカレンダーが掛けてあります。",
         "jp_ruby": "* <ruby>壁<rt>かべ</rt></ruby>にカレンダーが<ruby>掛<rt>か</rt></ruby>けてあります",
         "romaji": "*  kabe ni karendaa ga kake tearimasu",
         "zh": "* 墙上挂着挂历。"
@@ -24608,7 +24608,7 @@
         "group": "Ａ",
         "speaker": "乙",
         "jp_raw": "!公園(こうえん)の!前(まえ)に!止(と)めてあります",
-        "jp_clean": "公園の前に止めてあります",
+        "jp_clean": "公園の前に止めてあります。",
         "jp_ruby": "<ruby>公園<rt>こうえん</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>止<rt>と</rt></ruby>めてあります",
         "romaji": "kouen no mae ni tome tearimasu",
         "zh": "乙：停在公园前面了。"
@@ -24638,7 +24638,7 @@
         "group": "Ｃ",
         "speaker": "甲",
         "jp_raw": "カレーライスを!作(つく)ってみました。!食(た)べてみてください",
-        "jp_clean": "カレーライスを作ってみました。食べてみてください",
+        "jp_clean": "カレーライスを作ってみました。食べてみてください。",
         "jp_ruby": "カレーライスを<ruby>作<rt>つく</rt></ruby>ってみました。<ruby>食<rt>た</rt></ruby>べてみてください",
         "romaji": "kareeraisu wo tsukutsu temimashita . tabete mitekudasai",
         "zh": "C 甲：我做了咖喱饭，〈请〉你尝尝。"
@@ -25584,7 +25584,7 @@
           "type": "dialogue",
           "speaker": "李(り)",
           "jp_raw": "ええ，!北京(ペキン)では，!餃子(ギョーザ)はどの!家(いえ)でも，!自分(じぶん)たちで!作(つく)って!食(た)べます。!小(ちい)さな!子供(こども)でも!上手(じょうず)ですよ",
-          "jp_clean": "ええ，北京では，餃子はどの家でも，自分たちで作って食べます。小さな子供でも上手ですよ",
+          "jp_clean": "ええ，北京では，餃子はどの家でも，自分たちで作って食べます。小さな子供でも上手ですよ。",
           "jp_ruby": "ええ，<ruby>北京<rt>ペキン</rt></ruby>では，<ruby>餃子<rt>ギョーザ</rt></ruby>はどの<ruby>家<rt>いえ</rt></ruby>でも，<ruby>自分<rt>じぶん</rt></ruby>たちで<ruby>作<rt>つく</rt></ruby>って<ruby>食<rt>た</rt></ruby>べます。<ruby>小<rt>ちい</rt></ruby>さな<ruby>子供<rt>こども</rt></ruby>でも<ruby>上手<rt>じょうず</rt></ruby>ですよ",
           "romaji": "ee , pekin deha , gyouza hadono ie demo , jibuntachi de tsukutsu te tabe masu . chiisa na kodomo demo jouzu desuyo",
           "zh": "是呀。在北京家家户户都自己包饺子吃。就是小孩也你能包的很好。"
@@ -25624,7 +25624,7 @@
           "type": "dialogue",
           "speaker": "太田(おおた)",
           "jp_raw": "!準備(じゅんび)ができたら，!乾杯(かんぱい)しましょう",
-          "jp_clean": "準備ができたら，乾杯しましょう",
+          "jp_clean": "準備ができたら，乾杯しましょう。",
           "jp_ruby": "<ruby>準備<rt>じゅんび</rt></ruby>ができたら，<ruby>乾杯<rt>かんぱい</rt></ruby>しましょう",
           "romaji": "junbi gadekitara , kanpai shimashou",
           "zh": "要是准备好了，咱们就干杯。"
@@ -25659,7 +25659,7 @@
           "type": "dialogue",
           "speaker": "森(もり)",
           "jp_raw": "ぼくは，!小野(おの)さんが!作(つく)った!餃子(ギョーザ)だったら，３０!個(こ)は!大丈夫(だいじょうぶ)ですよ",
-          "jp_clean": "ぼくは，小野さんが作った餃子だったら，３０個は大丈夫ですよ",
+          "jp_clean": "ぼくは，小野さんが作った餃子だったら，３０個は大丈夫ですよ。",
           "jp_ruby": "ぼくは，<ruby>小野<rt>おの</rt></ruby>さんが<ruby>作<rt>つく</rt></ruby>った<ruby>餃子<rt>ギョーザ</rt></ruby>だったら，３０<ruby>個<rt>こ</rt></ruby>は<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>ですよ",
           "romaji": "bokuha , ono sanga tsukutsu ta gyouza dattara , 3 0 ko ha daijoubu desuyo",
           "zh": "要是小野做的饺子，我吃30个也没问题。"
@@ -29139,7 +29139,7 @@
       {
         "id": "b4_40_1",
         "jp_raw": "* これから!友達(ともだち)と!食事(しょくじ)に!行(い)くところです",
-        "jp_clean": "* これから友達と食事に行くところです",
+        "jp_clean": "* これから友達と食事に行くところです。",
         "jp_ruby": "* これから<ruby>友達<rt>ともだち</rt></ruby>と<ruby>食事<rt>しょくじ</rt></ruby>に<ruby>行<rt>い</rt></ruby>くところです",
         "romaji": "*  korekara tomodachi to shokuji ni iku tokorodesu",
         "zh": "* （我）正要和朋友一起去吃饭。"
@@ -29147,7 +29147,7 @@
       {
         "id": "b4_40_2",
         "jp_raw": "* !森(もり)さんは!会議(かいぎ)の!資料(しりょう)をそろえているところです",
-        "jp_clean": "* 森さんは会議の資料をそろえているところです",
+        "jp_clean": "* 森さんは会議の資料をそろえているところです。",
         "jp_ruby": "* <ruby>森<rt>もり</rt></ruby>さんは<ruby>会議<rt>かいぎ</rt></ruby>の<ruby>資料<rt>しりょう</rt></ruby>をそろえているところです",
         "romaji": "*  mori sanha kaigi no shiryou wosoroeteirutokorodesu",
         "zh": "* 森先生正在整理会议资料。"
@@ -29155,7 +29155,7 @@
       {
         "id": "b4_40_3",
         "jp_raw": "* !馬(ば)さんは，!今(いま)，!空港(くうこう)に!着(つ)いたところです",
-        "jp_clean": "* 馬さんは，今，空港に着いたところです",
+        "jp_clean": "* 馬さんは，今，空港に着いたところです。",
         "jp_ruby": "* <ruby>馬<rt>ば</rt></ruby>さんは，<ruby>今<rt>いま</rt></ruby>，<ruby>空港<rt>くうこう</rt></ruby>に<ruby>着<rt>つ</rt></ruby>いたところです",
         "romaji": "*  uma sanha , ima , kuukou ni tsui tatokorodesu",
         "zh": "* 小马现在刚刚到达机场。"
@@ -29163,7 +29163,7 @@
       {
         "id": "b4_40_4",
         "jp_raw": "* このモノレールは!去年(きょねん)!開通(かいつう)したばかりです",
-        "jp_clean": "* このモノレールは去年開通したばかりです",
+        "jp_clean": "* このモノレールは去年開通したばかりです。",
         "jp_ruby": "* このモノレールは<ruby>去年<rt>きょねん</rt></ruby><ruby>開通<rt>かいつう</rt></ruby>したばかりです",
         "romaji": "*  kono monoreeru ha kyonen kaitsuu shitabakaridesu",
         "zh": "* 这条单轨铁路是去年刚开通的。"
@@ -34396,7 +34396,7 @@
           "type": "dialogue",
           "speaker": "陳(ちん)",
           "jp_raw": "この!辺(へん)は「!外灘(ワイタン)」と!言(い)って，!古(ふる)い!建物(たてもの)が!多(おお)いんです",
-          "jp_clean": "この辺は「外灘」と言って，古い建物が多いんです",
+          "jp_clean": "この辺は「外灘」と言って，古い建物が多いんです。",
           "jp_ruby": "この<ruby>辺<rt>へん</rt></ruby>は「<ruby>外灘<rt>ワイタン</rt></ruby>」と<ruby>言<rt>い</rt></ruby>って，<ruby>古<rt>ふる</rt></ruby>い<ruby>建物<rt>たてもの</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いんです",
           "romaji": "kono hen ha ( waitan ) to itte , furui tatemono ga ooi ndesu",
           "zh": "这一带叫“外滩”，古老的建筑很多。"
